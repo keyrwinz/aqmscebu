@@ -1,5 +1,14 @@
 import React from "react"
-import Loadable from '@loadable/component'
+// import Loadable from '@loadable/component'
+import Spinner from '../Spinner'
+import Loadable from 'react-loadable';
+ 
+const LoadableChart = Loadable({
+  loader: () => import('../../../node_modules/react-apexcharts/src/react-apexcharts'),
+  loading() {
+    return <Spinner />
+  }
+});
 
 const ComponentWithChart = ({ title, unit }) => {
   const data = [
@@ -111,7 +120,7 @@ const ComponentWithChart = ({ title, unit }) => {
 
 export default ComponentWithChart
 
-const LoadableChart = Loadable( () => import('../../../node_modules/react-apexcharts/src/react-apexcharts'))
+// const LoadableChart = Loadable( () => import('../../../node_modules/react-apexcharts/src/react-apexcharts'))
 
 // import React, { useState } from 'react';
 // import ReactApexChart from 'react-apexcharts';

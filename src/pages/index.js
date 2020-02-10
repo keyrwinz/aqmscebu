@@ -5,6 +5,7 @@ import SEO from "../components/seo"
 import DataGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AQSummary from '../components/AirQualitySummary'
+import Spinner from '../components/Spinner'
 import {
   withGoogleMap,
   withScriptjs
