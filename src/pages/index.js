@@ -3,15 +3,15 @@ import styled from 'styled-components';
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import DataGraph from '../components/Graphs/TimeSeriesGraph'
-// import GoogleMap from '../components/GoogleMap/GoogleMap'
+import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AQSummary from '../components/AirQualitySummary'
-// import {
-//   withGoogleMap,
-//   withScriptjs
-// } from "react-google-maps";
+import {
+  withGoogleMap,
+  withScriptjs
+} from "react-google-maps";
 
 const API_MAP = 'AIzaSyCeEtWrTm6_sPXDtijAIYYyxWG6_dMSME4';
-// const MapWrapped = withScriptjs(withGoogleMap(GoogleMap));
+const MapWrapped = withScriptjs(withGoogleMap(GoogleMap));
 
 const IndexPage = () => {
   const [selectedNode, setSelectedNode] = useState('usc-mc');
@@ -82,7 +82,7 @@ const IndexPage = () => {
           </div>
           <div className="row">
             <div className="col-md-8 col-12 googleMap" style={{minHeight: '500px'}}>
-              {/* <MapWrapped
+              <MapWrapped
                 nodeSelectFunc={onClickMapNode}
                 googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${
                   API_MAP
@@ -90,8 +90,7 @@ const IndexPage = () => {
                 loadingElement={<div style={{ height: `100%` }} />}
                 containerElement={<div style={{ height: `100%` }} />}
                 mapElement={<div style={{ height: `100%` }} />}
-              /> */}
-              TEST
+              />
             </div>
             <div className="col-md-4 col-12">
               {RightPane}
