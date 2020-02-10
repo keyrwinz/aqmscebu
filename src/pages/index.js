@@ -2,6 +2,16 @@ import React, {useState} from "react"
 import styled from 'styled-components';
 import Layout from "../components/layout"
 import SEO from "../components/seo"
+import DataGraph from '../components/Graphs/TimeSeriesGraph'
+import GoogleMap from '../components/GoogleMap/GoogleMap'
+import AQSummary from '../components/AirQualitySummary'
+import {
+  withGoogleMap,
+  withScriptjs
+} from "react-google-maps";
+
+const API_MAP = 'AIzaSyCeEtWrTm6_sPXDtijAIYYyxWG6_dMSME4';
+const MapWrapped = withScriptjs(withGoogleMap(GoogleMap));
 
 const IndexPage = () => {
   const [selectedNode, setSelectedNode] = useState('usc-mc');
@@ -34,15 +44,15 @@ const IndexPage = () => {
 
   //setup right-pane
   let RightPane = null;
-  // if (ContentButton) {
-  //   RightPane =   (
-  //     <h1>graph unta..</h1>
-  //   )
-  // } else {
-  //   RightPane = (
-  //     <AQContent data={dataState}/>
-  //   )
-  // } 
+  if (ContentButton) {
+    RightPane =   (
+      <h1>graph unta..</h1>
+    )
+  } else {
+    RightPane = (
+      <AQSummary data={dataState}/>
+    )
+  } 
   //right-pane end
 
   const onClickMapNode = nodeId => {
@@ -72,7 +82,7 @@ const IndexPage = () => {
           </div>
           <div className="row">
             <div className="col-md-8 col-12 googleMap" style={{minHeight: '500px'}}>
-              {/* <MapWrapped
+              <MapWrapped
                 nodeSelectFunc={onClickMapNode}
                 googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${
                   API_MAP
@@ -80,43 +90,37 @@ const IndexPage = () => {
                 loadingElement={<div style={{ height: `100%` }} />}
                 containerElement={<div style={{ height: `100%` }} />}
                 mapElement={<div style={{ height: `100%` }} />}
-              /> */}
-              TEST
+              />
             </div>
             <div className="col-md-4 col-12">
-              {/* {RightPane} */}
-              TEST
+              {RightPane}
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                {/* <DataGraph title="Data Measurement for PM2.5" unit="ug/m3"/> */}
-                TEST
+                <DataGraph title="Data Measurement for PM2.5" unit="ug/m3"/>
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                {/* <DataGraph title="Data Measurement for PM10" unit="ug/m3"/> */}
-                TEST
+                <DataGraph title="Data Measurement for PM10" unit="ug/m3"/>
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                {/* <DataGraph title="Data Measurement for NO2" unit="ppm"/> */}
-                TEST
+                <DataGraph title="Data Measurement for NO2" unit="ppm"/>
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                {/* <DataGraph title="Data Measurement for SO2"unit="ppm"/> */}
-                TEST
+                <DataGraph title="Data Measurement for SO2"unit="ppm"/>
               </div>
             </div>
           </div>
