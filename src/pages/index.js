@@ -2,7 +2,7 @@ import React, {useState} from "react"
 import styled from 'styled-components';
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import DataGraph from '../components/Graphs/TimeSeriesGraph'
+// import DataGraph from '../components/Graphs/TimeSeriesGraph'
 // import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AQSummary from '../components/AirQualitySummary'
 // import {
@@ -100,28 +100,28 @@ const IndexPage = () => {
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for PM2.5" unit="ug/m3"/>
+                {/* <DataGraph title="Data Measurement for PM2.5" unit="ug/m3"/> */}
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for PM10" unit="ug/m3"/>
+                {/* <DataGraph title="Data Measurement for PM10" unit="ug/m3"/> */}
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for NO2" unit="ppm"/>
+                {/* <DataGraph title="Data Measurement for NO2" unit="ppm"/> */}
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for SO2"unit="ppm"/>
+                {/* <DataGraph title="Data Measurement for SO2"unit="ppm"/> */}
               </div>
             </div>
           </div>
