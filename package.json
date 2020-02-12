@@ -7,6 +7,7 @@
   "dependencies": {
     "@loadable/component": "^5.12.0",
     "apexcharts": "^3.15.5",
+    "firebase": "^7.8.1",
     "gatsby": "^2.19.7",
     "gatsby-image": "^2.2.39",
     "gatsby-plugin-manifest": "^2.2.39",

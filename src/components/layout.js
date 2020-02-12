@@ -33,15 +33,11 @@ const Layout = ({ children }) => {
           background: '#121212',
           color: 'hsla(0,0%,100%,.7)',
           fontFamily: 'Roboto, sans-serif',
-          paddingTop: '15px'
+          paddingTop: '15px',
+          paddingBottom: '12px'
         }}
       >
         <main>{children}</main>
-        <footer>
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>
-        </footer>
       </div>
     </>
   )

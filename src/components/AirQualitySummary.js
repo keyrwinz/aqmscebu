@@ -43,7 +43,7 @@ const AQContent = ({data}) => {
         </div>
       </div>
       <div style={{ display: 'flex', flexFlow: 'column', border: '1px solid #1e1e1e', marginBottom: '10px', height: `calc(50% - 5px)`, borderRadius: '5px', background: '#272727' }}>
-        <div style={{alignSelf: 'center', marginTop: '5px', marginBottom: '5px', fontWeight: 'bold', textAlign: 'center'}}>
+        <div style={{alignSelf: 'center', marginTop: '5px', marginBottom: '5px', fontWeight: 'bold', textAlign: 'center', padding: '0 5px'}}>
             <span>Pollutants-Specific Cautionary Statements for</span><br/> 
             <span>the General Public</span>
         </div>

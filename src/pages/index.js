@@ -1,26 +1,38 @@
-import React, {useState} from "react"
+import React, { useState, useEffect } from "react"
 import styled from 'styled-components';
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import DataGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AQSummary from '../components/AirQualitySummary'
-import Spinner from '../components/Spinner'
 import {
   withGoogleMap,
   withScriptjs
 } from "react-google-maps";
+import firebase from '../firebase'
 
 const API_MAP = 'AIzaSyCeEtWrTm6_sPXDtijAIYYyxWG6_dMSME4';
 const MapWrapped = withScriptjs(withGoogleMap(GoogleMap));
 
 const IndexPage = () => {
   const [selectedNode, setSelectedNode] = useState('usc-mc');
-  const [ContentButton, setContentButton] = useState(0);
   const [data, setData] = useState([]);
 
   let dataState = {};
   let dataGraph = [];
+
+  // fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = firebase.firestore();
+      const data = await db.collection("aqms-cebu").get();
+      setData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+
+      console.log(data);
+    };
+
+    fetchData();
+  }, []);
 
   if (selectedNode === 'usc-mc' && data) {
     data.map(d => {
@@ -42,19 +54,10 @@ const IndexPage = () => {
     })
   }
 
-
-  //setup right-pane
   let RightPane = null;
-  if (ContentButton) {
-    RightPane =   (
-      <h1>graph unta..</h1>
-    )
-  } else {
-    RightPane = (
-      <AQSummary data={dataState}/>
-    )
-  } 
-  //right-pane end
+  RightPane = (
+    <AQSummary data={dataState}/>
+  )
 
   const onClickMapNode = nodeId => {
     setSelectedNode(nodeId)
@@ -66,19 +69,8 @@ const IndexPage = () => {
         <SEO title="Home" />
         <div className="container-sm">
           <div className="row">
-            <div className="col-md-8 col-12">
+            <div className="col-md-12 col-12">
               <input className="form-control" id="nodeSearch" type="text" placeholder="Search.." />
-            </div>
-            <div className="col-md-4 col-12 groupBtn">
-              <button className={`btn ${ContentButton == 0 ? 'btn-dark' : 'btn-light'}`} 
-                      style={{width: '35%'}} type="button"
-                      onClick={() => setContentButton(0)}
-              >Air Quality</button>
-              <div style={{borderLeft: '3px solid #272727', height:'30px'}}></div>
-              <button className={`btn ${ContentButton == 1 ? 'btn-dark' : 'btn-light'}`} 
-                      style={{width: '35%'}} type="button"
-                      onClick={() => setContentButton(1)}
-              >Graph</button>
             </div>
           </div>
           <div className="row">
@@ -94,7 +86,7 @@ const IndexPage = () => {
               />
             </div>
             <div className="col-md-4 col-12">
-              {RightPane}
+              { RightPane }
             </div>
           </div>
           <div className="row graph">
@@ -127,10 +119,9 @@ const IndexPage = () => {
           </div>
           <div className="row">
             <div className="col">
-              <div className="footer">
+              <div className="footer borderbox">
                 © {new Date().getFullYear()}, Built by
-                {` `}
-                <a href="#">WAYDSB Thesis2020</a>
+                <a href="#">{``}WAYDSB Thesis2020</a>
               </div>
             </div>
           </div>
