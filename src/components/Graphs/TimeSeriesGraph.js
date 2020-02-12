@@ -11,6 +11,7 @@ const LoadableChart = Loadable({
 });
 
 const ComponentWithChart = ({ title, unit }) => {
+  
   const data = [
     [1484418600000, 23],
     [1484505000000, 20],

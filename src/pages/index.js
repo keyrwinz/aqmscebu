@@ -27,8 +27,6 @@ const IndexPage = () => {
       const db = firebase.firestore();
       const data = await db.collection("aqms-cebu").get();
       setData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-
-      console.log(data);
     };
 
     fetchData();
