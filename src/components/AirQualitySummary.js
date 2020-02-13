@@ -1,5 +1,6 @@
 import React from 'react';
 import HappyFace from "../assets/images/happy.png";
+import styled from 'styled-components';
 
 const styles = {
   spanMeasurements: {
@@ -8,16 +9,16 @@ const styles = {
   }
 }
 
-const AQContent = ({data}) => {
-
+const AQContent = ({nodeName, data}) => {
   return (
-    <>
-      <div style={{ display: 'flex', flexFlow: 'column', border: '1px solid #1e1e1e', marginBottom: '10px', height: `calc(50% - 5px)`, borderRadius: '5px', background: '#272727' }}>
-        <div style={{alignSelf: 'center', marginTop: '5px', marginBottom: '5px'}}>
-          <span style={{fontWeight: 'bold'}}>GOOD</span>
+    <Style>
+      <div className="measurements-tab">
+        <div className="measurements-label bold green">
+          <span>GOOD</span>
         </div>
         <div style={{width: '100%', borderTop: '1px solid black', paddingTop: '20px'}}>
           <span style={{marginLeft: '20px'}}>Measurements:</span>
+          <span style={{fontSize: '-webkit-xxx-large', marginLeft: '20px'}}>{nodeName}</span>
           <div style={{marginLeft: '45px', marginTop: '10px'}}>
             <ul style={{listStyle: 'none', fontWeight: 'bold', color: 'white'}}>
               <li>PM2.5: 
@@ -42,7 +43,7 @@ const AQContent = ({data}) => {
           </div>
         </div>
       </div>
-      <div style={{ display: 'flex', flexFlow: 'column', border: '1px solid #1e1e1e', marginBottom: '10px', height: `calc(50% - 5px)`, borderRadius: '5px', background: '#272727' }}>
+      <div className="cautionary-tab">
         <div style={{alignSelf: 'center', marginTop: '5px', marginBottom: '5px', fontWeight: 'bold', textAlign: 'center', padding: '0 5px'}}>
             <span>Pollutants-Specific Cautionary Statements for</span><br/> 
             <span>the General Public</span>
@@ -53,8 +54,44 @@ const AQContent = ({data}) => {
           </div>
         </div>
       </div>
-    </>
+    </Style>
   )
 }
+
+const Style = styled.div`
+  .bold {
+    font-weight: bold;
+  }
+
+  .green {
+    color: #1cfc03;
+  }
+
+  .measurements-tab {
+    display: flex; 
+    flex-flow: column; 
+    border: 1px solid #1e1e1e; 
+    margin-bottom: 10px; 
+    height: calc(50% - 5px);
+    border-radius: 5px; 
+    background: #272727;
+  }
+
+  .measurements-label {
+    align-self: center; 
+    margin-top: 5px; 
+    margin-bottom: 5px;
+  }
+
+  .cautionary-tab {
+    display: flex;
+    flex-flow: column; 
+    border: 1px solid #1e1e1e; 
+    margin-bottom: 10px; 
+    height: calc(50% - 5px); 
+    border-radius: 5px; 
+    background: #272727;
+  }
+`;
 
 export default AQContent;

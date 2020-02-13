@@ -4,7 +4,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import DataGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
-import AQSummary from '../components/AirQualitySummary'
+import AirQualitySummary from '../components/AirQualitySummary'
 import {
   withGoogleMap,
   withScriptjs
@@ -14,48 +14,24 @@ import firebase from '../firebase'
 const API_MAP = 'AIzaSyCeEtWrTm6_sPXDtijAIYYyxWG6_dMSME4';
 const MapWrapped = withScriptjs(withGoogleMap(GoogleMap));
 
+
+const fetchData = async (node) => {
+  let data;
+  const db = firebase.firestore();
+  const doc = await db.collection("aqms-cebu").doc(node).get();
+  data = doc.data()
+  return data
+};
+
 const IndexPage = () => {
   const [selectedNode, setSelectedNode] = useState('usc-mc');
+  const [state, setState] = useState({})
   const [data, setData] = useState([]);
-
-  let dataState = {};
-  let dataGraph = [];
 
   // fetch data
   useEffect(() => {
-    const fetchData = async () => {
-      const db = firebase.firestore();
-      const data = await db.collection("aqms-cebu").get();
-      setData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-    };
-
-    fetchData();
-  }, []);
-
-  if (selectedNode === 'usc-mc' && data) {
-    data.map(d => {
-      if(d.id === selectedNode){
-        dataState = {...d.state, name: 'mc'}
-        d.states.map(s => {
-          dataGraph.push({...s, name: 'mc'})
-        })
-      }
-    })
-  } else if (selectedNode === 'usc-sc' && data) {
-    data.map(d => {
-      if(d.id === selectedNode){
-        dataState = {...d.state, name: 'sc'}
-        d.states.map(s => {
-          dataGraph.push({...s, name: 'sc'})
-        })
-      }
-    })
-  }
-
-  let RightPane = null;
-  RightPane = (
-    <AQSummary data={dataState}/>
-  )
+    fetchData(selectedNode).then(data => setState(data.state))
+  }, [selectedNode])
 
   const onClickMapNode = nodeId => {
     setSelectedNode(nodeId)
@@ -68,7 +44,7 @@ const IndexPage = () => {
         <div className="container-sm">
           <div className="row">
             <div className="col-md-12 col-12">
-              <input className="form-control" id="nodeSearch" type="text" placeholder="Search.." />
+              <input className="form-control" id="nodeSearch" type="text" placeholder="Search..." />
             </div>
           </div>
           <div className="row">
@@ -84,7 +60,7 @@ const IndexPage = () => {
               />
             </div>
             <div className="col-md-4 col-12">
-              { RightPane }
+              <AirQualitySummary nodeName={selectedNode} data={state}/>
             </div>
           </div>
           <div className="row graph">
@@ -156,17 +132,6 @@ const Style = styled.div`
     width: 28.2%;
     margin-left: 10px;
     margin-right: 10px;
-  }
-  .footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #272727;
-    min-height: 91px;
-  }
-  .borderbox {
-    border-radius: 3px;
-    border: 2px solid #272727;
   }
   .googleMap, .graph {
     color: black

@@ -620,3 +620,15 @@ pre tt:after {
     font-size: 100%;
   }
 }
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #272727;
+  min-height: 91px;
+}
+.borderbox {
+  border-radius: 3px;
+  border: 2px solid #272727;
+}
