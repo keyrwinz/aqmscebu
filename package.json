@@ -8,6 +8,8 @@
     "@loadable/component": "^5.12.0",
     "apexcharts": "^3.15.5",
     "firebase": "^7.8.1",
+    "firebase-admin": "^8.9.2",
+    "firebase-functions": "^3.3.0",
     "gatsby": "^2.19.7",
     "gatsby-image": "^2.2.39",
     "gatsby-plugin-manifest": "^2.2.39",
@@ -16,6 +18,7 @@
     "gatsby-plugin-sharp": "^2.4.3",
     "gatsby-source-filesystem": "^2.1.46",
     "gatsby-transformer-sharp": "^2.3.13",
+    "jquery": "^3.4.1",
     "moment": "^2.24.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
@@ -26,6 +29,7 @@
     "react-helmet": "^5.2.1",
     "react-loadable": "^5.5.0",
     "react-paginate": "^6.3.2",
+    "react-table": "^7.0.0-rc.15",
     "styled-components": "^5.0.1"
   },
   "devDependencies": {

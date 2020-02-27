@@ -239,12 +239,10 @@ const RenderData = ({data}) => {
       <table className="table table-dark">
         <thead>
           <tr>
-            <th scope="col">PM<sub>2.5</sub></th>
+            <th scope="col">PM<sub>1</sub></th>
+            <th scope="col">PM<sub>25</sub></th>
             <th scope="col">PM<sub>10</sub></th>
-            <th scope="col">NO<sub>2</sub></th>
-            <th scope="col">SO<sub>2</sub></th>
-            <th scope="col">Humidity</th>
-            <th scope="col">Temperature</th>
+            <th scope="col">Index</th>
             <th scope="col">Timestamp</th>
           </tr>
         </thead>
@@ -253,15 +251,12 @@ const RenderData = ({data}) => {
             let epoch_time = new Date(d.timestamp * 1000)
             var timestamp = epoch_time.toLocaleString('en-GB', 
               { month: 'short', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true } );
-            console.log('timestamp: ', d.timestamp, 'date: ', timestamp)
             return(
               <tr key={index}>
-                <td>{d.pm25 ? d.pm25 : 'No data'}</td>
-                <td>{d.pm10 ? d.pm10 : 'No data'}</td>
-                <td>{d.no2 ? d.no2 : 'No data'}</td>
-                <td>{d.so2 ? d.so2 : 'No data'}</td>
-                <td>{d.humidity ? d.humidity : 'No data'}</td>
-                <td>{d.temp ? d.temp : 'No data'}</td>
+                <td>{d.pm1 ? d.pm1 : 'No data'}</td>
+                <td>{d.pm25 ? d.pm25.toFixed(2) : 'No data'}</td>
+                <td>{d.pm10 ? d.pm10.toFixed(2) : 'No data'}</td>
+                <td>{d.index ? d.index : 'No data'}</td>
                 <td>{d.timestamp ? timestamp : 'No data'}</td>
               </tr>
               )

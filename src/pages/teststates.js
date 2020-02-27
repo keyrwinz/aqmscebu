@@ -1,90 +1,76 @@
 import React, {useState, useEffect} from 'react';
 import Layout from "../components/layout"
-import firebase from '../firebase'
-// import RenderData from '../components/RenderData'
-var moment = require('moment');
+import firebase, { firebaseFunctions } from '../firebase'
+import RenderData from '../components/RenderData'
+import RenderPMSData from '../components/RenderPMSData'
 
-const updateTime = () => {
-  console.log(moment().format('D MMMM YYYY h:mm:ss a'))
-}
+const moment = require('moment');
 
 const TestStates = () => {
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
 
+  const addtemp = 10 + 6;
+
   const addData = async (node) => {
-    const db = firebase.firestore();
+    const db = await firebase.firestore();
+    const time = new Date()
     db.collection('aqms-cebu').doc(node).collection('states').doc().set({
       humidity: 100,
-      no2: 3,
-      so2: 3,
-      pm10: 3,
-      pm25: 3,
-      temp: 37,
-      timestamp: moment().format('D MMMM YYYY h:mm:ss a')
+      no2: addtemp,
+      so2: addtemp,
+      pm10: addtemp,
+      pm25: addtemp,
+      temp: addtemp,
+      timestamp: time.getTime()
     }).then(function() {
       console.log("Document successfully written!");
     })
     .catch(function(error) {
-        console.error("Error writing document: ", error);
+      console.error("Error writing document: ", error);
     });
   }
 
   useEffect(() => {
+    setNode('usc-mc');
+    console.log(firebaseFunctions.database.ref('/'))
+  }, [])
+
+  useEffect(() => {
     let array = []
-    firebase.firestore().collection('aqms-cebu').doc(node).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
+    firebase.firestore().collection('aqms-cebu').doc(node).collection('test').orderBy('timestamp').onSnapshot(snapshot => {
       let changes = snapshot.docChanges()
       changes.forEach(change => {
         let d = change.doc.data()
         array.push(d)
       })
-      setData(array)
+      // console.log(array)
+      let result = array.sort((a, b) => b.timestamp - a.timestamp);
+      setData(result)
     });
   }, [node]);
+
+  let renderComponent = null
+
+  if(node === 'usc-mc'){
+    renderComponent = <RenderPMSData data={data} />
+  }else if(node === 'usc-sc'){
+    renderComponent = <RenderData data={data}/>
+  }
 
   return (
     <Layout>
       <div className="container-sm">
         <div className="row">
           <div className="col">
-            <button onClick={() => setNode('usc-mc')} >USC-MC</button>
-            <button onClick={() => setNode('usc-sc')} >USC-SC</button>
+            <button onClick={() => setNode('usc-mc')}>USC-MC</button>
+            <button onClick={() => setNode('usc-sc')}>USC-SC</button>
             <button style={{float: 'right'}} onClick={() => addData(node)}>Add data</button>
-            {/* <button style={{float: 'right'}} onClick={() => updateTime()}>Update time</button> */}
           </div>
         </div>
         <div className="row">
-          <div className="col">
-            <table className="table table-dark">
-              <thead>
-                <tr>
-                  <th scope="col">PM<sub>2.5</sub></th>
-                  <th scope="col">PM<sub>10</sub></th>
-                  <th scope="col">NO<sub>2</sub></th>
-                  <th scope="col">SO<sub>2</sub></th>
-                  <th scope="col">Humidity</th>
-                  <th scope="col">Temperature</th>
-                  <th scope="col">Timestamp</th>
-                </tr>
-              </thead>
-              <tbody>
-              {/* <RenderData data={data}/> */}
-                { data.map((d) => {
-                  return(
-                    <tr key={d.timestamp}>
-                      <td>{d.pm25 ? d.pm25 : 'No data'}</td>
-                      <td>{d.pm10 ? d.pm10 : 'No data'}</td>
-                      <td>{d.no2 ? d.no2 : 'No data'}</td>
-                      <td>{d.so2 ? d.so2 : 'No data'}</td>
-                      <td>{d.humidity ? d.humidity : 'No data'}</td>
-                      <td>{d.temp ? d.temp : 'No data'}</td>
-                      <td>{d.timestamp ? d.timestamp.toString() : 'No data'}</td>
-                    </tr>
-                    )
-                  })
-                }
-              </tbody>
-            </table>
+          <div className="col" style={{color: 'black'}}>
+            {renderComponent}
           </div>
         </div>
         <div className="row">

@@ -6,34 +6,26 @@ import ReactPaginate from 'react-paginate';
 const TestData = () => {
   const [data, setData] = useState([]);
   const [displayData, setDisplayData] = useState([]);
-  const [prevState, setPrevState] = useState(null);
-  const [slice, setSlice] = useState({f: 0, s: 20})
+
+  let slice = {};
+  const perPage = 20
 
   useEffect(() => {
-    setDisplayData(data.slice(0, 20));
+    setDisplayData(data.slice(0, perPage));
   }, [data])
 
   const onPageClick = args => {
-    let page = args.selected + 1
-    if(page > prevState){
-      if(slice.f === 0){
-        setSlice({
-          f: 20,
-          s: page * 20
-        })
-      }else{
-        setSlice({
-          f: (page * 20) - 20,
-          s: page * 20
-        })
-      }
-    }else{
-      setSlice({
-        f: ((page * 20) - 20),
-        s: page * 20
-      })
+    let selected = args.selected;
+    let start = Math.ceil(selected * perPage);
+    let end = start + perPage
+
+    slice = {f: start, s: end}
+
+    //if last page
+    if(selected + 1 == Math.ceil(data.length/perPage)){
+      slice = {f: start, s: data.length - 1}
     }
-    setPrevState(args.selected)
+
     setDisplayData(data.slice(slice.f, slice.s))
   }
 
@@ -44,7 +36,7 @@ const TestData = () => {
           <div className="col">
             <CSVReader onFileLoaded={data => setData(data)} />
           </div>
-        </div>
+        </div> 
         <div className="row">
           <div className="col">
             <table className="table table-dark">
@@ -88,6 +80,7 @@ const TestData = () => {
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
                 onPageChange={(args) => onPageClick(args)}
+                onClick={() => console.log('clicked')}
                 subContainerClassName={'pages pagination'}
               />
             </div>

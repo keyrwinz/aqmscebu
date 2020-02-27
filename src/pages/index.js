@@ -25,17 +25,53 @@ const fetchData = async (node) => {
 
 const IndexPage = () => {
   const [selectedNode, setSelectedNode] = useState('usc-mc');
+  const [data, setData] = useState([])
   const [state, setState] = useState({})
-  const [data, setData] = useState([]);
+  const [ContentButton, setContentButton] = useState(0)
 
   // fetch data
   useEffect(() => {
-    fetchData(selectedNode).then(data => setState(data.state))
+    // fetchData(selectedNode).then(data => setState(data.state))
+
+    let array = []
+    firebase.firestore().collection('aqms-cebu').doc(selectedNode).collection('test').orderBy('timestamp').onSnapshot(snapshot => {
+      let changes = snapshot.docChanges()
+      changes.forEach(change => {
+        let d = change.doc.data()
+        array.push(d)
+      })
+      // console.log(array)
+      let result = array.sort((a, b) => b.timestamp - a.timestamp);
+      setData(result)
+    });
   }, [selectedNode])
+
+  let pm25 = []
+  let pm10 = []
+
+  if(selectedNode === 'usc-mc'){
+    pm25 = data.map(x => [x.timestamp, x.pm25 === 'No data' ? 0 : x.pm25])
+    pm10 = data.map(x => [x.timestamp, x.pm10 === 'No data' ? 0 : x.pm10])
+  }
 
   const onClickMapNode = nodeId => {
     setSelectedNode(nodeId)
   }
+
+  const scrollTo = (param) => {
+    const id = document.querySelector(param);
+    if(id){
+      const coordinates = id.getBoundingClientRect();
+      const currentY = window.scrollY;
+      setTimeout(() => {
+          window.scrollTo({
+            top: coordinates.top + currentY,
+            behavior: "smooth"
+          });
+      }, 200);
+    }
+  }
+
 
   return (
     <Layout>
@@ -43,8 +79,16 @@ const IndexPage = () => {
         <SEO title="Home" />
         <div className="container-sm">
           <div className="row">
-            <div className="col-md-12 col-12">
+            <div className="col-md-8 col-12">
               <input className="form-control" id="nodeSearch" type="text" placeholder="Search..." />
+            </div>
+            <div className="col-md-4 col-12 groupBtn">
+                <button className="btn btn-dark" 
+                        style={{width: '35%'}} type="button" 
+                        onClick={() => scrollTo('#first-graph')}
+                >Graph</button>
+                <div style={{borderLeft: '4px solid #1e1e1e', height:'25px'}}></div>
+                <a className="btn btn-dark" style={{width: '35%'}} type="button" href="/teststates">AQ Data</a>
             </div>
           </div>
           <div className="row">
@@ -63,17 +107,17 @@ const IndexPage = () => {
               <AirQualitySummary nodeName={selectedNode} data={state}/>
             </div>
           </div>
-          <div className="row graph">
+          <div id="first-graph" className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for PM2.5" unit="ug/m3"/>
+                <DataGraph title="Data Measurement for PM2.5" unit="ug/m3" label="PM2.5" states={pm25}/>
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for PM10" unit="ug/m3"/>
+                <DataGraph title="Data Measurement for PM10" unit="ug/m3" label="PM10" states={pm10}/>
               </div>
             </div>
           </div>
