@@ -10,15 +10,16 @@ const styles = {
 }
 
 const AQContent = ({nodeName, data}) => {
+  // console.log(data)
   return (
     <Style>
       <div className="measurements-tab">
         <div className="measurements-label bold green">
-          <span>GOOD</span>
+          <span>..</span>
         </div>
         <div style={{width: '100%', borderTop: '1px solid black', paddingTop: '20px'}}>
           <span style={{marginLeft: '20px'}}>Measurements:</span>
-          <span style={{fontSize: '-webkit-xxx-large', marginLeft: '20px'}}>{nodeName}</span>
+          <span style={{fontSize: '-webkit-xxx-large', marginLeft: '20px', textTransform: 'uppercase'}}>{nodeName}</span>
           <div style={{marginLeft: '45px', marginTop: '10px'}}>
             <ul style={{listStyle: 'none', fontWeight: 'bold', color: 'white'}}>
               <li>PM2.5: 

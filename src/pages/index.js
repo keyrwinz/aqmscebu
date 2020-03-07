@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import styled from 'styled-components';
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import DataGraph from '../components/Graphs/TimeSeriesGraph'
+import TimeSeriesGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AirQualitySummary from '../components/AirQualitySummary'
 import {
@@ -18,9 +18,8 @@ const MapWrapped = withScriptjs(withGoogleMap(GoogleMap));
 const fetchData = async (node) => {
   let data;
   const db = firebase.firestore();
-  const doc = await db.collection("aqms-cebu").doc(node).get();
-  data = doc.data()
-  return data
+  const doc = await db.collection("aqms-cebu").doc(node).collection('states').get();
+  return doc
 };
 
 const IndexPage = () => {
@@ -29,30 +28,35 @@ const IndexPage = () => {
   const [state, setState] = useState({})
   const [ContentButton, setContentButton] = useState(0)
 
-  // fetch data
-  useEffect(() => {
-    // fetchData(selectedNode).then(data => setState(data.state))
-
-    let array = []
-    firebase.firestore().collection('aqms-cebu').doc(selectedNode).collection('test').orderBy('timestamp').onSnapshot(snapshot => {
-      let changes = snapshot.docChanges()
-      changes.forEach(change => {
-        let d = change.doc.data()
-        array.push(d)
-      })
-      // console.log(array)
-      let result = array.sort((a, b) => b.timestamp - a.timestamp);
-      setData(result)
-    });
-  }, [selectedNode])
-
   let pm25 = []
   let pm10 = []
+  let no2 = []
+  let so2 = []
 
-  if(selectedNode === 'usc-mc'){
-    pm25 = data.map(x => [x.timestamp, x.pm25 === 'No data' ? 0 : x.pm25])
-    pm10 = data.map(x => [x.timestamp, x.pm10 === 'No data' ? 0 : x.pm10])
-  }
+  // fetch data
+  useEffect(() => {
+    let unsubscribe = firebase.firestore().collection('aqms-cebu').doc(selectedNode).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
+      const newData = [];
+      let length = 0;
+      let currentState = {}
+      snapshot.docs.forEach(d => {
+        newData.push(d.data());
+      });
+      length = newData.length
+      currentState = {...newData[length - 1]}
+      setState(currentState)
+      setData(newData.sort((a, b) => b.timestamp - a.timestamp));
+    }); 
+
+    return () => {
+      unsubscribe()
+    }
+  }, [selectedNode]);
+
+  pm25 = data.map(x => [x.timestamp, x.pm25 === 'No data' ? 0 : x.pm25])
+  pm10 = data.map(x => [x.timestamp, x.pm10 === 'No data' ? 0 : x.pm10])
+  no2 = data.map(x => [x.timestamp, x.no2 === 'No data' ? 0 : x.no2])
+  so2 = data.map(x => [x.timestamp, x.so2 === 'No data' ? 0 : x.so2])
 
   const onClickMapNode = nodeId => {
     setSelectedNode(nodeId)
@@ -110,28 +114,28 @@ const IndexPage = () => {
           <div id="first-graph" className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for PM2.5" unit="ug/m3" label="PM2.5" states={pm25}/>
+                <TimeSeriesGraph title="Data Measurement for PM2.5" unit="ug/m3" label="PM2.5" states={pm25}/>
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for PM10" unit="ug/m3" label="PM10" states={pm10}/>
+                <TimeSeriesGraph title="Data Measurement for PM10" unit="ug/m3" label="PM10" states={pm10}/>
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for NO2" unit="ppm"/>
+                <TimeSeriesGraph title="Data Measurement for NO2" unit="ppm" label="NO2" states={no2}/>
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <DataGraph title="Data Measurement for SO2"unit="ppm"/>
+                <TimeSeriesGraph title="Data Measurement for SO2"unit="ppm" label="SO2" states={so2}/>
               </div>
             </div>
           </div>

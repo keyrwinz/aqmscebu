@@ -10222,4 +10222,16 @@ a.text-dark:hover, a.text-dark:focus {
     border-color: #dee2e6;
   }
 }
+
+ul.pagination.mypagination {
+  position: fixed;
+  bottom: 85px !important;
+}
+
+.footer.page-footer.borderbox {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
 /*# sourceMappingURL=bootstrap.css.map */

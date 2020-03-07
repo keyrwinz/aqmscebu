@@ -34,7 +34,8 @@ const Layout = ({ children }) => {
           color: 'hsla(0,0%,100%,.7)',
           fontFamily: 'Roboto, sans-serif',
           paddingTop: '15px',
-          paddingBottom: '12px'
+          paddingBottom: '12px',
+          minHeight: '100vh'
         }}
       >
         <main>{children}</main>

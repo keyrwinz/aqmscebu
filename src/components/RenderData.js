@@ -213,7 +213,8 @@ const RenderData = ({data}) => {
   const [displayData, setDisplayData] = useState([]);
   
   let slice = {};
-  const perPage = 20
+  //show per page
+  const perPage = 10
 
   useEffect(() => {
     setDisplayData(data.slice(0, perPage));
@@ -250,8 +251,9 @@ const RenderData = ({data}) => {
         </thead>
         <tbody>
           { displayData.map((d,index) => {
-            let strTime = String(d.timestamp)
-            let multiplier = strTime.length === 10 ? 1000 : 1
+            // let strTime = String(parseInt(d.timestamp))
+            // let multiplier = strTime.length === 10 ? 1000 : 1
+            let multiplier = 1000
             let epoch_time = new Date(d.timestamp * multiplier)
             var timestamp = epoch_time.toLocaleString('en-GB', 
               { month: 'short', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true } );
@@ -273,7 +275,7 @@ const RenderData = ({data}) => {
       <ReactPaginate
         breakClassName={'page-item'}
         breakLinkClassName={'page-link'}
-        containerClassName={'pagination'}
+        containerClassName={'pagination mypagination'}
         pageClassName={'page-item'}
         pageLinkClassName={'page-link'}
         previousClassName={'page-item'}
@@ -284,7 +286,7 @@ const RenderData = ({data}) => {
         previousLabel={'previous'}
         nextLabel={'next'}
         breakLabel={'...'}
-        pageCount={data.length / 20}
+        pageCount={data.length / 10}
         marginPagesDisplayed={2}
         pageRangeDisplayed={5}
         onPageChange={(args) => onPageClick(args)}

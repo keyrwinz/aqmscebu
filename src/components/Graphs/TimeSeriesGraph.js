@@ -11,7 +11,6 @@ const LoadableChart = Loadable({
 });
 
 const ComponentWithChart = ({ title, unit, states, label = "" }) => {
-    
   const graphData = {
     series: [{
       name: label,
@@ -20,6 +19,14 @@ const ComponentWithChart = ({ title, unit, states, label = "" }) => {
     options: {
       chart: {
         type: 'area',
+        id: 'realtime',
+        animations: {
+          enabled: true,
+          easing: 'linear',
+          dynamicAnimation: {
+            speed: 1000
+          }
+        },
         stacked: false,
         height: 350,
         foreColor: 'red',

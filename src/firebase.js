@@ -15,6 +15,4 @@ if (typeof window !== 'undefined'){
   firebase.initializeApp(firebaseConfig);
 }
 
-export const firebaseFunctions = firebase.functions()
-
 export default firebase;

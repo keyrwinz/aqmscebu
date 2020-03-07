@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import Layout from "../components/layout"
-import firebase, { firebaseFunctions } from '../firebase'
+import styled from 'styled-components';
+import firebase from '../firebase'
 import RenderData from '../components/RenderData'
 import RenderPMSData from '../components/RenderPMSData'
-
-const moment = require('moment');
 
 const TestStates = () => {
   const [data, setData] = useState([])
@@ -32,66 +31,69 @@ const TestStates = () => {
   }
 
   useEffect(() => {
-    console.log('pre-loading')
-    firebase.firestore().collection('aqms-cebu').doc(node).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
-      // console.log({ snapshot: snapshot.docs })
+    let unsubscribe = firebase.firestore().collection('aqms-cebu').doc(node).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
       const newData = [];
       snapshot.docs.forEach(d => {
         newData.push(d.data());
       });
       setData(newData.sort((a, b) => b.timestamp - a.timestamp));
-      // // let array = []
-      // let changes = snapshot.docChanges()
-      // // changes.forEach(change => {
-      // //   let d = change.doc.data()
-      // //   array.push(d)
-      // // });
-      // const newData = changes.map(change => change.doc.data()).sort((a, b) => b.timestamp - a.timestamp);
-      // // let result = array.sort((a, b) => b.timestamp - a.timestamp);
-      // setData(() => ([...data, ...newData]));
-      // console.log(result)
-    });
-
-    // return () => {
-    //   unsubscribe();
-    // }
-
+    }); 
+    
+    return () => {
+      unsubscribe()
+    }
   }, [node, setData]);
 
   let renderComponent = null
-
   if(node === 'usc-mc'){
     renderComponent = <RenderData data={data} />
   }else if(node === 'usc-sc'){
     renderComponent = <RenderData data={data}/>
   }
 
+  const onChangeHandler = (e) => {
+    setNode(e.target.value)
+  }
+
   return (
     <Layout>
-      <div className="container-sm">
-        <div className="row">
-          <div className="col">
-            <button onClick={() => setNode('usc-mc')}>USC-MC</button>
-            <button onClick={() => setNode('usc-sc')}>USC-SC</button>
-            <button style={{float: 'right'}} onClick={() => addData(node)}>Add data</button>
+      <Style>
+        <div className="container-sm">
+          <div className="row">
+            <div className="col statesHeader">
+              <div className="form-group">
+                <label>Select Node</label>
+                <select className="form-control customSelect" onChange={e => onChangeHandler(e)} value={node}>
+                  <option>usc-mc</option>
+                  <option>usc-sc</option>
+                </select>
+              </div>
+              {/* <button className="floatRight" onClick={() => addData(node)}>Add data</button> */}
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="col" style={{color: 'black'}}>
-            {renderComponent}
+          <div className="row">
+            <div className="col" style={{color: 'black'}}>
+              {renderComponent}
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <div className="footer borderbox">
-              © {new Date().getFullYear()}, Built by
-              <a href="#">{``}WAYDSB Thesis2020</a>
+          <div className="row">
+            <div className="col">
+              <div className="footer page-footer borderbox">
+                © {new Date().getFullYear()}, Built by
+                <a href="#">{``}WAYDSB Thesis2020</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Style>
     </Layout>
   )
 }
+
+const Style = styled.div`
+  .customSelect {
+    width: 200px;
+  }
+`;
 
 export default TestStates
