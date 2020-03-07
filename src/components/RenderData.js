@@ -250,10 +250,11 @@ const RenderData = ({data}) => {
         </thead>
         <tbody>
           { displayData.map((d,index) => {
-            let epoch_time = new Date(d.timestamp * 1000)
+            let strTime = String(d.timestamp)
+            let multiplier = strTime.length === 10 ? 1000 : 1
+            let epoch_time = new Date(d.timestamp * multiplier)
             var timestamp = epoch_time.toLocaleString('en-GB', 
               { month: 'short', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true } );
-            console.log('timestamp: ', d.timestamp, 'date: ', timestamp)
             return(
               <tr key={index}>
                 <td>{d.pm25 ? d.pm25 : 'No data'}</td>

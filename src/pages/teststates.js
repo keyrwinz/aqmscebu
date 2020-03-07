@@ -10,18 +10,18 @@ const TestStates = () => {
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
 
-  const addtemp = 10 + 6;
+  const addtemp = 10;
 
   const addData = async (node) => {
     const db = await firebase.firestore();
     const time = new Date()
     db.collection('aqms-cebu').doc(node).collection('states').doc().set({
       humidity: 100,
-      no2: addtemp,
-      so2: addtemp,
-      pm10: addtemp,
-      pm25: addtemp,
-      temp: addtemp,
+      no2: addtemp + 1,
+      so2: addtemp + 2,
+      pm10: addtemp + 3,
+      pm25: addtemp + 4,
+      temp: addtemp + 5,
       timestamp: time.getTime()
     }).then(function() {
       console.log("Document successfully written!");
@@ -32,28 +32,36 @@ const TestStates = () => {
   }
 
   useEffect(() => {
-    setNode('usc-mc');
-    console.log(firebaseFunctions.database.ref('/'))
-  }, [])
-
-  useEffect(() => {
-    let array = []
-    firebase.firestore().collection('aqms-cebu').doc(node).collection('test').orderBy('timestamp').onSnapshot(snapshot => {
-      let changes = snapshot.docChanges()
-      changes.forEach(change => {
-        let d = change.doc.data()
-        array.push(d)
-      })
-      // console.log(array)
-      let result = array.sort((a, b) => b.timestamp - a.timestamp);
-      setData(result)
+    console.log('pre-loading')
+    firebase.firestore().collection('aqms-cebu').doc(node).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
+      // console.log({ snapshot: snapshot.docs })
+      const newData = [];
+      snapshot.docs.forEach(d => {
+        newData.push(d.data());
+      });
+      setData(newData.sort((a, b) => b.timestamp - a.timestamp));
+      // // let array = []
+      // let changes = snapshot.docChanges()
+      // // changes.forEach(change => {
+      // //   let d = change.doc.data()
+      // //   array.push(d)
+      // // });
+      // const newData = changes.map(change => change.doc.data()).sort((a, b) => b.timestamp - a.timestamp);
+      // // let result = array.sort((a, b) => b.timestamp - a.timestamp);
+      // setData(() => ([...data, ...newData]));
+      // console.log(result)
     });
-  }, [node]);
+
+    // return () => {
+    //   unsubscribe();
+    // }
+
+  }, [node, setData]);
 
   let renderComponent = null
 
   if(node === 'usc-mc'){
-    renderComponent = <RenderPMSData data={data} />
+    renderComponent = <RenderData data={data} />
   }else if(node === 'usc-sc'){
     renderComponent = <RenderData data={data}/>
   }

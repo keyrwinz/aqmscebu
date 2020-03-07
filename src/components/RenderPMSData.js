@@ -248,7 +248,7 @@ const RenderData = ({data}) => {
         </thead>
         <tbody>
           { displayData.map((d,index) => {
-            let epoch_time = new Date(d.timestamp * 1000)
+            let epoch_time = new Date(d.timestamp)
             var timestamp = epoch_time.toLocaleString('en-GB', 
               { month: 'short', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true } );
             return(
