@@ -10,7 +10,35 @@ const styles = {
 }
 
 const AQContent = ({nodeName, data}) => {
-  // console.log(data)
+  let {pm25, pm10, so2, no2} = data;
+  let pm25Badge = ''
+  let pm10Badge = ''
+  let so2Badge = ''
+  let no2Badge = ''
+
+  const makeBadge = ({bg, color, text}) => {
+    return (<span className="badge badge-secondary" style={{background: bg, color: color}}>{text}</span>)
+  }
+
+
+  if(data.pm25){
+    if(pm25 >= 0 && pm25 <= 54){
+      pm25Badge = makeBadge({bg: 'green', text: 'Good'})
+    }else if(pm25 >= 55 && pm25 <= 154){
+      pm25Badge = makeBadge({bg: 'Yellow', color: 'black', text: 'Fair'})
+    }else if(pm25 >= 155 && pm25 <= 254){
+      pm25Badge = makeBadge({bg: 'Orange', text: 'Unhealthy'})
+    }else if(pm25 >= 255 && pm25 <= 354){
+      pm25Badge = makeBadge({bg: 'Red', text: 'Very Unhealthy'})
+    }else if(pm25 >= 355 && pm25 <= 424){
+      pm25Badge = makeBadge({bg: 'Purple', text: 'Acutely Unhealthy'})
+    }else if(pm25 >= 425 && pm25 <= 504){
+      pm25Badge = makeBadge({bg: 'Maroon', text: 'Emergency'})
+    }else{
+      pm25Badge = makeBadge({text: 'invalid'})
+    }
+  }
+
   return (
     <Style>
       <div className="measurements-tab">
@@ -18,12 +46,22 @@ const AQContent = ({nodeName, data}) => {
           <span>..</span>
         </div>
         <div style={{width: '100%', borderTop: '1px solid black', paddingTop: '20px'}}>
-          <span style={{marginLeft: '20px'}}>Measurements:</span>
-          <span style={{fontSize: '-webkit-xxx-large', marginLeft: '20px', textTransform: 'uppercase'}}>{nodeName}</span>
-          <div style={{marginLeft: '45px', marginTop: '10px'}}>
+          <div className="row" style={{paddingLeft: '20px'}}>
+            <div className="col col-12" style={{maxHeight: '100px'}}>
+              <span>Selected Node: </span>
+            </div>
+            <div className="col col-12" style={{display: 'flex', alignItems: 'center', maxHeight: '50px'}}>
+              <span style={{fontSize: '-webkit-xxx-large', textTransform: 'uppercase'}}>{nodeName}</span>
+            </div>
+            <div className="col col-12" style={{maxHeight: '100px'}}>
+              <span>Measurements:</span>
+            </div>
+          </div>
+          <div style={{marginLeft: '45px'}}>
             <ul style={{listStyle: 'none', fontWeight: 'bold', color: 'white'}}>
               <li>PM2.5: 
                 <span style={styles.spanMeasurements}> {data.pm25 || 'loading...'} </span>
+                {pm25Badge}
               </li>
               <li>PM10: 
                 <span style={styles.spanMeasurements}> {data.pm10 || 'loading...'} </span>

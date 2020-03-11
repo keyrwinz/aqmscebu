@@ -10,30 +10,39 @@ import {
   withScriptjs
 } from "react-google-maps";
 import firebase from '../firebase'
+import nodes from "../components/GoogleMap/AqmsNodes";
 
 const API_MAP = 'AIzaSyCeEtWrTm6_sPXDtijAIYYyxWG6_dMSME4';
+const WEATHER_API = 'e48a7eafd3731c7718a4c34b6a06e78f';
 const MapWrapped = withScriptjs(withGoogleMap(GoogleMap));
 
-
-const fetchData = async (node) => {
-  let data;
-  const db = firebase.firestore();
-  const doc = await db.collection("aqms-cebu").doc(node).collection('states').get();
-  return doc
-};
 
 const IndexPage = () => {
   const [selectedNode, setSelectedNode] = useState('usc-mc');
   const [data, setData] = useState([])
   const [state, setState] = useState({})
   const [ContentButton, setContentButton] = useState(0)
+  const [weather, setWeather] = useState({})
 
   let pm25 = []
   let pm10 = []
   let no2 = []
   let so2 = []
 
-  // fetch data
+  const fetchWeather = async ({lat, lng}) => {
+    let response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${WEATHER_API}/${lat},${lng}`)
+    let data = await response.json()
+    setWeather(data)
+  }
+
+  const fetchData = async (node) => {
+    let data;
+    const db = firebase.firestore();
+    const doc = await db.collection("aqms-cebu").doc(node).collection('states').get();
+    return doc
+  };
+
+  // fetch data from database (selected node)
   useEffect(() => {
     let unsubscribe = firebase.firestore().collection('aqms-cebu').doc(selectedNode).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
       const newData = [];
@@ -53,13 +62,19 @@ const IndexPage = () => {
     }
   }, [selectedNode]);
 
+  useEffect(() => {
+    // console.log(weather)
+  }, [weather])
+
   pm25 = data.map(x => [x.timestamp, x.pm25 === 'No data' ? 0 : x.pm25])
   pm10 = data.map(x => [x.timestamp, x.pm10 === 'No data' ? 0 : x.pm10])
   no2 = data.map(x => [x.timestamp, x.no2 === 'No data' ? 0 : x.no2])
   so2 = data.map(x => [x.timestamp, x.so2 === 'No data' ? 0 : x.so2])
 
   const onClickMapNode = nodeId => {
+    let nodeObj = nodes.nodesLoc.find(obj => obj.id === nodeId)
     setSelectedNode(nodeId)
+    // fetchWeather(nodeObj)
   }
 
   const scrollTo = (param) => {
