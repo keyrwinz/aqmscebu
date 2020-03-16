@@ -63,7 +63,7 @@ const IndexPage = () => {
   }, [selectedNode]);
 
   useEffect(() => {
-    // console.log(weather)
+    console.log(weather)
   }, [weather])
 
   pm25 = data.map(x => [x.timestamp, x.pm25 === 'No data' ? 0 : x.pm25])
@@ -91,27 +91,28 @@ const IndexPage = () => {
     }
   }
 
-
   return (
     <Layout>
       <Style>
         <SEO title="Home" />
-        <div className="container-sm">
+        <div className="container-fluid main-container">
           <div className="row">
-            <div className="col-md-8 col-12">
+            <div className="col-md-7 col-12">
               <input className="form-control" id="nodeSearch" type="text" placeholder="Search..." />
             </div>
-            <div className="col-md-4 col-12 groupBtn">
+            <div className="col-md-5 col-12 groupBtn">
                 <button className="btn btn-dark" 
                         style={{width: '35%'}} type="button" 
                         onClick={() => scrollTo('#first-graph')}
-                >Graph</button>
+                >View Graph</button>
                 <div style={{borderLeft: '4px solid #1e1e1e', height:'25px'}}></div>
-                <a className="btn btn-dark" style={{width: '35%'}} type="button" href="/teststates">AQ Data</a>
+                <a className="btn btn-dark" style={{width: '35%'}} type="button" href="/realtimedata">Realtime Data</a>
+                <div style={{borderLeft: '4px solid #1e1e1e', height:'25px'}}></div>
+                <a className="btn btn-dark" style={{width: '35%'}} type="button" href="/teststates">Download Data</a>
             </div>
           </div>
           <div className="row">
-            <div className="col-md-8 col-12 googleMap" style={{minHeight: '500px'}}>
+            <div className="col-md-7 col-12 googleMap" style={{minHeight: '500px'}}>
               <MapWrapped
                 nodeSelectFunc={onClickMapNode}
                 googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${
@@ -122,7 +123,7 @@ const IndexPage = () => {
                 mapElement={<div style={{ height: `100%` }} />}
               />
             </div>
-            <div className="col-md-4 col-12">
+            <div className="col-md-5 col-12">
               <AirQualitySummary nodeName={selectedNode} data={state}/>
             </div>
           </div>
@@ -171,6 +172,13 @@ const IndexPage = () => {
 const Style = styled.div`
   flex: 1 1 auto;
   
+  @media (min-width: 768px) {
+    .main-container {
+      padding-left: 30px !important;
+      padding-right: 30px !important;
+    }
+  }
+
   div.topDiv {
     display: flex;
     width: 100%;
