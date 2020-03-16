@@ -7,7 +7,7 @@
 2. Git bash
 3. Gatsbyjs cli (optional)
 
-**Instructions:**
+**Instructions:**  
 Step 1: Fork this repo 'https://github.com/keyrwinz/aqmscebu'  
 Step 2: Make a clone from your forked repo (git clone from git bash)  
 Step 3: Make a folder then adto i clone  
