@@ -2,6 +2,7 @@ import React from "react"
 // import Loadable from '@loadable/component'
 import Spinner from '../Spinner'
 import Loadable from 'react-loadable';
+import Color from '../Theme/ColorPallete'
  
 const LoadableChart = Loadable({
   loader: () => import('../../../node_modules/react-apexcharts/src/react-apexcharts'),
@@ -29,7 +30,7 @@ const ComponentWithChart = ({ title, unit, states, label = "" }) => {
         },
         stacked: false,
         height: 350,
-        foreColor: 'red',
+        foreColor: Color.secondaryColor,
         zoom: {
           type: 'x',
           enabled: true,
@@ -55,7 +56,7 @@ const ComponentWithChart = ({ title, unit, states, label = "" }) => {
           fontSize:  '14px',
           fontWeight:  'bold',
           fontFamily:  undefined,
-          color:  'red'
+          color:  Color.secondaryColor
         },
       },
       fill: {
@@ -88,8 +89,8 @@ const ComponentWithChart = ({ title, unit, states, label = "" }) => {
         enabled: true,
         style: {
           fontSize: '12px',
-          color: 'red',
-          fontColor: 'red'
+          color: Color.secondaryColor,
+          fontColor: Color.secondaryColor
         },
         x: {
           formatter: function (val) {

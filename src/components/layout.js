@@ -10,6 +10,7 @@ import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 
 import Header from "./header"
+import Color from './Theme/ColorPallete'
 import "./layout.css"
 import '../assets/css/bootstrap.css'
 
@@ -30,8 +31,8 @@ const Layout = ({ children }) => {
       <div
         style={{
           boxSizing: 'border-box',
-          background: '#121212',
-          color: 'hsla(0,0%,100%,.7)',
+          background: Color.primaryColor,
+          color: Color.secondaryColor,
           fontFamily: 'Roboto, sans-serif',
           paddingTop: '15px',
           paddingBottom: '12px',

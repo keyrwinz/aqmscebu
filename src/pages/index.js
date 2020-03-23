@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import styled from 'styled-components';
 import Layout from "../components/layout"
+import Color from '../components/Theme/ColorPallete'
 import SEO from "../components/seo"
 import TimeSeriesGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
@@ -23,6 +24,7 @@ const IndexPage = () => {
   const [state, setState] = useState({})
   const [ContentButton, setContentButton] = useState(0)
   const [weather, setWeather] = useState({})
+  const [loading, setLoading] = useState(false)
 
   let pm25 = []
   let pm10 = []
@@ -43,27 +45,29 @@ const IndexPage = () => {
   };
 
   // fetch data from database (selected node)
-  useEffect(() => {
-    let unsubscribe = firebase.firestore().collection('aqms-cebu').doc(selectedNode).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
-      const newData = [];
-      let length = 0;
-      let currentState = {}
-      snapshot.docs.forEach(d => {
-        newData.push(d.data());
-      });
-      length = newData.length
-      currentState = {...newData[length - 1]}
-      setState(currentState)
-      setData(newData.sort((a, b) => b.timestamp - a.timestamp));
-    }); 
+  // useEffect(() => {
+  //   setLoading(true)
+  //   let unsubscribe = firebase.firestore().collection('aqms-cebu').doc(selectedNode).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
+  //     const newData = [];
+  //     let length = 0;
+  //     let currentState = {}
+  //     snapshot.docs.forEach(d => {
+  //       newData.push(d.data());
+  //     });
+  //     length = newData.length
+  //     currentState = {...newData[length - 1]}
+  //     setState(currentState)
+  //     setData(newData.sort((a, b) => b.timestamp - a.timestamp));
+  //     setLoading(false)
+  //   }); 
 
-    return () => {
-      unsubscribe()
-    }
-  }, [selectedNode]);
+  //   return () => {
+  //     unsubscribe()
+  //   }
+  // }, [selectedNode]);
 
   useEffect(() => {
-    console.log(weather)
+    // console.log(weather)
   }, [weather])
 
   pm25 = data.map(x => [x.timestamp, x.pm25 === 'No data' ? 0 : x.pm25])
@@ -104,11 +108,15 @@ const IndexPage = () => {
                 <button className="btn btn-dark" 
                         style={{width: '35%'}} type="button" 
                         onClick={() => scrollTo('#first-graph')}
-                >View Graph</button>
-                <div style={{borderLeft: '4px solid #1e1e1e', height:'25px'}}></div>
-                <a className="btn btn-dark" style={{width: '35%'}} type="button" href="/realtimedata">Realtime Data</a>
-                <div style={{borderLeft: '4px solid #1e1e1e', height:'25px'}}></div>
-                <a className="btn btn-dark" style={{width: '35%'}} type="button" href="/teststates">Download Data</a>
+                ><div className="optionsBtn">View Graph</div></button>
+                <div className="divider"></div>
+                <a className="btn btn-dark" style={{width: '35%'}} type="button" href="/realtimedata">
+                  <div className="optionsBtn">Realtime Data</div>
+                </a>
+                <div className="divider"></div>
+                <a className="btn btn-dark" style={{width: '35%'}} type="button" href="/teststates">
+                  <div className="optionsBtn">Download Data</div>
+                </a>
             </div>
           </div>
           <div className="row">
@@ -124,7 +132,7 @@ const IndexPage = () => {
               />
             </div>
             <div className="col-md-5 col-12">
-              <AirQualitySummary nodeName={selectedNode} data={state}/>
+              <AirQualitySummary loading={loading} nodeName={selectedNode} data={state}/>
             </div>
           </div>
           <div id="first-graph" className="row graph">
@@ -157,9 +165,9 @@ const IndexPage = () => {
           </div>
           <div className="row">
             <div className="col">
-              <div className="footer borderbox">
+              <div className="footer borderbox" style={{color: 'white'}}>
                 © {new Date().getFullYear()}, Built by
-                <a href="#">{``}WAYDSB Thesis2020</a>
+                <a href="#">&nbsp;&nbsp;WAYDSB Thesis2020</a>
               </div>
             </div>
           </div>
@@ -177,6 +185,20 @@ const Style = styled.div`
       padding-left: 30px !important;
       padding-right: 30px !important;
     }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: ${Color.thirdColor};
+    min-height: 91px;
+  }
+
+  .borderbox {
+    border-radius: 3px;
+    border: 2px solid ${Color.fourthColor};
+    background: ${Color.thirdColor}
   }
 
   div.topDiv {
@@ -206,6 +228,38 @@ const Style = styled.div`
   }
   .googleMap, .graph {
     color: black
+  }
+
+  @media (max-width: 768px) {
+    .groupBtn a, .groupBtn button {
+      min-height: 62px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 1130px) {
+    .groupBtn a, .groupBtn button {
+      min-height: 69.5px 
+    }
+  }
+
+  @media (min-width: 1130px) {
+    .optionsBtn {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .groupBtn a, .groupBtn button {
+      max-height: 62.5px
+    }
+  }
+
+  .divider {
+    border-left: 2px solid ${Color.fourthColor};
+    height: 25px;
+    margin: 0 7px;
   }
 `;
 

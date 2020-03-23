@@ -1,11 +1,15 @@
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
 import React from "react"
+import Color from './Theme/ColorPallete'
+import Logo1 from '../assets/images/logo1.png'
+import Logo2 from '../assets/images/logo2.png'
+import Logo3 from '../assets/images/logo3.png'
 
 const Header = ({ siteTitle }) => (
   <header
     style={{
-      background: `#272727`,
+      background: Color.thirdColor,
       height: '50px',
       display: 'flex',
       justifyContent: 'center',
@@ -13,7 +17,7 @@ const Header = ({ siteTitle }) => (
     }}
   >
     <div>
-      <span style={{ margin: 0 }}>
+      <span style={{ margin: 0}}>
         <Link
           to="/"
           style={{
@@ -22,6 +26,7 @@ const Header = ({ siteTitle }) => (
             textAlign: 'center'
           }}
         >
+          <img style={{margin: 0}} src={Logo1} alt="logo" height="50" width="50"/>
           {siteTitle}
         </Link>
       </span>
