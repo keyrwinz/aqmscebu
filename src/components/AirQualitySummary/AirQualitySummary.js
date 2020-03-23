@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { Carousel } from 'react-bootstrap'
-import HappyFace from "../assets/images/happy2.png";
-import styled from 'styled-components';
-import Color from './Theme/ColorPallete'
-import Spinner from './Spinner'
+import CautionaryStatements from './CautionaryStatements'
+import HappyFace from "../../assets/images/happy2.png"
+import styled from 'styled-components'
+import Color from '../Theme/ColorPallete'
+import Spinner from '../Spinner'
 
 const styles = {
   spanMeasurements: {
@@ -12,30 +13,65 @@ const styles = {
   }
 }
 
-const makeBadge = ({bg, color, text}) => {
-  return (<span className="badge badge-secondary" style={{background: bg, color: color}}>{text}</span>)
+const makeBadge = (classification) => {
+  let color = null
+  ,   bg = null
+
+  switch (classification) {
+    case 'Good':
+      bg = 'Green'
+      break;
+    case 'Fair':
+      bg = 'Yellow'
+      color = 'Black'
+      break;
+    case 'Unhealthy':
+      bg = 'Orange'
+      color = 'Black'
+      break;
+    case 'Very Unhealthy':
+      bg = 'Red'
+      break;
+    case 'Acutely Unhealthy':
+      bg = 'Purple'
+      break;
+    case 'Emergency':
+      bg = 'Maroon'
+      break;
+    default:
+      break;
+  }
+
+  return (<span className="badge badge-secondary" style={{background: bg, color: color}}>{classification}</span>)
 }
 
 const AQContent = ({loading, nodeName, data}) => {
   let {pm25, pm10, so2, no2, temp, humidity} = data;
-  let pm25Badge = ''
-  let pm10Badge = ''
-  let so2Badge = ''
-  let no2Badge = ''
+  let pm25Data = 'No data'
+  ,   pm10Data = 'No data'
+  ,   so2Data= 'No data'
+  ,   no2Data= 'No data'
+  ,   tempData = 'No data'
+  ,   humidityData = 'No data'
+  ,   pm25Badge = ''
+  ,   pm10Badge = ''
+  ,   so2Badge = ''
+  ,   no2Badge = ''
+  
+  let paramClassifications = {
+    PM25: null,
+    PM10: null,
+    SO2: null,
+    NO2: null
+  }
+
 
   pm25 = 10
   pm10 = 10
-  no2 = 0.64
+  no2 = 0.67
   so2 = 0.123
   temp = 35
   humidity = 75
-
-  let pm25Data = 'No data'
-  let pm10Data = 'No data'
-  let so2Data= 'No data'
-  let no2Data= 'No data'
-  let tempData = 'No data'
-  let humidityData = 'No data'
 
   if(loading){
     pm25Data = <Spinner small={true}/>
@@ -49,58 +85,64 @@ const AQContent = ({loading, nodeName, data}) => {
       pm25Data = pm25
       //classification of air quality
       if(pm25 >= 0 && pm25 <= 54){
-        pm25Badge = makeBadge({bg: 'green', text: 'Good'})
+        paramClassifications['PM25'] = 'Good'
       }else if(pm25 >= 55 && pm25 <= 154){
-        pm25Badge = makeBadge({bg: 'Yellow', color: 'black', text: 'Fair'})
+        paramClassifications['PM25'] = 'Fair'
       }else if(pm25 >= 155 && pm25 <= 254){
-        pm25Badge = makeBadge({bg: 'Orange', color: 'black', text: 'Unhealthy'})
+        paramClassifications['PM25'] = 'Unhealthy'
       }else if(pm25 >= 255 && pm25 <= 354){
-        pm25Badge = makeBadge({bg: 'Red', text: 'Very Unhealthy'})
+        paramClassifications['PM25'] = 'Very Unhealthy'
       }else if(pm25 >= 355 && pm25 <= 424){
-        pm25Badge = makeBadge({bg: 'Purple', text: 'Acutely Unhealthy'})
+        paramClassifications['PM25'] = 'Acutely Unhealthy'
       }else if(pm25 >= 425 && pm25 <= 504){
-        pm25Badge = makeBadge({bg: 'Maroon', text: 'Emergency'})
+        paramClassifications['PM25'] = 'Emergency'
       }else{
-        pm25Badge = makeBadge({text: 'invalid'})
+        paramClassifications['PM25'] = 'invalid'
       }
+      
+      pm25Badge = makeBadge(paramClassifications['PM25'])
     }
   
     if(pm10 || pm10 === 0){
       pm10Data = pm10
       if(pm10 >= 0 && pm10 <= 54){
-        pm10Badge = makeBadge({bg: 'green', text: 'Good'})
+        paramClassifications['PM10'] = 'Good'
       }else if(pm10 >= 55 && pm10 <= 154){
-        pm10Badge = makeBadge({bg: 'Yellow', color: 'black', text: 'Fair'})
+        paramClassifications['PM10'] = 'Fair'
       }else if(pm10 >= 155 && pm10 <= 254){
-        pm10Badge = makeBadge({bg: 'Orange', color: 'black', text: 'Unhealthy'})
+        paramClassifications['PM10'] = 'Unhealthy'
       }else if(pm10 >= 255 && pm10 <= 354){
-        pm10Badge = makeBadge({bg: 'Red', text: 'Very Unhealthy'})
+        paramClassifications['PM10'] = 'Very Unhealthy'
       }else if(pm10 >= 355 && pm10 <= 424){
-        pm10Badge = makeBadge({bg: 'Purple', text: 'Acutely Unhealthy'})
+        paramClassifications['PM10'] = 'Acutely Unhealthy'
       }else if(pm10 >= 425 && pm10 <= 504){
-        pm10Badge = makeBadge({bg: 'Maroon', text: 'Emergency'})
+        paramClassifications['PM10'] = 'Emergency'
       }else{
-        pm10Badge = makeBadge({text: 'invalid'})
+        paramClassifications['PM25'] = 'invalid'
       }
+      
+      pm10Badge = makeBadge(paramClassifications['PM10'])
     }
   
     if(so2 || so2 === 0){
       so2Data = so2
       if(so2 >= 0 && so2 <= 0.034){
-        so2Badge = makeBadge({bg: 'green', text: 'Good'})
+        paramClassifications['SO2'] = 'Good'
       }else if(so2 >= 0.035 && so2 <= 0.144){
-        so2Badge = makeBadge({bg: 'Yellow', color: 'black', text: 'Fair'})
+        paramClassifications['SO2'] = 'Fair'
       }else if(so2 >= 0.145 && so2 <= 0.224){
-        so2Badge = makeBadge({bg: 'Orange', color: 'black', text: 'Unhealthy'})
+        paramClassifications['SO2'] = 'Unhealthy'
       }else if(so2 >= 0.225 && so2 <= 0.304){
-        so2Badge = makeBadge({bg: 'Red', text: 'Very Unhealthy'})
+        paramClassifications['SO2'] = 'Very Unhealthy'
       }else if(so2 >= 0.305 && so2 <= 0.604){
-        so2Badge = makeBadge({bg: 'Purple', text: 'Acutely Unhealthy'})
+        paramClassifications['SO2'] = 'Acutely Unhealthy'
       }else if(so2 >= 0.605 && so2 <= 0.804){
-        so2Badge = makeBadge({bg: 'Maroon', text: 'Emergency'})
+        paramClassifications['SO2'] = 'Emergency'
       }else{
-        so2Badge = makeBadge({text: 'invalid'})
+        paramClassifications['PM25'] = 'invalid'
       }
+
+      so2Badge = makeBadge(paramClassifications['SO2'])
     }  
   
     if(no2){
@@ -108,12 +150,14 @@ const AQContent = ({loading, nodeName, data}) => {
       if(no2 >= 0 && no2 <= 0.64){
         //no classification for this range yet
       }else if(no2 >= 0.65 && no2 <= 1.24){
-        no2Badge = makeBadge({bg: 'Purple', text: 'Acutely Unhealthy'})
+        paramClassifications['NO2'] = 'Acutely Unhealthy'
       }else if(no2 >= 1.25 && no2 <= 1.64){
-        no2Badge = makeBadge({bg: 'Maroon', text: 'Emergency'})
+        paramClassifications['NO2'] = 'Emergency'
       }else {
-        no2Badge = makeBadge({text: 'invalid'})
+        paramClassifications['NO2'] = 'invalid'
       }
+
+      no2Badge = makeBadge(paramClassifications['SO2'])
     }
   
     if(temp || temp === 0){
@@ -124,6 +168,8 @@ const AQContent = ({loading, nodeName, data}) => {
       humidityData = humidity
     }
   }
+
+  console.log('after render: ' , paramClassifications)
 
   return (
     <Style>
@@ -175,45 +221,9 @@ const AQContent = ({loading, nodeName, data}) => {
         <div className="cautionary-content">
           <div style={{height: '320px'}}>
             {/* <img src={HappyFace} alt="happy-face" height="200" width="200" style={{display: 'block', margin: '30px auto'}} /> */}
-            <Carousel style={{height: '100%'}}>
+            <Carousel style={{height: '100%'}} interval="5000">
               <Carousel.Item>
-                <div className="carousel-content">
-                  <h3 className="carousel-content-title">PM10 (Unhealthy)</h3>
-                  <div id="style-5" style={{maxHeight: '200px', overflow: 'auto', margin: '0 60px'}}>
-                    <ul>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                    </ul>
-                  </div>
-                </div>
-              </Carousel.Item>
-              <Carousel.Item>
-                <div className="carousel-content">
-                  <h3 className="carousel-content-title">PM10 (health)</h3>
-                  <div id="style-5" style={{maxHeight: '200px', overflow: 'auto', margin: '0 60px'}}>
-                    <ul>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                    </ul>
-                  </div>
-                </div>
-              </Carousel.Item>
-              <Carousel.Item>
-                <div className="carousel-content">
-                  <h3 className="carousel-content-title">PM10 (emergency)</h3>
-                  <div id="style-5" style={{maxHeight: '200px', overflow: 'auto', margin: '0 60px'}}>
-                    <ul>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
-                    </ul>
-                  </div>
-                </div>
+                <CautionaryStatements param='pm25' classification='Acutely Unhealthy' />
               </Carousel.Item>
             </Carousel>
           </div>

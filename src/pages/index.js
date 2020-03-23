@@ -5,7 +5,7 @@ import Color from '../components/Theme/ColorPallete'
 import SEO from "../components/seo"
 import TimeSeriesGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
-import AirQualitySummary from '../components/AirQualitySummary'
+import AirQualitySummary from '../components/AirQualitySummary/AirQualitySummary'
 import {
   withGoogleMap,
   withScriptjs
