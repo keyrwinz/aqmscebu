@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { Carousel } from 'react-bootstrap'
 import HappyFace from "../assets/images/happy2.png";
 import styled from 'styled-components';
 import Color from './Theme/ColorPallete'
@@ -172,34 +173,49 @@ const AQContent = ({loading, nodeName, data}) => {
             <span>the General Public</span>
         </div>
         <div className="cautionary-content">
-          <div style={{marginTop: '10px'}}>
+          <div style={{height: '320px'}}>
             {/* <img src={HappyFace} alt="happy-face" height="200" width="200" style={{display: 'block', margin: '30px auto'}} /> */}
-            <div id="carouselExampleIndicators" className="carousel slide" data-ride="carousel">
-              <ol className="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-              </ol>
-              <div className="carousel-inner">
-                <div className="carousel-item active">
-                  <img className="d-block w-100" src={HappyFace} alt="First slide" height="200" width="200"/>
+            <Carousel style={{height: '100%'}}>
+              <Carousel.Item>
+                <div className="carousel-content">
+                  <h3 className="carousel-content-title">PM10 (Unhealthy)</h3>
+                  <div id="style-5" style={{maxHeight: '200px', overflow: 'auto', margin: '0 60px'}}>
+                    <ul>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                    </ul>
+                  </div>
                 </div>
-                <div className="carousel-item">
-                  <img className="d-block w-100" src={HappyFace} alt="Second slide" height="200" width="200"/>
+              </Carousel.Item>
+              <Carousel.Item>
+                <div className="carousel-content">
+                  <h3 className="carousel-content-title">PM10 (health)</h3>
+                  <div id="style-5" style={{maxHeight: '200px', overflow: 'auto', margin: '0 60px'}}>
+                    <ul>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                    </ul>
+                  </div>
                 </div>
-                <div className="carousel-item">
-                  <img className="d-block w-100" src={HappyFace} alt="Third slide" height="200" width="200"/>
+              </Carousel.Item>
+              <Carousel.Item>
+                <div className="carousel-content">
+                  <h3 className="carousel-content-title">PM10 (emergency)</h3>
+                  <div id="style-5" style={{maxHeight: '200px', overflow: 'auto', margin: '0 60px'}}>
+                    <ul>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                      <li>People with respiratory disease, such as asthma, should limit outdoor exertion.</li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-              <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span className="sr-only">Previous</span>
-              </a>
-              <a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                <span className="sr-only">Next</span>
-              </a>
-            </div>
+              </Carousel.Item>
+            </Carousel>
           </div>
         </div>
       </div>
@@ -256,7 +272,39 @@ const Style = styled.div`
     padding-top: 0px;
     min-height: 320px;
     max-height: 320px;
-    overflow: auto;
+  }
+
+  .carousel-content {
+    margin-top: 10px;
+    color: white;
+  }
+  .carousel-content-title {
+    text-align: center;
+  }
+  .carousel-content ul {
+    list-style: none;
+  }
+
+  #style-5::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+      background-color: black;
+  }
+
+  #style-5::-webkit-scrollbar {
+      width: 5px;
+      background-color: black;
+  }
+
+  #style-5::-webkit-scrollbar-thumb {
+    background-color: #99DDFF;
+    
+    background-image: -webkit-gradient(linear, 0 0, 0 100%,
+      color-stop(.5, rgba(255, 255, 255, .2)),
+      color-stop(.5, transparent), to(transparent));
+  }
+
+  .carousel-control-prev, .carousel-control-next { 
+    width: 10%;
   }
 `;
 
