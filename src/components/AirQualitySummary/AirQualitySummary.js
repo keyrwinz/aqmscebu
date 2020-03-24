@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Carousel } from 'react-bootstrap'
 import CautionaryStatements from './CautionaryStatements'
-import HappyFace from "../../assets/images/happy2.png"
 import styled from 'styled-components'
 import Color from '../Theme/ColorPallete'
 import Spinner from '../Spinner'
@@ -58,18 +57,19 @@ const AQContent = ({loading, nodeName, data}) => {
   ,   so2Badge = ''
   ,   no2Badge = ''
   
+  let paramKeys = []
   let paramClassifications = {
     PM25: null,
     PM10: null,
-    SO2: null,
-    NO2: null
+    NO2: null,
+    SO2: null
   }
 
 
-  pm25 = 10
-  pm10 = 10
-  no2 = 0.67
-  so2 = 0.123
+  pm25 = 154
+  pm10 = 355
+  no2 = 0.64
+  so2 = 0.034
   temp = 35
   humidity = 75
 
@@ -97,7 +97,7 @@ const AQContent = ({loading, nodeName, data}) => {
       }else if(pm25 >= 425 && pm25 <= 504){
         paramClassifications['PM25'] = 'Emergency'
       }else{
-        paramClassifications['PM25'] = 'invalid'
+        paramClassifications['PM25'] = 'Invalid'
       }
       
       pm25Badge = makeBadge(paramClassifications['PM25'])
@@ -118,12 +118,27 @@ const AQContent = ({loading, nodeName, data}) => {
       }else if(pm10 >= 425 && pm10 <= 504){
         paramClassifications['PM10'] = 'Emergency'
       }else{
-        paramClassifications['PM25'] = 'invalid'
+        paramClassifications['PM25'] = 'Invalid'
       }
       
       pm10Badge = makeBadge(paramClassifications['PM10'])
     }
-  
+    
+    if(no2){
+      no2Data = no2
+      if(no2 >= 0 && no2 <= 0.64){
+        //no classification for this range yet
+      }else if(no2 >= 0.65 && no2 <= 1.24){
+        paramClassifications['NO2'] = 'Acutely Unhealthy'
+      }else if(no2 >= 1.25 && no2 <= 1.64){
+        paramClassifications['NO2'] = 'Emergency'
+      }else {
+        paramClassifications['NO2'] = 'Invalid'
+      }
+
+      no2Badge = makeBadge(paramClassifications['NO2'])
+    }
+
     if(so2 || so2 === 0){
       so2Data = so2
       if(so2 >= 0 && so2 <= 0.034){
@@ -139,26 +154,11 @@ const AQContent = ({loading, nodeName, data}) => {
       }else if(so2 >= 0.605 && so2 <= 0.804){
         paramClassifications['SO2'] = 'Emergency'
       }else{
-        paramClassifications['PM25'] = 'invalid'
+        paramClassifications['PM25'] = 'Invalid'
       }
 
       so2Badge = makeBadge(paramClassifications['SO2'])
     }  
-  
-    if(no2){
-      no2Data = no2
-      if(no2 >= 0 && no2 <= 0.64){
-        //no classification for this range yet
-      }else if(no2 >= 0.65 && no2 <= 1.24){
-        paramClassifications['NO2'] = 'Acutely Unhealthy'
-      }else if(no2 >= 1.25 && no2 <= 1.64){
-        paramClassifications['NO2'] = 'Emergency'
-      }else {
-        paramClassifications['NO2'] = 'invalid'
-      }
-
-      no2Badge = makeBadge(paramClassifications['SO2'])
-    }
   
     if(temp || temp === 0){
       tempData = temp
@@ -167,9 +167,9 @@ const AQContent = ({loading, nodeName, data}) => {
     if(humidity || humidity === 0){
       humidityData = humidity
     }
-  }
 
-  console.log('after render: ' , paramClassifications)
+    paramKeys = Object.keys(paramClassifications)
+  }
 
   return (
     <Style>
@@ -220,11 +220,14 @@ const AQContent = ({loading, nodeName, data}) => {
         </div>
         <div className="cautionary-content">
           <div style={{height: '320px'}}>
-            {/* <img src={HappyFace} alt="happy-face" height="200" width="200" style={{display: 'block', margin: '30px auto'}} /> */}
             <Carousel style={{height: '100%'}} interval="5000">
-              <Carousel.Item>
-                <CautionaryStatements param='pm25' classification='Acutely Unhealthy' />
-              </Carousel.Item>
+              {paramKeys.map((key, index) => {
+                return (
+                  <Carousel.Item key={index}>
+                    <CautionaryStatements param={key} classification={paramClassifications[key]} />
+                  </Carousel.Item>
+                )
+              })}
             </Carousel>
           </div>
         </div>
@@ -290,6 +293,11 @@ const Style = styled.div`
   }
   .carousel-content-title {
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+    margin-right: 10px;
   }
   .carousel-content ul {
     list-style: none;
@@ -314,7 +322,7 @@ const Style = styled.div`
   }
 
   .carousel-control-prev, .carousel-control-next { 
-    width: 10%;
+    width: 45px;
   }
 `;
 

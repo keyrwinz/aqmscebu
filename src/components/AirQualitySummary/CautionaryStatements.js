@@ -1,4 +1,6 @@
 import React from 'react'; 
+import HappyFace from "../../assets/images/happy2.png"
+import SadFace from "../../assets/images/sad2.png"
 
 const CautionaryStatements = ({param, classification}) => {
 
@@ -18,48 +20,64 @@ const CautionaryStatements = ({param, classification}) => {
     /*[11]*/ 'Industrial activities, except that which is vital for public safety and health, should be curtailed.'
   ]
 
-  let ListStatements = ''
+  let DisplayList = null
+  let ListStatements = []
 
-  switch(param){
-    case 'pm25':
-      if(classification === 'Good'){
-        ListStatements = [Statements[0]]
-      }else if(classification === 'Fair'){
-        ListStatements = [Statements[0]]
-      }else if(classification === 'Unhealthy'){
-        ListStatements = [Statements[1]]
-      }else if(classification === 'Very Unhealthy'){
-        ListStatements = [Statements[2], Statements[3], Statements[4], Statements[5]]
-      }else if(classification === 'Acutely Unhealthy'){
-        ListStatements = [Statements[6], Statements[3], Statements[4], Statements[7], Statements[8]]
-      }else if(classification === 'Emergency'){
-        ListStatements = [Statements[9], Statements[10], Statements[11]]
+  if(param){
+    if(classification === 'Good'){
+      ListStatements = [Statements[0]]
+    }else if(classification === 'Fair'){
+      ListStatements = [Statements[0]]
+    }else if(classification === 'Unhealthy'){
+      ListStatements = [Statements[1]]
+    }else if(classification === 'Very Unhealthy'){
+      ListStatements = [Statements[2], Statements[3], Statements[4], Statements[5]]
+    }else if(classification === 'Acutely Unhealthy'){
+      ListStatements = [Statements[6], Statements[3], Statements[4], Statements[7], Statements[8]]
+    }else if(classification === 'Emergency'){
+      ListStatements = [Statements[9], Statements[10], Statements[11]]
+    }else{
+      ListStatements = ['No classification']
+    }
+  }else{
+    ListStatements = ['No parameter was passed']
+  }
+
+  let style = {
+    maxHeight: '200px', overflow: 'auto', margin: '0 60px', position: 'relative',height: '215px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+
+  if(ListStatements){
+    DisplayList = ListStatements.map((statement, index) => {
+      if(statement === 'None'){
+        return (
+          <li key={index} style={{margin: 0}}>
+            <img key={index} src={HappyFace} alt="happy-face" height="140" width="140" style={{margin: 0, marginTop: '20px'}}/>
+            <p style={{margin: 0, paddingTop: '10px', textAlign: 'center'}}>{statement}</p>
+          </li>
+        )
+      }else if(statement === 'No classification'){
+        return (
+          <li key={index} style={{margin: 0}}>
+            <img key={index} src={SadFace} alt="happy-face" height="140" width="140" style={{margin: 0, marginTop: '20px'}}/>
+            <p style={{margin: 0, paddingTop: '10px', textAlign: 'center'}}>{statement}</p>
+          </li>
+        )
       }else{
-        ListStatements = ['Invalid']
+        return (<li key={index}>{statement}</li>)
       }
-      // console.log('param: ', param)
-      // console.log('cstatements: ', ListStatements)
-      break;
-    case 'pm10':
-      console.log('pm10 napasa')
-      break;
-    case 'so2':
-      console.log('so2 napasa')
-      break;
-    case 'no2':
-      console.log('no2 napasa')
-      break;
-    default:
-      console.log('invalid')
-      break;
+    })
   }
 
   return (
     <div className="carousel-content">
-      <h3 className="carousel-content-title">{param}&nbsp;&nbsp;({classification})</h3>
-      <div id="style-5" style={{maxHeight: '200px', overflow: 'auto', margin: '0 60px'}}>
-        <ul>
-          {ListStatements ? ListStatements.map((statement, index) => <li key={index}>{statement}</li>) : ''}
+      <h3 className="carousel-content-title">{param}&nbsp;&nbsp;{classification ? `(${classification})` : ''}</h3>
+      <div id="style-5" style={style}>
+        <ul style={{margin: '0', position: 'absolute', top: 0, paddingRight: '7px'}}>
+          {DisplayList}
         </ul>
       </div>
     </div>
