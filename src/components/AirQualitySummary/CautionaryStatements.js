@@ -1,10 +1,11 @@
 import React from 'react'; 
-import HappyFace from "../../assets/images/happy2.png"
-import SadFace from "../../assets/images/sad2.png"
+import HappyFace from "../../assets/images/happy.png"
+import SmileFace from "../../assets/images/smile.png"
+import SadFace from "../../assets/images/sad.png"
 
 const CautionaryStatements = ({param, classification}) => {
 
-  // console.log(param, classification)
+  console.log(param, classification)
   const Statements = [
     /*[0]*/ 'None',
     /*[1]*/ 'People with respiratory disease, such as asthma, should limit outdoor exertion.',
@@ -20,13 +21,16 @@ const CautionaryStatements = ({param, classification}) => {
     /*[11]*/ 'Industrial activities, except that which is vital for public safety and health, should be curtailed.'
   ]
 
+  let emoticon = null
   let DisplayList = null
   let ListStatements = []
 
   if(param){
     if(classification === 'Good'){
+      emoticon = HappyFace
       ListStatements = [Statements[0]]
     }else if(classification === 'Fair'){
+      emoticon = SmileFace
       ListStatements = [Statements[0]]
     }else if(classification === 'Unhealthy'){
       ListStatements = [Statements[1]]
@@ -37,6 +41,7 @@ const CautionaryStatements = ({param, classification}) => {
     }else if(classification === 'Emergency'){
       ListStatements = [Statements[9], Statements[10], Statements[11]]
     }else{
+      emoticon = SadFace
       ListStatements = ['No classification']
     }
   }else{
@@ -52,17 +57,10 @@ const CautionaryStatements = ({param, classification}) => {
 
   if(ListStatements){
     DisplayList = ListStatements.map((statement, index) => {
-      if(statement === 'None'){
+      if(statement === 'None' || statement === 'No classification'){
         return (
           <li key={index} style={{margin: 0}}>
-            <img key={index} src={HappyFace} alt="happy-face" height="140" width="140" style={{margin: 0, marginTop: '20px'}}/>
-            <p style={{margin: 0, paddingTop: '10px', textAlign: 'center'}}>{statement}</p>
-          </li>
-        )
-      }else if(statement === 'No classification'){
-        return (
-          <li key={index} style={{margin: 0}}>
-            <img key={index} src={SadFace} alt="happy-face" height="140" width="140" style={{margin: 0, marginTop: '20px'}}/>
+            <img key={index} src={emoticon} alt="emoticon-face" height="140" width="140" style={{margin: 0, marginTop: '20px'}}/>
             <p style={{margin: 0, paddingTop: '10px', textAlign: 'center'}}>{statement}</p>
           </li>
         )

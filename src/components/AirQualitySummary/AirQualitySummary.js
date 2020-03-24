@@ -66,10 +66,10 @@ const AQContent = ({loading, nodeName, data}) => {
   }
 
 
-  pm25 = 154
-  pm10 = 355
-  no2 = 0.64
-  so2 = 0.034
+  pm25 = 50
+  pm10 = 154
+  no2 = 1.2
+  so2 = 0.99
   temp = 35
   humidity = 75
 
@@ -118,7 +118,7 @@ const AQContent = ({loading, nodeName, data}) => {
       }else if(pm10 >= 425 && pm10 <= 504){
         paramClassifications['PM10'] = 'Emergency'
       }else{
-        paramClassifications['PM25'] = 'Invalid'
+        paramClassifications['PM10'] = 'Invalid'
       }
       
       pm10Badge = makeBadge(paramClassifications['PM10'])
@@ -154,7 +154,7 @@ const AQContent = ({loading, nodeName, data}) => {
       }else if(so2 >= 0.605 && so2 <= 0.804){
         paramClassifications['SO2'] = 'Emergency'
       }else{
-        paramClassifications['PM25'] = 'Invalid'
+        paramClassifications['SO2'] = 'Invalid'
       }
 
       so2Badge = makeBadge(paramClassifications['SO2'])
@@ -174,10 +174,10 @@ const AQContent = ({loading, nodeName, data}) => {
   return (
     <Style>
       <div className="measurements-tab">
-        <div className="measurements-label bold green">
+        <div className="weather-row bold green">
           <span>..</span>
         </div>
-        <div style={{width: '100%', borderTop: `1px solid ${Color.fourthColor}`, paddingTop: '20px'}}>
+        <div style={{width: '100%', borderTop: `1px solid ${Color.fourthColor}`}}>
           <div className="row" style={{paddingLeft: '20px'}}>
             <div className="col col-12" style={{maxHeight: '100px'}}>
               <span>Selected Node: </span>
@@ -220,7 +220,7 @@ const AQContent = ({loading, nodeName, data}) => {
         </div>
         <div className="cautionary-content">
           <div style={{height: '320px'}}>
-            <Carousel style={{height: '100%'}} interval="5000">
+            <Carousel style={{height: '100%'}} interval="7000">
               {paramKeys.map((key, index) => {
                 return (
                   <Carousel.Item key={index}>
@@ -255,10 +255,11 @@ const Style = styled.div`
     background: ${Color.thirdColor};
   }
 
-  .measurements-label {
-    align-self: center; 
+  .weather-row {
     margin-top: 5px; 
     margin-bottom: 5px;
+    max-height: 51px;
+    min-height: 51px;
   }
 
   .cautionary-tab {
