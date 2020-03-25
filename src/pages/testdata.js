@@ -1,29 +1,29 @@
-import React, {useState, useEffect} from 'react';
-import Layout from "../components/layout"
+import React, { useState, useEffect } from 'react'
+import ReactPaginate from 'react-paginate'
 import CSVReader from 'react-csv-reader'
-import ReactPaginate from 'react-paginate';
+import Layout from '../components/layout'
 
 const TestData = () => {
-  const [data, setData] = useState([]);
-  const [displayData, setDisplayData] = useState([]);
+  const [data, setData] = useState([])
+  const [displayData, setDisplayData] = useState([])
 
-  let slice = {};
+  let slice = {}
   const perPage = 20
 
   useEffect(() => {
-    setDisplayData(data.slice(0, perPage));
+    setDisplayData(data.slice(0, perPage))
   }, [data])
 
-  const onPageClick = args => {
-    let selected = args.selected;
-    let start = Math.ceil(selected * perPage);
-    let end = start + perPage
+  const onPageClick = (args) => {
+    let selected = args.selected
+    const start = Math.ceil(selected * perPage)
+    const end = start + perPage
 
-    slice = {f: start, s: end}
+    slice = { f: start, s: end }
 
-    //if last page
-    if(selected + 1 == Math.ceil(data.length/perPage)){
-      slice = {f: start, s: data.length - 1}
+    // if last page
+    if (selected + 1 == Math.ceil(data.length / perPage)) {
+      slice = { f: start, s: data.length - 1 }
     }
 
     setDisplayData(data.slice(slice.f, slice.s))
@@ -36,7 +36,7 @@ const TestData = () => {
           <div className="col">
             <CSVReader onFileLoaded={data => setData(data)} />
           </div>
-        </div> 
+        </div>
         <div className="row">
           <div className="col">
             <table className="table table-dark">
@@ -52,16 +52,23 @@ const TestData = () => {
                 {displayData.map((data, index) => {
                   let time = `${data[8]}:${data[9]}:${data[10]}`
                   return (
-                  <tr key={index}>
-                    <td>{data[1]}</td>
-                    <td>{data[2]}</td>
-                    <td>{data[3]}</td>
-                    <td>{time}</td>
-                  </tr>
-                )})}
+                    <tr key={index}>
+                      <td>{data[1]}</td>
+                      <td>{data[2]}</td>
+                      <td>{data[3]}</td>
+                      <td>{time}</td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
-            <div style={{color: 'black', display: 'flex', justifyContent: 'center'}}>
+            <div
+              style={{
+                color: 'black',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
               <ReactPaginate
                 breakClassName={'page-item'}
                 breakLinkClassName={'page-link'}
@@ -79,7 +86,7 @@ const TestData = () => {
                 pageCount={data.length / 20}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
-                onPageChange={(args) => onPageClick(args)}
+                onPageChange={args => onPageClick(args)}
                 onClick={() => console.log('clicked')}
                 subContainerClassName={'pages pagination'}
               />

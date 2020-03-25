@@ -5,13 +5,13 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React from "react"
-import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useStaticQuery, graphql } from 'gatsby'
 
-import Header from "./header"
+import Header from './header'
 import Color from './Theme/ColorPallete'
-import "./layout.css"
+import './layout.css'
 import '../assets/css/bootstrap.css'
 
 const Layout = ({ children }) => {
@@ -36,7 +36,7 @@ const Layout = ({ children }) => {
           fontFamily: 'Roboto, sans-serif',
           paddingTop: '15px',
           paddingBottom: '12px',
-          minHeight: '100vh'
+          minHeight: '100vh',
         }}
       >
         <main>{children}</main>

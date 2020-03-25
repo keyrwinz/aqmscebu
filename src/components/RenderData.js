@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import ReactPaginate from 'react-paginate';
-import styled from 'styled-components'
-import { useTable, usePagination, useSortBy } from 'react-table'
+import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+import ReactPaginate from 'react-paginate'
+// import styled from 'styled-components'
+// import { useTable, usePagination, useSortBy } from 'react-table'
 
 // const Styles = styled.div`
 //   padding: 1rem;
@@ -44,7 +45,7 @@ import { useTable, usePagination, useSortBy } from 'react-table'
 //     getTableBodyProps,
 //     headerGroups,
 //     prepareRow,
-//     page, 
+//     page,
 //     canPreviousPage,
 //     canNextPage,
 //     pageOptions,
@@ -111,7 +112,7 @@ import { useTable, usePagination, useSortBy } from 'react-table'
 //           })}
 //         </tbody>
 //       </table>
-      
+
 //       {/* pagination */}
 //       <div className="pagination">
 //         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
@@ -208,28 +209,27 @@ import { useTable, usePagination, useSortBy } from 'react-table'
 
 // export default App
 
+const RenderData = ({ data }) => {
+  const [displayData, setDisplayData] = useState([])
 
-const RenderData = ({data}) => {
-  const [displayData, setDisplayData] = useState([]);
-  
-  let slice = {};
-  //show per page
+  let slice = {}
+  // show per page
   const perPage = 10
 
   useEffect(() => {
-    setDisplayData(data.slice(0, perPage));
+    setDisplayData(data.slice(0, perPage))
   }, [data])
 
-  const onPageClick = args => {
-    let selected = args.selected;
-    let start = Math.ceil(selected * perPage);
-    let end = start + perPage
+  const onPageClick = (args) => {
+    const { selected } = args
+    const start = Math.ceil(selected * perPage)
+    const end = start + perPage
 
-    slice = {f: start, s: end}
+    slice = { f: start, s: end }
 
-    //if last page
-    if(selected + 1 == Math.ceil(data.length/perPage)){
-      slice = {f: start, s: data.length - 1}
+    // if last page
+    if (selected + 1 === Math.ceil(data.length / perPage)) {
+      slice = { f: start, s: data.length - 1 }
     }
 
     setDisplayData(data.slice(slice.f, slice.s))
@@ -240,24 +240,44 @@ const RenderData = ({data}) => {
       <table className="table table-dark">
         <thead>
           <tr>
-            <th scope="col">PM<sub>2.5</sub></th>
-            <th scope="col">PM<sub>10</sub></th>
-            <th scope="col">NO<sub>2</sub></th>
-            <th scope="col">SO<sub>2</sub></th>
+            <th scope="col">
+              PM
+              <sub>2.5</sub>
+            </th>
+            <th scope="col">
+              PM
+              <sub>10</sub>
+            </th>
+            <th scope="col">
+              NO
+              <sub>2</sub>
+            </th>
+            <th scope="col">
+              SO
+              <sub>2</sub>
+            </th>
             <th scope="col">Humidity</th>
             <th scope="col">Temperature</th>
             <th scope="col">Timestamp</th>
           </tr>
         </thead>
         <tbody>
-          { displayData.map((d,index) => {
+          {displayData.map((d, index) => {
             // let strTime = String(parseInt(d.timestamp))
             // let multiplier = strTime.length === 10 ? 1000 : 1
-            let multiplier = 1000
-            let epoch_time = new Date(d.timestamp * multiplier)
-            var timestamp = epoch_time.toLocaleString('en-GB', 
-              { month: 'short', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true } );
-            return(
+            const multiplier = 1000
+            const epochTime = new Date(d.timestamp * multiplier)
+            const timestamp = epochTime.toLocaleString('en-GB', {
+              month: 'short',
+              day: '2-digit',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric',
+              hour12: true,
+            })
+            return (
+              // eslint-disable-next-line react/no-array-index-key
               <tr key={index}>
                 <td>{d.pm25 ? d.pm25 : 'No data'}</td>
                 <td>{d.pm10 ? d.pm10 : 'No data'}</td>
@@ -267,33 +287,40 @@ const RenderData = ({data}) => {
                 <td>{d.temp ? d.temp : 'No data'}</td>
                 <td>{d.timestamp ? timestamp : 'No data'}</td>
               </tr>
-              )
-            })
-          }
+            )
+          })}
         </tbody>
       </table>
       <ReactPaginate
-        breakClassName={'page-item'}
-        breakLinkClassName={'page-link'}
-        containerClassName={'pagination mypagination'}
-        pageClassName={'page-item'}
-        pageLinkClassName={'page-link'}
-        previousClassName={'page-item'}
-        previousLinkClassName={'page-link'}
-        nextClassName={'page-item'}
-        nextLinkClassName={'page-link'}
-        activeClassName={'active'}
-        previousLabel={'previous'}
-        nextLabel={'next'}
-        breakLabel={'...'}
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination mypagination"
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        previousLinkClassName="page-link"
+        nextClassName="page-item"
+        nextLinkClassName="page-link"
+        activeClassName="active"
+        previousLabel="previous"
+        nextLabel="next"
+        breakLabel="..."
         pageCount={data.length / 10}
         marginPagesDisplayed={2}
         pageRangeDisplayed={5}
         onPageChange={(args) => onPageClick(args)}
-        subContainerClassName={'pages pagination'}
+        subContainerClassName="pages pagination"
       />
     </>
   )
+}
+
+RenderData.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.number),
+}
+
+RenderData.defaultProps = {
+  data: [],
 }
 
 export default RenderData

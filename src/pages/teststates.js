@@ -1,54 +1,64 @@
-import React, {useState, useEffect} from 'react';
-import Layout from "../components/layout"
-import styled from 'styled-components';
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import Layout from '../components/layout'
 import firebase from '../firebase'
 import RenderData from '../components/RenderData'
-import RenderPMSData from '../components/RenderPMSData'
 
 const TestStates = () => {
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
 
-  const addtemp = 10;
+  // const addtemp = 10
 
-  const addData = async (node) => {
-    const db = await firebase.firestore();
-    const time = new Date()
-    db.collection('aqms-cebu').doc(node).collection('states').doc().set({
-      humidity: 100,
-      no2: addtemp + 1,
-      so2: addtemp + 2,
-      pm10: addtemp + 3,
-      pm25: addtemp + 4,
-      temp: addtemp + 5,
-      timestamp: time.getTime()
-    }).then(function() {
-      console.log("Document successfully written!");
-    })
-    .catch(function(error) {
-      console.error("Error writing document: ", error);
-    });
-  }
+  // const addData = async () => {
+  //   const db = await firebase.firestore()
+  //   const time = new Date()
+  //   db.collection('aqms-cebu')
+  //     .doc(node)
+  //     .collection('states')
+  //     .doc()
+  //     .set({
+  //       humidity: 100,
+  //       no2: addtemp + 1,
+  //       so2: addtemp + 2,
+  //       pm10: addtemp + 3,
+  //       pm25: addtemp + 4,
+  //       temp: addtemp + 5,
+  //       timestamp: time.getTime(),
+  //     })
+  //     .then(() => {
+  //       console.log('Document successfully written!')
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error writing document: ', error)
+  //     })
+  // }
 
   useEffect(() => {
-    let unsubscribe = firebase.firestore().collection('aqms-cebu').doc(node).collection('states').orderBy('timestamp').onSnapshot(snapshot => {
-      const newData = [];
-      snapshot.docs.forEach(d => {
-        newData.push(d.data());
-      });
-      setData(newData.sort((a, b) => b.timestamp - a.timestamp));
-    }); 
-    
+    const unsubscribe = firebase
+      .firestore()
+      .collection('aqms-cebu')
+      .doc(node)
+      .collection('states')
+      .orderBy('timestamp')
+      .onSnapshot((snapshot) => {
+        const newData = []
+        snapshot.docs.forEach((d) => {
+          newData.push(d.data())
+        })
+        setData(newData.sort((a, b) => b.timestamp - a.timestamp))
+      })
+
     return () => {
       unsubscribe()
     }
-  }, [node, setData]);
+  }, [node, setData])
 
   let renderComponent = null
-  if(node === 'usc-mc'){
+  if (node === 'usc-mc') {
     renderComponent = <RenderData data={data} />
-  }else if(node === 'usc-sc'){
-    renderComponent = <RenderData data={data}/>
+  } else if (node === 'usc-sc') {
+    renderComponent = <RenderData data={data} />
   }
 
   const onChangeHandler = (e) => {
@@ -62,8 +72,13 @@ const TestStates = () => {
           <div className="row">
             <div className="col statesHeader">
               <div className="form-group">
+                {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                 <label>Select Node</label>
-                <select className="form-control customSelect" onChange={e => onChangeHandler(e)} value={node}>
+                <select
+                  className="form-control customSelect"
+                  onChange={(e) => onChangeHandler(e)}
+                  value={node}
+                >
                   <option>usc-mc</option>
                   <option>usc-sc</option>
                 </select>
@@ -72,15 +87,20 @@ const TestStates = () => {
             </div>
           </div>
           <div className="row">
-            <div className="col" style={{color: 'black'}}>
+            <div className="col" style={{ color: 'black' }}>
               {renderComponent}
             </div>
           </div>
           <div className="row">
             <div className="col">
               <div className="footer page-footer borderbox">
-                © {new Date().getFullYear()}, Built by
-                <a href="#">{``}WAYDSB Thesis2020</a>
+                ©
+                {' '}
+                {new Date().getFullYear()}
+                , Built by
+                <a href="#top">
+                  WAYDSB Thesis2020
+                </a>
               </div>
             </div>
           </div>
@@ -94,6 +114,6 @@ const Style = styled.div`
   .customSelect {
     width: 200px;
   }
-`;
+`
 
 export default TestStates

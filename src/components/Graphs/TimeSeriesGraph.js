@@ -1,22 +1,26 @@
-import React from "react"
-// import Loadable from '@loadable/component'
+import React from 'react'
+import PropTypes from 'prop-types'
+import Loadable from 'react-loadable'
 import Spinner from '../Spinner'
-import Loadable from 'react-loadable';
 import Color from '../Theme/ColorPallete'
- 
+
 const LoadableChart = Loadable({
   loader: () => import('../../../node_modules/react-apexcharts/src/react-apexcharts'),
   loading() {
     return <Spinner />
-  }
-});
+  },
+})
 
-const ComponentWithChart = ({ title, unit, states, label = "" }) => {
+const TimeSeriesGraph = ({
+  title, unit, states, label,
+}) => {
   const graphData = {
-    series: [{
-      name: label,
-      data: states
-    }],
+    series: [
+      {
+        name: label,
+        data: states,
+      },
+    ],
     options: {
       chart: {
         type: 'area',
@@ -25,8 +29,8 @@ const ComponentWithChart = ({ title, unit, states, label = "" }) => {
           enabled: true,
           easing: 'linear',
           dynamicAnimation: {
-            speed: 1000
-          }
+            speed: 1000,
+          },
         },
         stacked: false,
         height: 350,
@@ -34,17 +38,17 @@ const ComponentWithChart = ({ title, unit, states, label = "" }) => {
         zoom: {
           type: 'x',
           enabled: true,
-          autoScaleYaxis: true
+          autoScaleYaxis: true,
         },
         toolbar: {
-          autoSelected: 'zoom'
-        }
+          autoSelected: 'zoom',
+        },
       },
       dataLabels: {
         enabled: false,
-        formatter: function (val) {
+        formatter(val) {
           return val.toFixed(2)
-        }
+        },
       },
       markers: {
         size: 0,
@@ -53,10 +57,10 @@ const ComponentWithChart = ({ title, unit, states, label = "" }) => {
         text: title || 'No title',
         align: 'left',
         style: {
-          fontSize:  '14px',
-          fontWeight:  'bold',
-          fontFamily:  undefined,
-          color:  Color.secondaryColor
+          fontSize: '14px',
+          fontWeight: 'bold',
+          fontFamily: undefined,
+          color: Color.secondaryColor,
         },
       },
       fill: {
@@ -66,60 +70,81 @@ const ComponentWithChart = ({ title, unit, states, label = "" }) => {
           inverseColors: false,
           opacityFrom: 0.5,
           opacityTo: 0,
-          stops: [0, 90, 100]
+          stops: [0, 90, 100],
         },
       },
       yaxis: {
         labels: {
-          formatter: function (val) {
+          formatter(val) {
             return val.toFixed(2)
           },
         },
         title: {
-          text: unit || 'No unit'
+          text: unit || 'No unit',
         },
       },
       xaxis: {
         type: 'datetime',
         title: {
-          text: 'Time'
-        }
+          text: 'Time',
+        },
       },
       tooltip: {
         enabled: true,
         style: {
           fontSize: '12px',
           color: Color.secondaryColor,
-          fontColor: Color.secondaryColor
+          fontColor: Color.secondaryColor,
         },
         x: {
-          formatter: function (val) {
-            let epoch_time = new Date(val*1000)
-            var timestamp = epoch_time.toLocaleString('en-GB', 
-              { month: '2-digit', day: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true } );
+          formatter(val) {
+            const epochTime = new Date(val * 1000)
+            const timestamp = epochTime.toLocaleString('en-GB', {
+              month: '2-digit',
+              day: '2-digit',
+              year: 'numeric',
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric',
+              hour12: true,
+            })
             return timestamp
-          }
+          },
         },
         shared: false,
         y: {
-          formatter: function (val) {
+          formatter(val) {
             return val.toFixed(2)
-          }
-        }
-      }
+          },
+        },
+      },
     },
-  };
+  }
 
   return (
     <>
-      <LoadableChart  
-          options={graphData.options} 
-          series={graphData.series} 
-          type="area"
-          height="350"
+      <LoadableChart
+        options={graphData.options}
+        series={graphData.series}
+        type="area"
+        height="350"
       />
     </>
   )
 }
 
-export default ComponentWithChart
+TimeSeriesGraph.propTypes = {
+  title: PropTypes.string,
+  unit: PropTypes.string,
+  states: PropTypes.arrayOf(PropTypes.string),
+  label: PropTypes.string,
+}
+
+TimeSeriesGraph.defaultProps = {
+  title: '',
+  unit: '',
+  states: [],
+  label: '',
+}
+
+export default TimeSeriesGraph

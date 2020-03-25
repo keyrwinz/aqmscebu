@@ -1,10 +1,8 @@
-import { Link } from "gatsby"
-import PropTypes from "prop-types"
-import React from "react"
+import { Link } from 'gatsby'
+import PropTypes from 'prop-types'
+import React from 'react'
 import Color from './Theme/ColorPallete'
-import Logo1 from '../assets/images/logo1.png'
-import Logo2 from '../assets/images/logo2.png'
-import Logo3 from '../assets/images/logo3.png'
+import Logo1 from '../assets/images/Logo1.png'
 
 const Header = ({ siteTitle }) => (
   <header
@@ -13,20 +11,26 @@ const Header = ({ siteTitle }) => (
       height: '50px',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     }}
   >
     <div>
-      <span style={{ margin: 0}}>
+      <span style={{ margin: 0 }}>
         <Link
           to="/"
           style={{
-            color: `white`,
-            textDecoration: `none`,
-            textAlign: 'center'
+            color: 'white',
+            textDecoration: 'none',
+            textAlign: 'center',
           }}
         >
-          <img style={{margin: 0}} src={Logo1} alt="logo" height="50" width="50"/>
+          <img
+            style={{ margin: 0 }}
+            src={Logo1}
+            alt="logo"
+            height="50"
+            width="50"
+          />
           {siteTitle}
         </Link>
       </span>
@@ -39,7 +43,7 @@ Header.propTypes = {
 }
 
 Header.defaultProps = {
-  siteTitle: ``,
+  siteTitle: '',
 }
 
 export default Header

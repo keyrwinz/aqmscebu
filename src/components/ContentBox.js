@@ -12,12 +12,12 @@ const defaultStyle = {
 
 export default function ContentBox({ children, style }) {
   return (
-    <div style={{...defaultStyle, ...style}}>
+    <div style={{ ...defaultStyle, ...style }}>
       {children}
     </div>
   );
 }
 
 ContentBox.defaultProps = {
-  style: {}
+  style: {},
 }
