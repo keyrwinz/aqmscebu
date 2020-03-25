@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import Clock from 'react-live-clock'
 import { Carousel } from 'react-bootstrap'
 import styled from 'styled-components'
 import CautionaryStatements from './CautionaryStatements'
 import Color from '../Theme/ColorPallete'
 import Spinner from '../Spinner'
+import nodes from '../GoogleMap/AqmsNodes'
+
+const WEATHER_API = 'e48a7eafd3731c7718a4c34b6a06e78f'
 
 const styles = {
   spanMeasurements: {
@@ -49,10 +53,35 @@ const makeBadge = (classification) => {
   )
 }
 
-const AQContent = ({ loading, nodeName, data }) => {
+const AQContent = ({
+  loading, nodeName, data,
+}) => {
   let {
     pm25, pm10, so2, no2, temp, humidity,
   } = data
+
+  const [weatherIcon, setWeatherIcon] = useState(null)
+  const [weather, setWeather] = useState({ loading: true })
+
+  const fetchWeather = async ({ lat, lng }) => {
+    setWeatherIcon(() => <Spinner small />)
+    const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${WEATHER_API}/${lat},${lng}`)
+    const resData = await response.json()
+    const { icon } = resData.currently
+    /* eslint-disable global-require */
+    /* eslint-disable import/no-dynamic-require */
+    const iconSrc = require(`../../assets/weather-icons/${icon}.svg`)
+    setWeatherIcon(() => <img src={iconSrc} alt="weather-icon" />)
+    setWeather(resData)
+  }
+
+  useEffect(() => {
+    const nodeObj = nodes.nodesLoc.find((obj) => obj.id === nodeName)
+    fetchWeather(nodeObj)
+  }, [nodeName])
+
+  console.log(weather)
+
   // eslint-disable-next-line one-var
   let pm25Data = 'No data',
     pm10Data = 'No data',
@@ -182,9 +211,19 @@ const AQContent = ({ loading, nodeName, data }) => {
   return (
     <Style>
       <div className="measurements-tab">
-        <div className="weather-row bold green">
-          {/* <DayIcon /> */}
-          {/* <img src={DayIcon}/> */}
+        <div className="weather-row">
+          {weatherIcon}
+          <span className="clock">
+            <Clock
+              format="h:mm A"
+              ticking
+              timezone="Asia/Singapore"
+            />
+          </span>
+          &nbsp;&nbsp;
+          <span style={{ color: '#fff' }}>Weather:</span>
+          &nbsp;&nbsp;
+          {weather.loading ? <Spinner small /> : weather.currently.summary}
         </div>
         <div
           style={{ width: '100%', borderTop: `1px solid ${Color.fourthColor}` }}
@@ -294,14 +333,6 @@ AQContent.propTypes = {
 }
 
 const Style = styled.div`
-  .bold {
-    font-weight: bold;
-  }
-
-  .green {
-    color: #1cfc03;
-  }
-
   .measurements-tab {
     display: flex;
     flex-flow: column;
@@ -313,10 +344,22 @@ const Style = styled.div`
   }
 
   .weather-row {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    position: relative;
     max-height: 51px;
     min-height: 51px;
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+  }
+
+  .weather-row img {
+    margin: 0;
+    padding: 0;
+  }
+
+  .clock {
+    position: absolute; 
+    right: 0;
   }
 
   .cautionary-tab {

@@ -316,7 +316,7 @@ const RenderData = ({ data }) => {
 }
 
 RenderData.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.number),
+  data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
 }
 
 RenderData.defaultProps = {

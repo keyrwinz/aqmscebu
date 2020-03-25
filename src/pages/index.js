@@ -10,10 +10,8 @@ import SEO from '../components/seo'
 import TimeSeriesGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AirQualitySummary from '../components/AirQualitySummary/AirQualitySummary'
-import nodes from '../components/GoogleMap/AqmsNodes'
 
 const API_MAP = 'AIzaSyCeEtWrTm6_sPXDtijAIYYyxWG6_dMSME4'
-const WEATHER_API = 'e48a7eafd3731c7718a4c34b6a06e78f'
 const MapWrapped = withScriptjs(withGoogleMap(GoogleMap))
 
 
@@ -21,20 +19,12 @@ const IndexPage = () => {
   const [selectedNode, setSelectedNode] = useState('usc-mc')
   const [data, setData] = useState([])
   const [state, setState] = useState({})
-  // const [ContentButton, setContentButton] = useState(0)
-  const [weather, setWeather] = useState({})
   const [loading, setLoading] = useState(false)
 
   let pm25 = []
   let pm10 = []
   let no2 = []
   let so2 = []
-
-  const fetchWeather = async ({ lat, lng }) => {
-    const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${WEATHER_API}/${lat},${lng}`)
-    const resData = await response.json()
-    setWeather(resData)
-  }
 
   // fetch data from database (selected node)
   // useEffect(() => {
@@ -63,15 +53,6 @@ const IndexPage = () => {
   //     unsubscribe()
   //   }
   // }, [selectedNode])
-
-  useEffect(() => {
-    const nodeObj = nodes.nodesLoc.find((obj) => obj.id === selectedNode)
-    fetchWeather(nodeObj)
-  }, [selectedNode])
-
-  useEffect(() => {
-    console.log(weather)
-  }, [weather])
 
   pm25 = data.map((x) => [x.timestamp, x.pm25 === 'No data' ? 0 : x.pm25])
   pm10 = data.map((x) => [x.timestamp, x.pm10 === 'No data' ? 0 : x.pm10])
@@ -144,7 +125,6 @@ const IndexPage = () => {
                 loading={loading}
                 nodeName={selectedNode}
                 data={state}
-                weather={weather}
               />
             </div>
           </div>
