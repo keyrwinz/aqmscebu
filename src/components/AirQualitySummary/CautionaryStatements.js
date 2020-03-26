@@ -68,11 +68,11 @@ const CautionaryStatements = ({ param, classification }) => {
   }
 
   const style = {
-    maxHeight: '200px',
+    maxHeight: '230px',
     overflow: 'auto',
     margin: '0 60px',
     position: 'relative',
-    height: '215px',
+    height: '230px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -87,9 +87,9 @@ const CautionaryStatements = ({ param, classification }) => {
               key={statement.id}
               src={emoticon}
               alt="emoticon-face"
-              height="140"
-              width="140"
-              style={{ margin: 0, marginTop: '20px' }}
+              height="150"
+              width="150"
+              style={{ margin: 0, marginTop: '30px' }}
             />
             <p style={{ margin: 0, paddingTop: '10px', textAlign: 'center' }}>
               {statement.mssg}

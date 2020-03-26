@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { GoogleMap, Marker, InfoWindow } from 'react-google-maps'
 import nodes from './AqmsNodes'
-import nodeIcon from '../../assets/images/node.svg'
+import nodeIcon from '../../assets/images/NodeIcon.png'
 
 const mapStyles = [
   {
@@ -55,7 +55,7 @@ const mapStyles = [
     elementType: 'labels.icon',
     stylers: [
       {
-        visibility: 'on',
+        visibility: 'off',
       },
     ],
   },

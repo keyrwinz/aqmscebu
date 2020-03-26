@@ -71,7 +71,7 @@ const AQContent = ({
     /* eslint-disable global-require */
     /* eslint-disable import/no-dynamic-require */
     const iconSrc = require(`../../assets/weather-icons/${icon}.svg`)
-    setWeatherIcon(() => <img src={iconSrc} alt="weather-icon" />)
+    setWeatherIcon(() => <img src={iconSrc} alt="weather-icon" height="60" />)
     setWeather(resData)
   }
 
@@ -137,7 +137,6 @@ const AQContent = ({
         paramClassifications.PM25 = 'Invalid'
       }
 
-      paramClassifications.WEW = '123'
       pm25Badge = makeBadge(paramClassifications.PM25)
     }
     if (pm10 || pm10 === 0) {
@@ -212,21 +211,23 @@ const AQContent = ({
     <Style>
       <div className="measurements-tab">
         <div className="weather-row">
-          {weatherIcon}
-          <span className="clock">
+          <div className="weather-icon">
+            {weatherIcon}
+          </div>
+          &nbsp;&nbsp;
+          <div className="weather-summary">
+            {weather.loading ? <Spinner small /> : weather.currently.summary}
+          </div>
+          <div className="clock">
             <Clock
               format="h:mm A"
               ticking
               timezone="Asia/Singapore"
             />
-          </span>
-          &nbsp;&nbsp;
-          <span style={{ color: '#fff' }}>Weather:</span>
-          &nbsp;&nbsp;
-          {weather.loading ? <Spinner small /> : weather.currently.summary}
+          </div>
         </div>
         <div
-          style={{ width: '100%', borderTop: `1px solid ${Color.fourthColor}` }}
+          style={{ width: '100%', borderTop: `1px solid ${Color.fourthColor}33` }}
         >
           <div className="row" style={{ paddingLeft: '20px' }}>
             <div className="col col-12" style={{ maxHeight: '100px' }}>
@@ -301,7 +302,7 @@ const AQContent = ({
         </div>
         <div className="cautionary-content">
           <div style={{ height: '320px' }}>
-            <Carousel style={{ height: '100%' }} interval="7000">
+            <Carousel style={{ height: '100%' }} interval="5000">
               {paramKeys.map((key, index) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <Carousel.Item key={index}>
@@ -336,20 +337,23 @@ const Style = styled.div`
   .measurements-tab {
     display: flex;
     flex-flow: column;
-    border: 1px solid ${Color.fourthColor};
     margin-bottom: 10px;
     height: calc(50% - 5px);
-    border-radius: 5px;
     background: ${Color.thirdColor};
   }
 
   .weather-row {
+    color: white;
     position: relative;
     max-height: 51px;
     min-height: 51px;
     display: flex;
     align-items: center;
-    margin: 0 20px;
+    margin-right: 20px;
+    margin-left: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipses;
   }
 
   .weather-row img {
@@ -358,16 +362,19 @@ const Style = styled.div`
   }
 
   .clock {
-    position: absolute; 
     right: 0;
+    position: absolute;
+    height: 51px;
+    display: flex;
+    align-items: center;
+    background: ${Color.thirdColor};
+    padding-left: 10px;
   }
 
   .cautionary-tab {
     display: flex;
     flex-flow: column;
-    border: 1px solid ${Color.fourthColor};
-    height: calc(50% - 5px);
-    border-radius: 5px;
+    height: 400px;
     background: ${Color.thirdColor};
   }
 
@@ -382,7 +389,7 @@ const Style = styled.div`
 
   .cautionary-content {
     width: 100%;
-    border-top: 1px solid ${Color.fourthColor};
+    border-top: 1px solid ${Color.fourthColor}33;
     padding-top: 0px;
     min-height: 320px;
     max-height: 320px;
@@ -430,6 +437,10 @@ const Style = styled.div`
   .carousel-control-prev,
   .carousel-control-next {
     width: 45px;
+  }
+  
+  .carousel-indicators {
+    bottom: -30px !important;
   }
 `
 

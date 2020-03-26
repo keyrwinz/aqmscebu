@@ -192,8 +192,9 @@ const Style = styled.div`
 
   .borderbox {
     border-radius: 3px;
-    border: 2px solid ${Color.fourthColor};
-    background: ${Color.thirdColor}
+    border: 1px solid ${Color.fourthColor}33;
+    background: ${Color.thirdColor};
+    padding: 10px;
   }
 
   div.topDiv {
