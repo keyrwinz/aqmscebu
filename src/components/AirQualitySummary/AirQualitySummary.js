@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import Clock from 'react-live-clock'
-import { Carousel } from 'react-bootstrap'
+import {
+  Carousel, OverlayTrigger, Popover,
+} from 'react-bootstrap'
 import styled from 'styled-components'
 import CautionaryStatements from './CautionaryStatements'
 import Color from '../Theme/ColorPallete'
@@ -15,6 +17,45 @@ const styles = {
     marginLeft: '15px',
     fontWeight: 'normal',
   },
+}
+
+const popover = (param, param2 = null) => {
+  let title = ''
+  let unit = ''
+
+  if (param === 'PM25') {
+    title = 'Particulate Matter 2.5'
+    unit = 'µg/m³'
+  } else if (param === 'PM10') {
+    title = 'Particulate Matter 10'
+    unit = 'µg/m³'
+  } else if (param === 'NO2') {
+    title = 'Nitrogen Dioxide'
+    unit = 'ppm'
+  } else if (param === 'SO2') {
+    title = 'Sulfur Dioxide'
+    unit = 'ppm'
+  } else if (param === 'TEMP') {
+    title = 'Temperature'
+    unit = '°C'
+  } else if (param === 'HUMIDITY') {
+    title = 'Humidity'
+    unit = '%'
+  } else if (param === 'weather') {
+    title = 'Current Weather'
+    unit = param2 || 'No weather data'
+  }
+
+  return (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3">{title}</Popover.Title>
+      <Popover.Content>
+        unit:
+        {' '}
+        <strong>{unit}</strong>
+      </Popover.Content>
+    </Popover>
+  )
 }
 
 const makeBadge = (classification) => {
@@ -212,11 +253,16 @@ const AQContent = ({
       <div className="measurements-tab">
         <div className="weather-row">
           <div className="weather-icon">
-            {weatherIcon}
+            <OverlayTrigger
+              placement="top"
+              overlay={popover('weather', weather.loading ? 'Loading...' : weather.currently.icon)}
+            >
+              <span>{weatherIcon}</span>
+            </OverlayTrigger>
           </div>
           &nbsp;&nbsp;
           <div className="weather-summary">
-            {weather.loading ? <Spinner small /> : weather.currently.summary}
+            {weather.loading ? <Spinner small /> : weather.currently.summary }
           </div>
           <div className="clock">
             <Clock
@@ -259,35 +305,65 @@ const AQContent = ({
               style={{ listStyle: 'none', fontWeight: 'bold', color: 'white' }}
             >
               <li>
-                PM2.5:
+                <OverlayTrigger
+                  placement="top"
+                  overlay={popover('PM25')}
+                >
+                  <span>PM2.5:</span>
+                </OverlayTrigger>
                 <span style={styles.spanMeasurements}>{pm25Data}</span>
                 &nbsp;&nbsp;
                 {pm25Badge}
               </li>
               <li>
-                PM10:
+                <OverlayTrigger
+                  placement="top"
+                  overlay={popover('PM10')}
+                >
+                  <span>PM10:</span>
+                </OverlayTrigger>
                 <span style={styles.spanMeasurements}>{pm10Data}</span>
                 &nbsp;&nbsp;
                 {pm10Badge}
               </li>
               <li>
-                NO2:
+                <OverlayTrigger
+                  placement="top"
+                  overlay={popover('NO2')}
+                >
+                  <span>NO2:</span>
+                </OverlayTrigger>
                 <span style={styles.spanMeasurements}>{no2Data}</span>
                 &nbsp;&nbsp;
                 {no2Badge}
               </li>
               <li>
-                SO2:
+                <OverlayTrigger
+                  placement="top"
+                  overlay={popover('SO2')}
+                >
+                  <span>SO2:</span>
+                </OverlayTrigger>
                 <span style={styles.spanMeasurements}>{so2Data}</span>
                 &nbsp;&nbsp;
                 {so2Badge}
               </li>
               <li>
-                TEMP:
+                <OverlayTrigger
+                  placement="top"
+                  overlay={popover('TEMP')}
+                >
+                  <span>TEMP:</span>
+                </OverlayTrigger>
                 <span style={styles.spanMeasurements}>{tempData}</span>
               </li>
               <li>
-                HUMIDITY:
+                <OverlayTrigger
+                  placement="top"
+                  overlay={popover('HUMIDITY')}
+                >
+                  <span>HUMIDITY:</span>
+                </OverlayTrigger>
                 <span style={styles.spanMeasurements}>{humidityData}</span>
               </li>
             </ul>

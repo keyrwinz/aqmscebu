@@ -131,14 +131,14 @@ const IndexPage = () => {
           <div id="first-graph" className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <TimeSeriesGraph title="Data Measurement for PM2.5" unit="ug/m3" label="PM2.5" states={pm25} />
+                <TimeSeriesGraph title="Data Measurement for PM2.5" unit="µg/m³" label="PM2.5" states={pm25} />
               </div>
             </div>
           </div>
           <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
-                <TimeSeriesGraph title="Data Measurement for PM10" unit="ug/m3" label="PM10" states={pm10} />
+                <TimeSeriesGraph title="Data Measurement for PM10" unit="µg/m³" label="PM10" states={pm10} />
               </div>
             </div>
           </div>
