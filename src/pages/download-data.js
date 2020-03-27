@@ -4,7 +4,7 @@ import Layout from '../components/layout'
 import firebase from '../firebase'
 import RenderData from '../components/RenderData'
 
-const TestStates = () => {
+const DownloadData = () => {
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
 
@@ -35,6 +35,7 @@ const TestStates = () => {
   // }
 
   useEffect(() => {
+    console.log('fetching...')
     const unsubscribe = firebase
       .firestore()
       .collection('aqms-cebu')
@@ -116,4 +117,4 @@ const Style = styled.div`
   }
 `
 
-export default TestStates
+export default DownloadData

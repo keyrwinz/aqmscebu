@@ -1,25 +1,25 @@
-import React from 'react';
+import React from 'react'
+import PropTypes from 'prop-types'
 
-const Spinner = ({small}) => {
-
+const Spinner = ({ small }) => {
   let Style = {}
   let customSpinner = {}
-  
-  if(small){
+
+  if (small) {
     Style = {
-      display: 'inline-block'
+      display: 'inline-block',
     }
     customSpinner = {
       width: '1rem',
       height: '1rem',
-      borderWidth: '0.15em'
+      borderWidth: '0.15em',
     }
-  }else{
+  } else {
     Style = {
       minHeight: '100px',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     }
   }
 
@@ -32,5 +32,13 @@ const Spinner = ({small}) => {
   )
 }
 
-export default Spinner;
+Spinner.propTypes = {
+  small: PropTypes.bool,
+}
 
+Spinner.defaultProps = {
+  small: false,
+}
+
+
+export default Spinner
