@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Layout from '../components/layout'
 import firebase from '../firebase'
 import RenderData from '../components/RenderData'
+import SEO from '../components/seo'
 
 const DownloadData = () => {
   const [data, setData] = useState([])
@@ -55,6 +56,8 @@ const DownloadData = () => {
     }
   }, [node, setData])
 
+  console.log(data)
+
   let renderComponent = null
   if (node === 'usc-mc') {
     renderComponent = <RenderData data={data} />
@@ -68,6 +71,7 @@ const DownloadData = () => {
 
   return (
     <Layout>
+      <SEO title="Download Data" />
       <Style>
         <div className="container-sm">
           <div className="row">

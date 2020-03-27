@@ -116,7 +116,7 @@ const IndexPage = () => {
                 <div className="optionsBtn">Realtime Data</div>
               </a>
               <div className="divider" />
-              <a className="btn btn-dark" style={{ width: '35%' }} type="button" href="/teststates">
+              <a className="btn btn-dark" style={{ width: '35%' }} type="button" href="/download-data">
                 <div className="optionsBtn">Download Data</div>
               </a>
             </div>

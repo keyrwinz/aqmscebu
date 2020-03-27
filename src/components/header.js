@@ -2,7 +2,7 @@ import { Link } from 'gatsby'
 import PropTypes from 'prop-types'
 import React from 'react'
 import Color from './Theme/ColorPallete'
-import Logo1 from '../assets/images/Logo1.png'
+import Logo from '../assets/images/Logo.png'
 
 const Header = ({ siteTitle }) => (
   <header
@@ -26,7 +26,7 @@ const Header = ({ siteTitle }) => (
         >
           <img
             style={{ margin: 0 }}
-            src={Logo1}
+            src={Logo}
             alt="logo"
             height="50"
             width="50"

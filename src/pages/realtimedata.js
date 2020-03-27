@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../components/layout'
 import RealtimeTable from '../components/Tables/RealtimeTable'
+import SEO from '../components/seo'
 
 const App = () => {
   const [data, setData] = useState(() => {
@@ -27,6 +28,7 @@ const App = () => {
 
   return (
     <Layout>
+      <SEO title="Realtime Data" />
       <div className="container-sm" style={{ color: 'black' }}>
         <RealtimeTable list={data} height={600} />
       </div>
