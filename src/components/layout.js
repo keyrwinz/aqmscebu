@@ -8,7 +8,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useStaticQuery, graphql } from 'gatsby'
-
 import Header from './header'
 import Color from './Theme/ColorPallete'
 import './layout.css'

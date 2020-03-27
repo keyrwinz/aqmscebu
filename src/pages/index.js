@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
 import {
   withGoogleMap,
   withScriptjs,
 } from 'react-google-maps'
+import firebase from '../firebase'
 import Layout from '../components/layout'
 import Color from '../components/Theme/ColorPallete'
 import SEO from '../components/seo'
@@ -16,6 +18,16 @@ const MapWrapped = withScriptjs(withGoogleMap(GoogleMap))
 
 
 const IndexPage = () => {
+  const author = useStaticQuery(graphql`
+    query SiteAuthorQuery {
+      site {
+        siteMetadata {
+          author
+        }
+      }
+    }
+  `)
+
   const [selectedNode, setSelectedNode] = useState('usc-mc')
   const [data, setData] = useState([])
   const [state, setState] = useState({})
@@ -28,6 +40,7 @@ const IndexPage = () => {
 
   // fetch data from database (selected node)
   // useEffect(() => {
+  //   console.log('fetching...')
   //   setLoading(true)
 
   //   const unsubscribe = firebase.firestore()
@@ -162,7 +175,10 @@ const IndexPage = () => {
                 ©
                 { new Date().getFullYear() }
                 , Built by
-                <a href="#home">&nbsp;&nbsp;WAYDSB Thesis2020</a>
+                &nbsp;
+                <a href="#home">
+                  {author.site.siteMetadata.author}
+                </a>
               </div>
             </div>
           </div>

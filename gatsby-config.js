@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
-    title: 'CEBU - AIR QUALITY MONITORING',
+    title: 'Air Quality Monitoring',
     description: 'Air Quality Monitoring Application in Cebu City, Philippines',
-    author: '@waydsb',
+    author: '@AirNuff',
   },
   plugins: [
     'gatsby-plugin-react-helmet',

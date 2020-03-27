@@ -136,7 +136,7 @@ const TimeSeriesGraph = ({
 TimeSeriesGraph.propTypes = {
   title: PropTypes.string,
   unit: PropTypes.string,
-  states: PropTypes.arrayOf(PropTypes.string),
+  states: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
   label: PropTypes.string,
 }
 
