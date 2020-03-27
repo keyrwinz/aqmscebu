@@ -10,7 +10,7 @@
 **Instructions:**  
 <pre>
 Step 1: Fork this repo 'https://github.com/keyrwinz/aqmscebu'  
-        -> check ng naa sa rightside sa keyrwinz/aqmscebu.. kilid sa ⭐Star knang Fork i click na
+        -> check ng naa sa pinaka-top.. kilid sa ⭐Star knang Fork i click na
         -> then adto sa imo own repositories dpat naa nay 'aqmscebu' ddto
 Step 2: Make a clone from your forked repo (git clone from git bash)  
 Step 3: Make a folder then adto i clone  
@@ -21,7 +21,8 @@ Step 4: Move to the directory and open git bash sa path
         -> after ma clone ang repo. cd sa directory niya
 Step 5: Perform 'npm install'  
         -> mg download ni sya sa node_modules.
-Step 6: Once node_modules mu appear sa directory Perform 'npm start'  
+Step 6: Once node_modules mu appear sa directory Perform 'npm start'
+        -> if nag download ka ug gatsbyjs cli instead na 'npm start' ky 'gatsby develop' gamita
 Step 7: Open web broswer and go to -> localhost:8000
 </pre>
 
