@@ -128,7 +128,11 @@ const CautionaryStatements = ({ param, classification }) => {
 
 CautionaryStatements.propTypes = {
   param: PropTypes.string.isRequired,
-  classification: PropTypes.string.isRequired,
+  classification: PropTypes.string,
+}
+
+CautionaryStatements.defaultProps = {
+  classification: '',
 }
 
 export default CautionaryStatements

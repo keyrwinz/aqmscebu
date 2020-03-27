@@ -97,8 +97,11 @@ const makeBadge = (classification) => {
 const AQContent = ({
   loading, nodeName, data,
 }) => {
+  // let {
+  //   pm25, pm10, so2, no2, temp, humidity,
+  // } = data
   let {
-    pm25, pm10, so2, no2, temp, humidity,
+    temp, humidity,
   } = data
 
   const [weatherIcon, setWeatherIcon] = useState(null)
@@ -121,8 +124,6 @@ const AQContent = ({
     fetchWeather(nodeObj)
   }, [nodeName])
 
-  console.log(weather)
-
   // eslint-disable-next-line one-var
   let pm25Data = 'No data',
     pm10Data = 'No data',
@@ -144,12 +145,24 @@ const AQContent = ({
   }
 
   // for testing
-  pm25 = 50
-  pm10 = 154
-  no2 = 1.2
-  so2 = 0.99
+  const [pm25, setPM25] = useState(50)
+  const [pm10, setPM10] = useState(154)
+  const [no2, setNO2] = useState(1.2)
+  const [so2, setSO2] = useState(0.99)
+
+  // pm25 = 50
+  // pm10 = 154
+  // no2 = 1.2
+  // so2 = 0.99
   temp = 35
   humidity = 75
+
+  const randomNum = () => {
+    setPM25((Math.random() * (504 - 0) + 0).toFixed(2))
+    setPM10((Math.random() * (504 - 0) + 0).toFixed(2))
+    setNO2((Math.random() * (1.64 - 0) + 0).toFixed(2))
+    setSO2((Math.random() * (0.804 - 0) + 0).toFixed(2))
+  }
 
   if (loading) {
     pm25Data = <Spinner small />
@@ -276,8 +289,9 @@ const AQContent = ({
           style={{ width: '100%', borderTop: `1px solid ${Color.fourthColor}33` }}
         >
           <div className="row" style={{ paddingLeft: '20px' }}>
-            <div className="col col-12" style={{ maxHeight: '100px' }}>
+            <div className="col col-12" style={{ maxHeight: '100px', paddingRight: '50px' }}>
               <span>Selected Node: </span>
+              <button type="button" style={{ float: 'right' }} onClick={() => randomNum()}>random</button>
             </div>
             <div
               className="col col-12"
@@ -378,7 +392,7 @@ const AQContent = ({
         </div>
         <div className="cautionary-content">
           <div style={{ height: '320px' }}>
-            <Carousel style={{ height: '100%' }} interval="5000">
+            <Carousel style={{ height: '100%' }} interval="10000">
               {paramKeys.map((key, index) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <Carousel.Item key={index}>

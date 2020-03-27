@@ -34,7 +34,7 @@ const TimeSeriesGraph = ({
         },
         stacked: false,
         height: 350,
-        foreColor: Color.secondaryColor,
+        foreColor: Color.whiteColor,
         zoom: {
           type: 'x',
           enabled: true,
@@ -60,7 +60,7 @@ const TimeSeriesGraph = ({
           fontSize: '14px',
           fontWeight: 'bold',
           fontFamily: undefined,
-          color: Color.secondaryColor,
+          color: Color.whiteColor,
         },
       },
       fill: {
