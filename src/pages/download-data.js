@@ -36,7 +36,7 @@ const DownloadData = () => {
   // }
 
   useEffect(() => {
-    console.log('fetching...')
+    console.log('fetching data...')
     const unsubscribe = firebase
       .firestore()
       .collection('aqms-cebu')
@@ -55,8 +55,6 @@ const DownloadData = () => {
       unsubscribe()
     }
   }, [node, setData])
-
-  console.log(data)
 
   let renderComponent = null
   if (node === 'usc-mc') {
