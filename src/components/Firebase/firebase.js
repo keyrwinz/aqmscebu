@@ -1,7 +1,7 @@
 let firebase;
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDi-LQfnj4fWBm3gVGqVzOQwh9gs70fNi8",
+  apiKey: process.env.API_FIRESTORE,
   authDomain: "aqms-db-thesis-2020.firebaseapp.com",
   databaseURL: "https://aqms-db-thesis-2020.firebaseio.com",
   projectId: "aqms-db-thesis-2020",

@@ -5,7 +5,7 @@ import {
   withGoogleMap,
   withScriptjs,
 } from 'react-google-maps'
-import firebase from '../firebase'
+import Firebase from '../components/Firebase/firebase'
 import Layout from '../components/layout'
 import Color from '../components/Theme/ColorPallete'
 import SEO from '../components/seo'
@@ -13,9 +13,7 @@ import TimeSeriesGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AirQualitySummary from '../components/AirQualitySummary/AirQualitySummary'
 
-const API_MAP = 'AIzaSyCeEtWrTm6_sPXDtijAIYYyxWG6_dMSME4'
 const MapWrapped = withScriptjs(withGoogleMap(GoogleMap))
-
 
 const IndexPage = () => {
   const author = useStaticQuery(graphql`
@@ -43,7 +41,7 @@ const IndexPage = () => {
   //   console.log('fetching...')
   //   setLoading(true)
 
-  //   const unsubscribe = firebase.firestore()
+  //   const unsubscribe = Firebase.firestore()
   //     .collection('aqms-cebu')
   //     .doc(selectedNode)
   //     .collection('states')
@@ -126,7 +124,7 @@ const IndexPage = () => {
               <MapWrapped
                 nodeSelectFunc={onClickMapNode}
                 googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${
-                  API_MAP
+                  process.env.API_MAP
                 }`}
                 loadingElement={<div style={{ height: '100%' }} />}
                 containerElement={<div style={{ height: '100%' }} />}

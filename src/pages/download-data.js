@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Layout from '../components/layout'
-import firebase from '../firebase'
+import firebase from '../components/Firebase/firebase'
 import RenderData from '../components/RenderData'
 import SEO from '../components/seo'
 

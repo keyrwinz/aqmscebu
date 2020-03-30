@@ -10,7 +10,7 @@ import Color from '../Theme/ColorPallete'
 import Spinner from '../Spinner'
 import nodes from '../GoogleMap/AqmsNodes'
 
-const WEATHER_API = 'e48a7eafd3731c7718a4c34b6a06e78f'
+const WEATHER_API = process.env.API_WEATHER
 
 const styles = {
   spanMeasurements: {
