@@ -14,10 +14,7 @@ import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AirQualitySummary from '../components/AirQualitySummary/AirQualitySummary'
 
 const MapWrapped = withScriptjs(withGoogleMap(GoogleMap))
-
-console.log('apiMap: ', process.env.API_MAP)
-console.log('apiFirestore: ', process.env.API_FIRESTORE)
-console.log('apiWeather: ', process.env.API_WEATHER)
+const { API_MAP } = process.env
 
 const IndexPage = () => {
   const author = useStaticQuery(graphql`
@@ -128,7 +125,7 @@ const IndexPage = () => {
               <MapWrapped
                 nodeSelectFunc={onClickMapNode}
                 googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${
-                  process.env.API_MAP
+                  API_MAP
                 }`}
                 loadingElement={<div style={{ height: '100%' }} />}
                 containerElement={<div style={{ height: '100%' }} />}

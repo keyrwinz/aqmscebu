@@ -10,7 +10,7 @@ import Color from '../Theme/ColorPallete'
 import Spinner from '../Spinner'
 import nodes from '../GoogleMap/AqmsNodes'
 
-const WEATHER_API = process.env.API_WEATHER
+const { API_WEATHER } = process.env
 
 const styles = {
   spanMeasurements: {
@@ -109,7 +109,7 @@ const AQContent = ({
 
   const fetchWeather = async ({ lat, lng }) => {
     setWeatherIcon(() => <Spinner small />)
-    const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${WEATHER_API}/${lat},${lng}`)
+    const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`)
     const resData = await response.json()
     const { icon } = resData.currently
     /* eslint-disable global-require */
