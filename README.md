@@ -10,20 +10,11 @@
 **Instructions:**  
 <pre>
 Step 1: Fork this repo 'https://github.com/keyrwinz/aqmscebu'  
-        -> check ng naa sa pinaka-top.. kilid sa ⭐Star knang Fork i click na
-        -> then adto sa imo own repositories dpat naa nay 'aqmscebu' ddto
-Step 2: Make a clone from your forked repo (git clone from git bash)  
-Step 3: Make a folder then adto i clone  
-        -> himo folder then i right click ang folder i select 'git bash'
-        -> make sure ang imo i 'git clone' ky ang imoha na forked na repo 
-        -> repo: https://github.com/[imoUsername]/aqmscebu.git
-Step 4: Move to the directory and open git bash sa path 
-        -> after ma clone ang repo. cd sa directory niya
-Step 5: Perform 'npm install'  
-        -> mg download ni sya sa node_modules.
-Step 6: Once node_modules mu appear sa directory Perform 'npm start'
-        -> if nag download ka ug gatsbyjs cli instead na 'npm start' ky 'gatsby develop' gamita
-Step 7: Open web broswer and go to -> localhost:8000
+Step 2: Make a clone from your forked repo (git clone 'https://github.com/[yourUserName]/aqmscebu' from git cli)  
+Step 3: Move to the cloned directory and open git cli from there  
+Step 4: Perform 'npm install'  
+Step 5: Perform 'npm start'  
+Step 6: Open web broswer and go to -> localhost:8000
 </pre>
 
-Note: all commands must be executed using git bash
+Note: all commands must be executed using git bash/cli
