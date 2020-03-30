@@ -15,6 +15,10 @@ import AirQualitySummary from '../components/AirQualitySummary/AirQualitySummary
 
 const MapWrapped = withScriptjs(withGoogleMap(GoogleMap))
 
+console.log('apiMap: ', process.env.API_MAP)
+console.log('apiFirestore: ', process.env.API_FIRESTORE)
+console.log('apiWeather: ', process.env.API_WEATHER)
+
 const IndexPage = () => {
   const author = useStaticQuery(graphql`
     query SiteAuthorQuery {
