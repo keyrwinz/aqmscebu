@@ -4,12 +4,34 @@ import Layout from '../components/layout'
 import Firebase from '../components/Firebase/firebase'
 import RenderData from '../components/RenderData'
 import SEO from '../components/seo'
+import FirestoreData from '../../TEMP_FOLDER/uscmc.json'
 
 const DownloadData = () => {
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
 
   // const addtemp = 10
+  const firebaseDB = Firebase.database()
+  const nodeRef = firebaseDB.ref('aqmnodes/usc-mc/states')
+
+  const addData = () => {
+    FirestoreData.map((d) => {
+      nodeRef.push(d)
+    })
+    console.log('uploaded!')
+  }
+
+  useEffect(() => {
+    // const starCountRef = firebaseDB.ref('usc-mc/states')
+    //   .on('value', (snapshot) => {
+    //     console.log(snapshot.val())
+    //   })
+
+    // return () => {
+    //   starCountRef.off()
+    // }
+  }, [])
+
 
   // const addData = async () => {
   //   const db = await firebase.firestore()
@@ -35,26 +57,25 @@ const DownloadData = () => {
   //     })
   // }
 
-  useEffect(() => {
-    console.log('fetching data...')
-    const unsubscribe = Firebase
-      .firestore()
-      .collection('aqms-cebu')
-      .doc(node)
-      .collection('states')
-      .orderBy('timestamp')
-      .onSnapshot((snapshot) => {
-        const newData = []
-        snapshot.docs.forEach((d) => {
-          newData.push(d.data())
-        })
-        setData(newData.sort((a, b) => b.timestamp - a.timestamp))
-      })
-
-    return () => {
-      unsubscribe()
-    }
-  }, [node, setData])
+  // useEffect(() => {
+  //   console.log('fetching data...')
+  //   const unsubscribe = Firebase
+  //     .firestore()
+  //     .collection('aqms-cebu')
+  //     .doc(node)
+  //     .collection('states')
+  //     .orderBy('timestamp')
+  //     .onSnapshot((snapshot) => {
+  //       const newData = []
+  //       snapshot.docs.forEach((d) => {
+  //         newData.push(d.data())
+  //       })
+  //       setData(newData.sort((a, b) => b.timestamp - a.timestamp))
+  //     })
+  //   return () => {
+  //     unsubscribe()
+  //   }
+  // }, [node, setData])
 
   let renderComponent = null
   if (node === 'usc-mc') {
@@ -86,7 +107,7 @@ const DownloadData = () => {
                   <option>usc-sc</option>
                 </select>
               </div>
-              {/* <button className="floatRight" onClick={() => addData(node)}>Add data</button> */}
+              <button className="floatRight" type="button" onClick={() => addData(node)}>Add data</button>
             </div>
           </div>
           <div className="row">
