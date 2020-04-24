@@ -174,25 +174,25 @@ import ReactPaginate from 'react-paginate'
 //         Header: 'Air Quality Data',
 //         columns: [{
 //             Header: 'PM2.5',
-//             accessor: 'pm25'
+//             accessor: 'p2'
 //           }, {
 //             Header: 'PM10',
-//             accessor: 'pm10',
+//             accessor: 'p1',
 //           }, {
 //             Header: 'NO2',
-//             accessor: 'no2',
+//             accessor: 'n',
 //           }, {
 //             Header: 'SO2',
-//             accessor: 'so2',
+//             accessor: 's',
 //           }, {
 //             Header: 'Humidity',
-//             accessor: 'humidity',
+//             accessor: 'h',
 //           }, {
 //             Header: 'Temperature',
-//             accessor: 'temp',
+//             accessor: 'te',
 //           }, {
 //             Header: 'Timestamp',
-//             accessor: 'timestamp'
+//             accessor: 'ti'
 //           }
 //         ],
 //       }
@@ -266,7 +266,7 @@ const RenderData = ({ data }) => {
             // let strTime = String(parseInt(d.timestamp))
             // let multiplier = strTime.length === 10 ? 1000 : 1
             const multiplier = 1000
-            const epochTime = new Date(d.timestamp * multiplier)
+            const epochTime = new Date(d.ti * multiplier)
             const timestamp = epochTime.toLocaleString('en-GB', {
               month: 'short',
               day: '2-digit',
@@ -279,13 +279,13 @@ const RenderData = ({ data }) => {
             return (
               // eslint-disable-next-line react/no-array-index-key
               <tr key={index}>
-                <td>{d.pm25 ? d.pm25 : 'No data'}</td>
-                <td>{d.pm10 ? d.pm10 : 'No data'}</td>
-                <td>{d.no2 ? d.no2 : 'No data'}</td>
-                <td>{d.so2 ? d.so2 : 'No data'}</td>
-                <td>{d.humidity ? d.humidity : 'No data'}</td>
-                <td>{d.temp ? d.temp : 'No data'}</td>
-                <td>{d.timestamp ? timestamp : 'No data'}</td>
+                <td>{d.p2 ? d.p2 : 'No data'}</td>
+                <td>{d.p1 ? d.p1 : 'No data'}</td>
+                <td>{d.n ? d.n : 'No data'}</td>
+                <td>{d.s ? d.s : 'No data'}</td>
+                <td>{d.h ? d.h : 'No data'}</td>
+                <td>{d.te ? d.te : 'No data'}</td>
+                <td>{d.ti ? timestamp : 'No data'}</td>
               </tr>
             )
           })}
