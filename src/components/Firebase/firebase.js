@@ -1,16 +1,16 @@
-let firebase;
+let firebase
 
 // CONFIG FOR REALTIME DB
 const firebaseConfig = {
   apiKey: process.env.API_FIREBASE,
-  authDomain: "aqmscebu.firebaseapp.com",
-  databaseURL: "https://aqmscebu.firebaseio.com",
-  projectId: "aqmscebu",
-  storageBucket: "aqmscebu.appspot.com",
-  messagingSenderId: "87641127223",
-  appId: "1:87641127223:web:1e3c9b20b0176b221202b2",
-  measurementId: "G-SYM7TXDQB0"
-};
+  authDomain: 'aqmscebu.firebaseapp.com',
+  databaseURL: 'https://aqmscebu.firebaseio.com',
+  projectId: 'aqmscebu',
+  storageBucket: 'aqmscebu.appspot.com',
+  messagingSenderId: '87641127223',
+  appId: '1:87641127223:web:1e3c9b20b0176b221202b2',
+  measurementId: 'G-SYM7TXDQB0',
+}
 
 // CONFIG FOR FIRESTORE
 // const firebaseConfig = {
@@ -24,10 +24,11 @@ const firebaseConfig = {
 //   measurementId: "G-Y2P4T33T38",
 // };
 
-if (typeof window !== 'undefined'){
-  firebase = require('firebase');
-  firebase.initializeApp(firebaseConfig);
+if (typeof window !== 'undefined') {
+  // eslint-disable-next-line global-require
+  firebase = require('firebase')
+  firebase.initializeApp(firebaseConfig)
   firebase.analytics()
 }
 
-export default firebase;
+export default firebase
