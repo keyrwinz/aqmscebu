@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
 import moment from 'moment'
@@ -27,7 +27,7 @@ const DownloadData = () => {
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
   const [pageSize, setPageSize] = useState(5)
-  const [paginatorInstance, setPaginator] = useState(null)
+  const paginatorRef = useRef()
 
   const options = {
     pageSize,
@@ -36,11 +36,13 @@ const DownloadData = () => {
     retainLastPage: false,
   }
 
+  console.log({ paginatorRef })
+
   useEffect(() => {
     const firebaseDB = Firebase.database()
     const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`)
     const paginator = new FirebasePaginator(nodeRef, options)
-    setPaginator(paginator)
+    paginatorRef.current = paginator
 
     const firebaseCallback = () => {
       const { collection } = paginator
@@ -53,9 +55,9 @@ const DownloadData = () => {
 
     paginator.on('value', firebaseCallback)
 
-    paginator.listen((eventName, eventPayload) => {
-      console.log(`Fired ${eventName} with the following payload: `, eventPayload)
-    })
+    // paginator.listen((eventName, eventPayload) => {
+    //   console.log(`Fired ${eventName} with the following payload: `, eventPayload)
+    // })
 
     return () => {
       paginator.off('value', firebaseCallback)
@@ -63,14 +65,23 @@ const DownloadData = () => {
   }, [node])
 
   const onChangeHandler = (value) => setNode(value)
-  const onPrevHandler = () => paginatorInstance.previous()
-  const onNextHandler = () => paginatorInstance.next()
+  const onPrevHandler = () => {
+    if (paginatorRef.current) {
+      paginatorRef.current.previous()
+    }
+  }
+  const onNextHandler = () => {
+    if (paginatorRef.current) {
+      paginatorRef.current.next()
+    }
+  }
 
-  let isLastPage
-  if (paginatorInstance) {
-    isLastPage = paginatorInstance.isLastPage || false
+  let isLastPage = null
+  if (paginatorRef.current) {
+    isLastPage = paginatorRef.current.isLastPage
   }
   console.log({ isLastPage })
+
   return (
     <Layout>
       <SEO title="Download Data" />
