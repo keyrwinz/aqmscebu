@@ -26,13 +26,12 @@ const DownloadData = () => {
 
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
-  const [pageSize, setPageSize] = useState(5)
+  const [pageSize, setPageSize] = useState(3)
   const paginatorRef = useRef()
 
   const options = {
     pageSize,
-    finite: false,
-    auth: process.env.API_FIREBASE,
+    finite: true,
     retainLastPage: false,
   }
 
@@ -80,7 +79,6 @@ const DownloadData = () => {
   if (paginatorRef.current) {
     isLastPage = paginatorRef.current.isLastPage
   }
-  console.log({ isLastPage })
 
   return (
     <Layout>
