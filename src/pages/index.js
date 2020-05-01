@@ -32,39 +32,29 @@ const IndexPage = () => {
   const [state, setState] = useState({})
   const [loading, setLoading] = useState(false)
 
+  const firebaseDB = Firebase.database()
+  const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`)
+
+  const firebaseCallback = (collection) => {
+    if (Object.keys(collection).length !== 0) {
+      const entries = Object.entries(collection).reverse()
+      const response = entries.map((d) => d[1])
+      setData(response)
+    }
+  }
+
+  useEffect(() => {
+    nodeRef.on('value', firebaseCallback)
+
+    return () => {
+      nodeRef.off('value', firebaseCallback)
+    }
+  }, [])
+
   let pm25 = []
   let pm10 = []
   let no2 = []
   let so2 = []
-
-  // fetch data from database (selected node)
-  // useEffect(() => {
-  //   console.log('fetching...')
-  //   setLoading(true)
-
-  //   const unsubscribe = Firebase.firestore()
-  //     .collection('aqms-cebu')
-  //     .doc(selectedNode)
-  //     .collection('states')
-  //     .orderBy('timestamp')
-  //     .onSnapshot((snapshot) => {
-  //       const newData = []
-  //       let length = 0
-  //       let currentState = {}
-  //       snapshot.docs.forEach((d) => {
-  //         newData.push(d.data())
-  //       })
-  //       length = newData.length
-  //       currentState = { ...newData[length - 1] }
-  //       setState(currentState)
-  //       setData(newData.sort((a, b) => b.timestamp - a.timestamp))
-  //       setLoading(false)
-  //     })
-
-  //   return () => {
-  //     unsubscribe()
-  //   }
-  // }, [selectedNode])
 
   pm25 = data.map((x) => [x.timestamp, x.pm25 === 'No data' ? 0 : x.pm25])
   pm10 = data.map((x) => [x.timestamp, x.pm10 === 'No data' ? 0 : x.pm10])
