@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useStaticQuery, graphql } from 'gatsby'
+import { useStaticQuery, graphql, Link } from 'gatsby'
 import styled from 'styled-components'
 import {
   withGoogleMap,
@@ -102,13 +102,13 @@ const IndexPage = () => {
                 </div>
               </button>
               <div className="divider" />
-              <a className="btn btn-dark" style={{ width: '35%' }} type="button" href="/realtimedata">
-                <div className="optionsBtn">Realtime Data</div>
-              </a>
-              <div className="divider" />
-              <a className="btn btn-dark" style={{ width: '35%' }} type="button" href="/download-data">
+              <Link className="btn btn-dark" style={{ width: '35%' }} to="/realtimedata">
                 <div className="optionsBtn">Download Data</div>
-              </a>
+              </Link>
+              <div className="divider" />
+              <Link className="btn btn-dark" style={{ width: '35%' }} to="/download">
+                <div className="optionsBtn">Download Data</div>
+              </Link>
             </div>
           </div>
           <div className="row">
