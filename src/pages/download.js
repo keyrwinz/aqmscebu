@@ -25,15 +25,14 @@ const DownloadData = () => {
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
   const [pageSize, setPageSize] = useState(10)
-  const paginatorRef = useRef()
+  const paginatorRef = useRef(null)
+  const inputPageRef = useRef(null)
 
   const options = {
     pageSize,
     finite: true,
     retainLastPage: false,
   }
-
-  console.log({ paginatorRef })
 
   useEffect(() => {
     const firebaseDB = Firebase.database()
@@ -62,20 +61,66 @@ const DownloadData = () => {
   }, [node])
 
   const onChangeHandler = (value) => setNode(value)
+
   const onPrevHandler = () => {
     if (paginatorRef.current) {
       paginatorRef.current.previous()
     }
   }
+
+  const goToPageHandler = () => {
+    if (inputPageRef.current && inputPageRef.current.value !== '') {
+      const { value } = inputPageRef.current
+      console.log({ value })
+      paginatorRef.current.goToPage(value)
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('Invalid page number. Please try again.')
+    }
+  }
+
   const onNextHandler = () => {
     if (paginatorRef.current) {
       paginatorRef.current.next()
     }
   }
 
-  let isLastPage = null
+  console.log({ paginatorRef })
+  // console.log({ inputPageRef })
+
+  let GotoPageButton = (
+    <button
+      className="input-group-text"
+      type="button"
+      disabled
+    >
+      Goto page
+    </button>
+  )
+
+  let disableFirstPageBtn = 'disabled'
+  let disableLastPageBtn = 'disabled'
+  let pageCounter = 0
   if (paginatorRef.current) {
-    isLastPage = paginatorRef.current.isLastPage
+    const { isLastPage, pageCount, pageNumber } = paginatorRef.current
+    disableLastPageBtn = isLastPage ? 'disabled' : ''
+    disableFirstPageBtn = pageNumber === 1 ? 'disabled' : ''
+    pageCounter = pageCount
+
+    if (inputPageRef.current) {
+      inputPageRef.current.removeAttribute('disabled')
+      inputPageRef.current.value = paginatorRef.current.pageNumber
+    }
+
+    GotoPageButton = (
+      <button
+        className="input-group-text blue"
+        type="button"
+        onClick={() => goToPageHandler()}
+      >
+        Goto page
+      </button>
+    )
   }
 
   return (
@@ -84,9 +129,9 @@ const DownloadData = () => {
       <Style>
         <div className="container-sm">
           <div className="row">
-            <div className="d-flex bd-highlight w-100">
+            <div className="d-flex bd-highlight w-100 headers">
               <div className="p-2 flex-grow-1 bd-highlight">
-                <div className="input-group w-25">
+                <div className="input-group custom-select-group">
                   <div className="input-group-prepend">
                     <label className="input-group-text" htmlFor="nodeSelection">Node</label>
                   </div>
@@ -108,39 +153,61 @@ const DownloadData = () => {
                   </select>
                 </div>
               </div>
-              <div className="p-2 bd-highlight">
-                <ul className="pagination">
-                  <li className="page-item">
-                    <button
-                      className="page-link"
-                      type="button"
-                      aria-label="Previous"
-                      onClick={() => onNextHandler()}
-                    >
-                      <span aria-hidden="true">&laquo;</span>
-                    </button>
-                  </li>
-                </ul>
-              </div>
-              <div className="p-2 bd-highlight">
-                <ul className="pagination">
-                  <li className={`page-item ${isLastPage ? 'disabled' : ''}`}>
-                    <button
-                      style={{ background: `${isLastPage ? 'black' : ''}` }}
-                      className="page-link"
-                      type="button"
-                      aria-label="Next"
-                      onClick={() => onPrevHandler()}
-                    >
-                      <span aria-hidden="true">&raquo;</span>
-                    </button>
-                  </li>
-                </ul>
+              <div className="p-2 d-flex">
+                <div className="bd-highlight">
+                  <ul className="pagination">
+                    <li className={`page-item ${disableFirstPageBtn}`}>
+                      <button
+                        style={{ background: `${disableFirstPageBtn}` }}
+                        className="page-link"
+                        type="button"
+                        aria-label="Previous"
+                        onClick={() => onNextHandler()}
+                      >
+                        <strong aria-hidden="true">&laquo;</strong>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <div className="input-group page-input">
+                  <div className="input-group-prepend">
+                    {GotoPageButton}
+                  </div>
+                  <input
+                    ref={inputPageRef}
+                    type="number"
+                    className="form-control"
+                    aria-label="Goto page"
+                    min="1"
+                    max={pageCounter}
+                    disabled
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text">
+                      {`/ ${pageCounter}`}
+                    </span>
+                  </div>
+                </div>
+                <div className="bd-highlight">
+                  <ul className="pagination">
+                    <li className={`page-item ${disableLastPageBtn}`}>
+                      <button
+                        style={{ background: `${disableLastPageBtn}` }}
+                        className="page-link"
+                        type="button"
+                        aria-label="Next"
+                        onClick={() => onPrevHandler()}
+                      >
+                        <strong aria-hidden="true">&raquo;</strong>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
           <div className="row" style={{ marginRight: '-10px' }}>
-            <div className="col" style={{ color: 'black', overflowX: 'auto' }}>
+            <div className="col data-table" style={{ color: 'black', overflowX: 'auto' }}>
               <RenderData data={data} pageSize={pageSize} />
             </div>
           </div>
@@ -164,9 +231,14 @@ const DownloadData = () => {
 }
 
 const Style = styled.div`
-  .customSelect {
-    width: 200px;
+  .blue {
+    color: #007bff;
   }
+
+  .custom-select-group {
+    max-width: 250px;
+  }
+
   .footer {
     display: flex;
     justify-content: center;
@@ -180,6 +252,40 @@ const Style = styled.div`
     border: 1px solid ${Color.fourthColor}33;
     background: ${Color.thirdColor};
     padding: 10px;
+  }
+
+  ul {
+    margin-left: 0;
+  }
+
+  .input-group {
+    flex-wrap: nowrap;
+  }
+
+  .input-group * {
+    font-size: 0.8rem;
+  }
+
+  .page-input {
+    max-width: 300px;
+    margin: 0 5px;
+  }
+
+  .page-input * {
+    height: 42px;
+  }
+
+  .page-link strong {
+    font-family: -webkit-pictograph;
+  }
+
+  @media (max-width: 575px) {
+    .headers {
+      flex-direction: column;
+    }
+    .table {
+      font-size: 0.8rem;
+    }
   }
 `
 
