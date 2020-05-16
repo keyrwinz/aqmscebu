@@ -33,13 +33,14 @@ const IndexPage = () => {
   const [loading, setLoading] = useState(false)
 
   const firebaseDB = Firebase.database()
-  const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`)
+  const nodeRef = firebaseDB.ref(`aqmnodes/${selectedNode}/states`)
 
   const firebaseCallback = (collection) => {
     if (Object.keys(collection).length !== 0) {
       const entries = Object.entries(collection).reverse()
       const response = entries.map((d) => d[1])
       setData(response)
+      console.log({ data })
     }
   }
 
