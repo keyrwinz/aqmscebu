@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useStaticQuery, graphql, Link } from 'gatsby'
 import styled from 'styled-components'
 import {
@@ -31,17 +31,13 @@ const IndexPage = () => {
   const [data, setData] = useState([])
   const [state, setState] = useState({})
   const [loading, setLoading] = useState(false)
+  const graphRef = useRef()
 
   const firebaseDB = Firebase.database()
   const nodeRef = firebaseDB.ref(`aqmnodes/${selectedNode}/states`)
 
   const firebaseCallback = (collection) => {
-    if (Object.keys(collection).length !== 0) {
-      const entries = Object.entries(collection).reverse()
-      const response = entries.map((d) => d[1])
-      setData(response)
-      console.log({ data })
-    }
+    //
   }
 
   useEffect(() => {
@@ -67,18 +63,15 @@ const IndexPage = () => {
     setSelectedNode(nodeId)
   }
 
-  const scrollTo = (param) => {
-    const id = document.querySelector(param)
-    if (id) {
-      const coordinates = id.getBoundingClientRect()
-      const currentY = window.scrollY
-      setTimeout(() => {
-        window.scrollTo({
-          top: coordinates.top + currentY,
-          behavior: 'smooth',
-        })
-      }, 200)
-    }
+  const scrollTo = () => {
+    const { top } = graphRef.current.getBoundingClientRect()
+    const currentY = window.scrollY
+    setTimeout(() => {
+      window.scrollTo({
+        top: top + currentY,
+        behavior: 'smooth',
+      })
+    }, 200)
   }
 
   return (
@@ -95,7 +88,7 @@ const IndexPage = () => {
                 className="btn btn-dark"
                 style={{ width: '35%' }}
                 type="button"
-                onClick={() => scrollTo('#first-graph')}
+                onClick={() => scrollTo()}
               >
                 <div className="optionsBtn">
                   View Graph
@@ -103,7 +96,7 @@ const IndexPage = () => {
               </button>
               <div className="divider" />
               <Link className="btn btn-dark" style={{ width: '35%' }} to="/realtimedata">
-                <div className="optionsBtn">Download Data</div>
+                <div className="optionsBtn">Realtime Data</div>
               </Link>
               <div className="divider" />
               <Link className="btn btn-dark" style={{ width: '35%' }} to="/download">
@@ -131,7 +124,7 @@ const IndexPage = () => {
               />
             </div>
           </div>
-          <div id="first-graph" className="row graph">
+          <div id="first-graph" className="row graph" ref={graphRef}>
             <div className="col col-12">
               <div className="borderbox">
                 <TimeSeriesGraph title="Data Measurement for PM2.5" unit="µg/m³" label="PM2.5" states={pm25} />

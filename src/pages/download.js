@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styled from 'styled-components'
-import moment from 'moment'
 import FirebasePaginator from 'firebase-paginator'
 import Firebase from '../components/Firebase/firebase'
 import Nodes from '../components/GoogleMap/AqmsNodes'
@@ -10,7 +9,6 @@ import Layout from '../components/layout'
 import Color from '../components/Theme/ColorPallete'
 import RenderData from '../components/RenderData'
 import SEO from '../components/seo'
-// import FirestoreData from '../../TEMP_FOLDER/uscsc.json'
 
 const DownloadData = () => {
   const author = useStaticQuery(graphql`
@@ -26,7 +24,7 @@ const DownloadData = () => {
 
   const [data, setData] = useState([])
   const [node, setNode] = useState('usc-mc')
-  const [pageSize, setPageSize] = useState(3)
+  const [pageSize, setPageSize] = useState(10)
   const paginatorRef = useRef()
 
   const options = {
@@ -39,7 +37,7 @@ const DownloadData = () => {
 
   useEffect(() => {
     const firebaseDB = Firebase.database()
-    const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`)
+    const nodeRef = firebaseDB.ref('aqmnodes/test-data/states')
     const paginator = new FirebasePaginator(nodeRef, options)
     paginatorRef.current = paginator
 
