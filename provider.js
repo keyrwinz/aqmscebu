@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export const UserCtx = React.createContext()
+export const AppCtx = React.createContext()
 
 // eslint-disable-next-line react/prop-types
 const Provider = ({ children }) => {
@@ -8,7 +8,7 @@ const Provider = ({ children }) => {
   const [node, setNode] = useState('usc-mc')
 
   return (
-    <UserCtx.Provider value={{
+    <AppCtx.Provider value={{
       user,
       node,
       updateUser: (userInfo) => setUser(userInfo),
@@ -16,7 +16,7 @@ const Provider = ({ children }) => {
     }}
     >
       {children}
-    </UserCtx.Provider>
+    </AppCtx.Provider>
   )
 }
 
