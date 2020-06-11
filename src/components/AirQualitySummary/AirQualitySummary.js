@@ -1,140 +1,63 @@
-import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
-import Clock from 'react-live-clock'
+import React, { useEffect, useState, useContext } from 'react'
 import {
-  Carousel, OverlayTrigger, Popover,
+  Carousel, OverlayTrigger,
 } from 'react-bootstrap'
 import styled from 'styled-components'
-import CautionaryStatements from './CautionaryStatements'
+import Firebase from '../Firebase/firebase'
+import { AppCtx } from '../../../provider'
+import WeatherSummary from '../WeatherSummary'
+import CautionaryStatements from '../CautionaryStatements'
 import Color from '../Theme/ColorPallete'
 import Spinner from '../Spinner'
-import nodes from '../GoogleMap/AqmsNodes'
+import popover from '../Utils/popover'
+import airClassification from '../Utils/airClassification'
+import makeBadge from '../Utils/makeBadge'
 
-const { API_WEATHER } = process.env
+const AQContent = () => {
+  const [state, setState] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-const styles = {
-  spanMeasurements: {
-    marginLeft: '15px',
-    fontWeight: 'normal',
-  },
-}
+  const store = useContext(AppCtx)
+  const { node } = store
+  console.log({ node })
+  console.log({ state })
+  const firebaseDB = Firebase.database()
+  const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`).orderByKey().limitToLast(1)
 
-const popover = (param, param2 = null) => {
-  let title = ''
-  let unit = ''
-
-  if (param === 'PM25') {
-    title = 'Particulate Matter 2.5'
-    unit = 'µg/m³'
-  } else if (param === 'PM10') {
-    title = 'Particulate Matter 10'
-    unit = 'µg/m³'
-  } else if (param === 'NO2') {
-    title = 'Nitrogen Dioxide'
-    unit = 'ppm'
-  } else if (param === 'SO2') {
-    title = 'Sulfur Dioxide'
-    unit = 'ppm'
-  } else if (param === 'TEMP') {
-    title = 'Temperature'
-    unit = '°C'
-  } else if (param === 'HUMIDITY') {
-    title = 'Humidity'
-    unit = '%'
-  } else if (param === 'weather') {
-    title = 'Current Weather'
-    unit = param2 || 'No weather data'
-  }
-
-  return (
-    <Popover id="popover-basic">
-      <Popover.Title as="h3">{title}</Popover.Title>
-      <Popover.Content>
-        unit:
-        {' '}
-        <strong>{unit}</strong>
-      </Popover.Content>
-    </Popover>
-  )
-}
-
-const makeBadge = (classification) => {
-  let color = null
-  let bg = null
-
-  switch (classification) {
-    case 'Good':
-      bg = 'Green'
-      break
-    case 'Fair':
-      bg = 'Yellow'
-      color = 'Black'
-      break
-    case 'Unhealthy':
-      bg = 'Orange'
-      color = 'Black'
-      break
-    case 'Very Unhealthy':
-      bg = 'Red'
-      break
-    case 'Acutely Unhealthy':
-      bg = 'Purple'
-      break
-    case 'Emergency':
-      bg = 'Maroon'
-      break
-    default:
-      break
-  }
-
-  return (
-    <span className="badge badge-secondary" style={{ background: bg, color }}>
-      {classification}
-    </span>
-  )
-}
-
-const AQContent = ({
-  loading, nodeName, data,
-}) => {
-  // let {
-  //   pm25, pm10, so2, no2, temp, humidity,
-  // } = data
-  let {
-    temp, humidity,
-  } = data
-
-  const [weatherIcon, setWeatherIcon] = useState(null)
-  const [weather, setWeather] = useState({ loading: true })
-
-  const fetchWeather = async ({ lat, lng }) => {
-    setWeatherIcon(() => <Spinner small />)
-    const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`)
-    const resData = await response.json()
-    const { icon } = resData.currently
-    /* eslint-disable global-require */
-    /* eslint-disable import/no-dynamic-require */
-    const iconSrc = require(`../../assets/weather-icons/${icon}.svg`)
-    setWeatherIcon(() => <img src={iconSrc} alt="weather-icon" height="60" />)
-    setWeather(resData)
+  const firebaseCallback = (snapshot) => {
+    let snapshotVal
+    snapshot.forEach((d) => {
+      snapshotVal = d.val()
+    })
+    setState(snapshotVal)
+    setLoading(false)
   }
 
   useEffect(() => {
-    const nodeObj = nodes.nodesLoc.find((obj) => obj.id === nodeName)
-    fetchWeather(nodeObj)
-  }, [nodeName])
+    setLoading(true)
+    nodeRef.on('value', firebaseCallback)
 
-  // eslint-disable-next-line one-var
-  let pm25Data = 'No data',
-    pm10Data = 'No data',
-    so2Data = 'No data',
-    no2Data = 'No data',
-    tempData = 'No data',
-    humidityData = 'No data',
-    pm25Badge = '',
-    pm10Badge = '',
-    so2Badge = '',
-    no2Badge = ''
+    return () => {
+      nodeRef.off('value', firebaseCallback)
+    }
+  }, [node])
+
+  // init. parameters data from state (db)
+  const pm25 = state?.p2
+  const pm10 = state?.p1
+  const no2 = state?.n
+  const so2 = state?.s
+  const temp = state?.te
+  const humidity = state?.h
+
+  const data = {
+    PM25: { value: 'No data', badge: '' },
+    PM10: { value: 'No data', badge: '' },
+    NO2: { value: 'No data', badge: '' },
+    SO2: { value: 'No data', badge: '' },
+    TEMP: { value: 'No data', badge: '' },
+    HUMIDITY: { value: 'No data', badge: '' },
+  }
 
   let paramKeys = []
   const paramClassifications = {
@@ -144,120 +67,40 @@ const AQContent = ({
     SO2: null,
   }
 
-  // for testing
-  const [pm25, setPM25] = useState(50)
-  const [pm10, setPM10] = useState(154)
-  const [no2, setNO2] = useState(1.2)
-  const [so2, setSO2] = useState(0.99)
-
-  // pm25 = 50
-  // pm10 = 154
-  // no2 = 1.2
-  // so2 = 0.99
-  temp = 35
-  humidity = 75
-
-  const randomNum = () => {
-    setPM25((Math.random() * (504 - 0) + 0).toFixed(2))
-    setPM10((Math.random() * (504 - 0) + 0).toFixed(2))
-    setNO2((Math.random() * (1.64 - 0) + 0).toFixed(2))
-    setSO2((Math.random() * (0.804 - 0) + 0).toFixed(2))
-  }
-
   if (loading) {
-    pm25Data = <Spinner small />
-    pm10Data = <Spinner small />
-    so2Data = <Spinner small />
-    no2Data = <Spinner small />
-    tempData = <Spinner small />
-    humidityData = <Spinner small />
+    data.PM25.value = <Spinner small />
+    data.PM10.value = <Spinner small />
+    data.NO2.value = <Spinner small />
+    data.SO2.value = <Spinner small />
+    data.TEMP.value = <Spinner small />
+    data.HUMIDITY.value = <Spinner small />
   } else {
     if (pm25 || pm25 === 0) {
-      pm25Data = pm25
-      // classification of air quality
-      if (pm25 >= 0 && pm25 <= 54) {
-        paramClassifications.PM25 = 'Good'
-      } else if (pm25 >= 55 && pm25 <= 154) {
-        paramClassifications.PM25 = 'Fair'
-      } else if (pm25 >= 155 && pm25 <= 254) {
-        paramClassifications.PM25 = 'Unhealthy'
-      } else if (pm25 >= 255 && pm25 <= 354) {
-        paramClassifications.PM25 = 'Very Unhealthy'
-      } else if (pm25 >= 355 && pm25 <= 424) {
-        paramClassifications.PM25 = 'Acutely Unhealthy'
-      } else if (pm25 >= 425 && pm25 <= 504) {
-        paramClassifications.PM25 = 'Emergency'
-      } else {
-        paramClassifications.PM25 = 'Invalid'
-      }
-
-      pm25Badge = makeBadge(paramClassifications.PM25)
+      data.PM25.value = pm25
+      paramClassifications.PM25 = airClassification('pm25', pm25)
+      data.PM25.badge = makeBadge(paramClassifications.PM25)
     }
     if (pm10 || pm10 === 0) {
-      pm10Data = pm10
-      if (pm10 >= 0 && pm10 <= 54) {
-        paramClassifications.PM10 = 'Good'
-      } else if (pm10 >= 55 && pm10 <= 154) {
-        paramClassifications.PM10 = 'Fair'
-      } else if (pm10 >= 155 && pm10 <= 254) {
-        paramClassifications.PM10 = 'Unhealthy'
-      } else if (pm10 >= 255 && pm10 <= 354) {
-        paramClassifications.PM10 = 'Very Unhealthy'
-      } else if (pm10 >= 355 && pm10 <= 424) {
-        paramClassifications.PM10 = 'Acutely Unhealthy'
-      } else if (pm10 >= 425 && pm10 <= 504) {
-        paramClassifications.PM10 = 'Emergency'
-      } else {
-        paramClassifications.PM10 = 'Invalid'
-      }
-
-      pm10Badge = makeBadge(paramClassifications.PM10)
+      data.PM10.value = pm10
+      paramClassifications.PM10 = airClassification('pm10', pm10)
+      data.PM10.badge = makeBadge(paramClassifications.PM10)
     }
-
-    if (no2) {
-      no2Data = no2
-      if (no2 >= 0 && no2 <= 0.64) {
-        // no classification for this range yet
-      } else if (no2 >= 0.65 && no2 <= 1.24) {
-        paramClassifications.NO2 = 'Acutely Unhealthy'
-      } else if (no2 >= 1.25 && no2 <= 1.64) {
-        paramClassifications.NO2 = 'Emergency'
-      } else {
-        paramClassifications.NO2 = 'Invalid'
-      }
-
-      no2Badge = makeBadge(paramClassifications.NO2)
+    if (no2 || no2 === 0) {
+      data.NO2.value = no2
+      paramClassifications.NO2 = airClassification('no2', no2)
+      data.NO2.badge = makeBadge(paramClassifications.NO2)
     }
-
     if (so2 || so2 === 0) {
-      so2Data = so2
-      if (so2 >= 0 && so2 <= 0.034) {
-        paramClassifications.SO2 = 'Good'
-      } else if (so2 >= 0.035 && so2 <= 0.144) {
-        paramClassifications.SO2 = 'Fair'
-      } else if (so2 >= 0.145 && so2 <= 0.224) {
-        paramClassifications.SO2 = 'Unhealthy'
-      } else if (so2 >= 0.225 && so2 <= 0.304) {
-        paramClassifications.SO2 = 'Very Unhealthy'
-      } else if (so2 >= 0.305 && so2 <= 0.604) {
-        paramClassifications.SO2 = 'Acutely Unhealthy'
-      } else if (so2 >= 0.605 && so2 <= 0.804) {
-        paramClassifications.SO2 = 'Emergency'
-      } else {
-        paramClassifications.SO2 = 'Invalid'
-      }
-
-      so2Badge = makeBadge(paramClassifications.SO2)
+      data.SO2.value = so2
+      paramClassifications.SO2 = airClassification('so2', so2)
+      data.SO2.badge = makeBadge(paramClassifications.SO2)
     }
-
     if (temp || temp === 0) {
-      tempData = temp
+      data.TEMP.value = temp
     }
-
     if (humidity || humidity === 0) {
-      humidityData = humidity
+      data.HUMIDITY.value = temp
     }
-
     paramKeys = Object.keys(paramClassifications)
   }
 
@@ -265,121 +108,48 @@ const AQContent = ({
     <Style>
       <div className="measurements-tab">
         <div className="weather-row">
-          <div className="weather-icon">
-            <OverlayTrigger
-              placement="top"
-              overlay={popover('weather', weather.loading ? 'Loading...' : weather.currently.icon)}
-            >
-              <span>{weatherIcon}</span>
-            </OverlayTrigger>
-          </div>
-          &nbsp;&nbsp;
-          <div className="weather-summary">
-            {weather.loading ? <Spinner small /> : weather.currently.summary }
-          </div>
+          <WeatherSummary popover={popover} />
           <div className="clock">
-            <Clock
+            {/* <Clock
               format="h:mm A"
               ticking
               timezone="Asia/Singapore"
-            />
+            /> */}
           </div>
         </div>
-        <div
-          style={{ width: '100%', borderTop: `1px solid ${Color.fourthColor}33` }}
-        >
-          <div className="row" style={{ paddingLeft: '20px' }}>
-            <div className="col col-12" style={{ maxHeight: '100px', paddingRight: '50px' }}>
+        <div className="measurements-row">
+          <div className="row measurements-title">
+            <div className="col col-12">
               <span>Selected Node: </span>
-              <button type="button" style={{ float: 'right' }} onClick={() => randomNum()}>random</button>
             </div>
-            <div
-              className="col col-12"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                maxHeight: '50px',
-              }}
-            >
-              <span
-                style={{
-                  fontSize: '-webkit-xxx-large',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {nodeName}
-              </span>
+            <div className="col col-12 selected-node-title">
+              {node}
             </div>
-            <div className="col col-12" style={{ maxHeight: '100px' }}>
+            <div className="col col-12">
               <span>Measurements:</span>
             </div>
           </div>
-          <div style={{ marginLeft: '45px' }}>
-            <ul
-              style={{ listStyle: 'none', fontWeight: 'bold', color: 'white' }}
-            >
-              <li>
-                <OverlayTrigger
-                  placement="top"
-                  overlay={popover('PM25')}
-                >
-                  <span>PM2.5:</span>
-                </OverlayTrigger>
-                <span style={styles.spanMeasurements}>{pm25Data}</span>
-                &nbsp;&nbsp;
-                {pm25Badge}
-              </li>
-              <li>
-                <OverlayTrigger
-                  placement="top"
-                  overlay={popover('PM10')}
-                >
-                  <span>PM10:</span>
-                </OverlayTrigger>
-                <span style={styles.spanMeasurements}>{pm10Data}</span>
-                &nbsp;&nbsp;
-                {pm10Badge}
-              </li>
-              <li>
-                <OverlayTrigger
-                  placement="top"
-                  overlay={popover('NO2')}
-                >
-                  <span>NO2:</span>
-                </OverlayTrigger>
-                <span style={styles.spanMeasurements}>{no2Data}</span>
-                &nbsp;&nbsp;
-                {no2Badge}
-              </li>
-              <li>
-                <OverlayTrigger
-                  placement="top"
-                  overlay={popover('SO2')}
-                >
-                  <span>SO2:</span>
-                </OverlayTrigger>
-                <span style={styles.spanMeasurements}>{so2Data}</span>
-                &nbsp;&nbsp;
-                {so2Badge}
-              </li>
-              <li>
-                <OverlayTrigger
-                  placement="top"
-                  overlay={popover('TEMP')}
-                >
-                  <span>TEMP:</span>
-                </OverlayTrigger>
-                <span style={styles.spanMeasurements}>{tempData}</span>
-              </li>
-              <li>
-                <OverlayTrigger
-                  placement="top"
-                  overlay={popover('HUMIDITY')}
-                >
-                  <span>HUMIDITY:</span>
-                </OverlayTrigger>
-                <span style={styles.spanMeasurements}>{humidityData}</span>
-              </li>
+          <div className="measurements-data">
+            <ul>
+              {Object.keys(data).map((param, index) => (
+                <li key={param}>
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={popover(param)}
+                  >
+                    <span className="param-label">
+                      {index < 4 ? param.slice(0, 2) : param}
+                      <sub>
+                        {index < 4 ? param.slice(2, 4) : ' '}
+                        {' '}
+                      </sub>
+                      :
+                    </span>
+                  </OverlayTrigger>
+                  <span className="param-value">{data[param].value}</span>
+                  {data[param].badge}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
@@ -392,35 +162,23 @@ const AQContent = ({
         </div>
         <div className="cautionary-content">
           <div style={{ height: '320px' }}>
-            <Carousel style={{ height: '100%' }} interval="10000">
-              {paramKeys.map((key, index) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <Carousel.Item key={index}>
-                  <CautionaryStatements
-                    param={key}
-                    classification={paramClassifications[key]}
-                  />
-                </Carousel.Item>
-              ))}
-            </Carousel>
+            {loading ? <Spinner /> : (
+              <Carousel style={{ height: '100%' }} interval="10000">
+                {paramKeys.map((key) => (
+                  <Carousel.Item key={key}>
+                    <CautionaryStatements
+                      param={key}
+                      classification={paramClassifications[key]}
+                    />
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+            )}
           </div>
         </div>
       </div>
     </Style>
   )
-}
-
-AQContent.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  nodeName: PropTypes.string.isRequired,
-  data: PropTypes.shape({
-    pm25: PropTypes.number,
-    pm10: PropTypes.number,
-    no2: PropTypes.number,
-    so2: PropTypes.number,
-    temp: PropTypes.number,
-    humidity: PropTypes.number,
-  }).isRequired,
 }
 
 const Style = styled.div`
@@ -461,6 +219,44 @@ const Style = styled.div`
     padding-left: 10px;
   }
 
+  .measurements-row {
+    width: 100%; 
+    border-top: 1px solid ${Color.fourthColor + 33};
+  }
+
+  .measurements-title {
+    width: 100%;
+    margin: 0;
+    padding-left: 15px;
+  }
+
+  .selected-node-title {
+    display: flex;
+    align-items: center;
+    max-height: 50px;
+    font-size: -webkit-xxx-large;
+    text-transform: uppercase;
+  }
+
+  .measurements-data {
+    margin-left: 45px;
+  }
+
+  .measurements-data ul {
+    list-style: none;
+    font-weight: bold;
+    color: white;
+  }
+
+  .param-label:hover {
+    cursor: help;
+  }
+
+  .param-value {
+    margin: 0px 10px 0px 10px;
+    font-weight: normal;
+  }
+
   .cautionary-tab {
     display: flex;
     flex-flow: column;
@@ -483,45 +279,6 @@ const Style = styled.div`
     padding-top: 0px;
     min-height: 320px;
     max-height: 320px;
-  }
-
-  .carousel-content {
-    margin-top: 10px;
-    color: white;
-  }
-  .carousel-content-title {
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-  .carousel-content ul {
-    list-style: none;
-  }
-
-  #style-5::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: black;
-  }
-
-  #style-5::-webkit-scrollbar {
-    width: 5px;
-    background-color: black;
-  }
-
-  #style-5::-webkit-scrollbar-thumb {
-    background-color: #99ddff;
-
-    background-image: -webkit-gradient(
-      linear,
-      0 0,
-      0 100%,
-      color-stop(0.5, rgba(255, 255, 255, 0.2)),
-      color-stop(0.5, transparent),
-      to(transparent)
-    );
   }
 
   .carousel-control-prev,
