@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { GoogleMap, Marker, InfoWindow } from 'react-google-maps'
-import nodes from './AqmsNodes'
+import { AirMonitoringNodes as nodes } from '../../config'
 import mapStyles from './GoogleMapStyle'
 import nodeIcon from '../../assets/images/NodeIcon.png'
 

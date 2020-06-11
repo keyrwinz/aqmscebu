@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { OverlayTrigger } from 'react-bootstrap'
 import { AppCtx } from '../../../provider'
 import WeatherIcon from './WeatherIcon'
-import AqmsNodes from '../GoogleMap/AqmsNodes'
+import { AirMonitoringNodes as AqmsNodes } from '../../config'
 import Spinner from '../Spinner'
 
 const { API_WEATHER } = process.env
