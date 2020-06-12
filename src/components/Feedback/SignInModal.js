@@ -41,11 +41,7 @@ const SignInModal = ({ open, setOpen }) => {
     severity: 'info',
   })
 
-  console.log('Rendered modal')
-
-  const handleClose = () => {
-    setOpen(false)
-  }
+  const handleClose = () => setOpen(false)
 
   const signInHandler = () => {
     setFeedback(true) // display loading backdrop...
