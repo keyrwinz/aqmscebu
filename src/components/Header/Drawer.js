@@ -7,6 +7,8 @@ import {
 import {
   Home, Assessment, Info, Menu, GitHub, Facebook, Twitter, Instagram,
 } from '@material-ui/icons'
+import { SocialMediaLinks } from '../../config'
+import Alert from '../Utils/alert'
 import Links from './Links'
 import Color from '../Theme/ColorPallete'
 
@@ -34,6 +36,10 @@ const getIcon = (icon) => {
 }
 
 const Drawer = () => {
+  const [alert, setAlert] = useState({
+    open: false,
+    message: '',
+  })
   const [state, setState] = useState(false)
 
   const toggleDrawer = (newState) => (event) => {
@@ -42,14 +48,9 @@ const Drawer = () => {
   }
 
   const navigateLink = (route) => navigate(route)
-  const navigatePlatforms = (route) => window.open(route, '_blank', 'noopener')
-
-  const platforms = [
-    { text: 'Github', icon: 'Github', route: 'https://github.com/keyrwinz/aqmscebu' },
-    { text: 'Facebook', icon: 'Facebook', route: '#f' },
-    { text: 'Twitter', icon: 'Twitter', route: '#t' },
-    { text: 'Instagram', icon: 'Instagram', route: '#i' },
-  ]
+  const navigatePlatforms = (route) => (route.slice(0, 4) === 'http'
+    ? window.open(route, '_blank', 'noopener')
+    : setAlert({ open: true, message: `No ${route} Link Yet` }))
 
   const DrawerLinks = (
     <div
@@ -74,7 +75,7 @@ const Drawer = () => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      {platforms.map((platform) => (
+      {SocialMediaLinks.map((platform) => (
         <ListItem button key={platform.text} onClick={() => navigatePlatforms(platform.route)}>
           <ListItemIcon>
             {getIcon(platform.icon)}
@@ -87,6 +88,7 @@ const Drawer = () => {
 
   return (
     <Style>
+      <Alert open={alert.open} setOpen={setAlert} message={alert.message} severity="warning" />
       <Button className="drawer-icon" onClick={toggleDrawer(true)}>
         <Menu style={{ color: Color.secondaryColor }} />
       </Button>
