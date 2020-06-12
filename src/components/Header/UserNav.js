@@ -5,12 +5,12 @@ import { Link } from 'gatsby'
 import {
   Button, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList, Avatar,
 } from '@material-ui/core'
-import { UserCtx } from '../../../provider'
+import { AppCtx } from '../../../provider'
 import Firebase from '../Firebase/firebase'
-import SignInModal from '../Modals/SignInModal'
+import SignInModal from '../Feedback/SignInModal'
 
 const UserNav = () => {
-  const store = useContext(UserCtx)
+  const store = useContext(AppCtx)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
