@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { GoogleMap, Marker, InfoWindow } from 'react-google-maps'
+import {
+  withGoogleMap, withScriptjs, GoogleMap, Marker, InfoWindow,
+} from 'react-google-maps'
 import { AirMonitoringNodes as nodes } from '../../config'
 import mapStyles from './GoogleMapStyle'
 import nodeIcon from '../../assets/images/NodeIcon.png'
@@ -61,4 +63,4 @@ Map.propTypes = {
   nodeSelectFunc: PropTypes.func.isRequired,
 }
 
-export default Map
+export default withScriptjs(withGoogleMap(Map))
