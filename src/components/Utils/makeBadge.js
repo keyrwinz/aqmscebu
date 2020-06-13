@@ -6,24 +6,24 @@ const makeBadge = (classification) => {
 
   switch (classification) {
     case 'Good':
-      bg = 'Green'
+      bg = 'limegreen'
       break
     case 'Fair':
-      bg = 'Yellow'
-      color = 'Black'
+      bg = 'yellow'
+      color = 'black'
       break
     case 'Unhealthy':
-      bg = 'Orange'
-      color = 'Black'
+      bg = 'orange'
+      color = 'black'
       break
     case 'Very Unhealthy':
-      bg = 'Red'
+      bg = 'red'
       break
     case 'Acutely Unhealthy':
-      bg = 'Purple'
+      bg = 'purple'
       break
     case 'Emergency':
-      bg = 'Maroon'
+      bg = 'maroon'
       break
     default:
       break
