@@ -1,15 +1,16 @@
 {
-  "name": "gatsby-starter-default",
+  "name": "airnuff-air-quality-monitoring",
   "private": true,
-  "description": "A simple starter to get up and developing quickly with Gatsby",
+  "description": "A Realtime Air Quality Monitoring Web Application",
   "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "author": "Keyrwin Felisilda <keyrwinfelisilda@gmail.com>",
   "dependencies": {
     "@loadable/component": "^5.12.0",
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.55",
     "apexcharts": "^3.15.5",
+    "axios": "^0.19.2",
     "babel-plugin-styled-components": "^1.10.7",
     "bootstrap": "^4.4.1",
     "firebase": "^7.8.1",
@@ -37,7 +38,6 @@
     "react-dom": "^16.12.0",
     "react-google-maps": "^9.4.5",
     "react-helmet": "^5.2.1",
-    "react-live-clock": "^4.0.3",
     "react-loadable": "^5.5.0",
     "react-paginate": "^6.3.2",
     "react-table": "^7.0.0-rc.15",
@@ -54,6 +54,11 @@
     "prettier": "^1.19.1"
   },
   "keywords": [
+    "realtime",
+    "air",
+    "quality",
+    "monitoring",
+    "air quality monitoring",
     "gatsby"
   ],
   "license": "MIT",
@@ -68,9 +73,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+    "url": "https://github.com/keyrwinz/aqmscebu"
   },
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/keyrwinz/aqmscebu/issues"
   }
 }
