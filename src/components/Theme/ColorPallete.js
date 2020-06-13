@@ -5,4 +5,6 @@ export default {
   fourthColor: '#E6E2DD',
   whiteColor: '#fff',
   blackColor: '#000',
+  greenColor: '#00FF7F',
+  redColor: '#FF414D',
 }
