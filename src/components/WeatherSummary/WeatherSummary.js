@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 import { OverlayTrigger } from 'react-bootstrap'
 import { AppCtx } from '../../../provider'
 import WeatherIcon from './WeatherIcon'
@@ -17,11 +18,15 @@ const WeatherSummary = ({ popover }) => {
   const fetchWeather = async ({ lat, lng }) => {
     setWeatherIcon(null)
     setWeather({ loading: true })
-    const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`)
-    const resData = await response.json()
-    const { icon } = resData.currently
-    setWeatherIcon(<WeatherIcon icon={icon} />)
-    setWeather(resData)
+    try {
+      const response = await axios(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`)
+      const { data } = response
+      const { icon } = data.currently
+      setWeatherIcon(<WeatherIcon icon={icon} />)
+      setWeather(data)
+    } catch (error) {
+      console.log({ error })
+    }
   }
 
   useEffect(() => {
