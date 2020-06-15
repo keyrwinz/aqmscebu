@@ -30,18 +30,18 @@ const CautionaryStatements = ({ param, classification }) => {
 
   if (param) {
     if (classification === 'Good') {
-      color = 'Green'
+      color = 'limegreen'
       emoticon = HappyFace
       ListStatements = [Statements[0]]
     } else if (classification === 'Fair') {
-      color = 'Yellow'
+      color = 'yellow'
       emoticon = SmileFace
       ListStatements = [Statements[0]]
     } else if (classification === 'Unhealthy') {
-      color = 'Orange'
+      color = 'orange'
       ListStatements = [Statements[1]]
     } else if (classification === 'Very Unhealthy') {
-      color = 'Red'
+      color = 'red'
       ListStatements = [
         Statements[2],
         Statements[3],
@@ -49,7 +49,7 @@ const CautionaryStatements = ({ param, classification }) => {
         Statements[5],
       ]
     } else if (classification === 'Acutely Unhealthy') {
-      color = 'Purple'
+      color = 'purple'
       ListStatements = [
         Statements[6],
         Statements[3],
@@ -58,7 +58,7 @@ const CautionaryStatements = ({ param, classification }) => {
         Statements[8],
       ]
     } else if (classification === 'Emergency') {
-      color = 'Maroon'
+      color = 'maroon'
       ListStatements = [Statements[9], Statements[10], Statements[11]]
     } else {
       emoticon = SadFace
