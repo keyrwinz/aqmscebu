@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { TextField } from '@material-ui/core/'
 import { Autocomplete } from '@material-ui/lab/'
 import { withStyles } from '@material-ui/core/styles'
+import { AppCtx } from '../../../provider'
 import Color from '../Theme/ColorPallete'
-import AqmsNodes from '../GoogleMap/AqmsNodes'
+import { AirMonitoringNodes as AqmsNodes } from '../../config'
 
 const CssTextField = withStyles({
   root: {
@@ -37,22 +38,38 @@ const CssTextField = withStyles({
   },
 })(TextField)
 
-const SearchBar = () => (
-  <Autocomplete
-    className="nodeSearchbar"
-    options={AqmsNodes.nodesLoc}
-    getOptionLabel={(option) => option.text}
-    renderInput={(params) => (
-      <CssTextField
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        {...params}
-        className="nodeSearchbar"
-        label="Search Node"
-        variant="outlined"
-        size="small"
-      />
-    )}
-  />
-)
+const SearchBar = () => {
+  const store = useContext(AppCtx)
+  const { updateNode } = store
+
+  const onChangeHandler = (_, value) => {
+    if (value === null) return
+    updateNode(value.id)
+  }
+
+  return (
+    <Autocomplete
+      className="nodeSearchbar"
+      options={AqmsNodes.nodesLoc}
+      getOptionLabel={(option) => option.text}
+      onChange={onChangeHandler}
+      renderOption={(option) => (
+        <>
+          {`${option.text}, ${option.locality}`}
+        </>
+      )}
+      renderInput={(params) => (
+        <CssTextField
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          {...params}
+          className="nodeSearchbar"
+          label="Search Node"
+          variant="outlined"
+          size="small"
+        />
+      )}
+    />
+  )
+}
 
 export default SearchBar
