@@ -1,52 +1,46 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { useStaticQuery, graphql, Link } from 'gatsby'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
-import {
-  withGoogleMap,
-  withScriptjs,
-} from 'react-google-maps'
-import Firebase from '../components/Firebase/firebase'
+import { AppCtx } from '../../provider'
 import Layout from '../components/layout'
-import Color from '../components/Theme/ColorPallete'
 import SEO from '../components/seo'
+import Firebase from '../components/Firebase/firebase'
 import TimeSeriesGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
-import AirQualitySummary from '../components/AirQualitySummary/AirQualitySummary'
+import AirQualitySummary from '../components/AirQualitySummary'
+import SummaryBar from '../components/Others/SummaryBar'
+import SearchBar from '../components/Others/SearchBar'
+import Spinner from '../components/Spinner'
+import Color from '../components/Theme/ColorPallete'
 
-const MapWrapped = withScriptjs(withGoogleMap(GoogleMap))
 const { API_MAP } = process.env
 
 const IndexPage = () => {
-  const author = useStaticQuery(graphql`
-    query SiteAuthorQuery {
-      site {
-        siteMetadata {
-          author
-        }
-      }
-    }
-  `)
-
-  const [selectedNode, setSelectedNode] = useState('usc-mc')
+  const [state, setState] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [data, setData] = useState([])
-  const [state, setState] = useState({})
-  const [loading, setLoading] = useState(false)
-  const graphRef = useRef()
+  const store = useContext(AppCtx)
+  const { node, updateNode } = store
 
   const firebaseDB = Firebase.database()
-  const nodeRef = firebaseDB.ref(`aqmnodes/${selectedNode}/states`)
+  const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`).orderByKey().limitToLast(1)
 
-  const firebaseCallback = (collection) => {
-    //
+  const firebaseCallback = (snapshot) => {
+    let snapshotVal
+    snapshot.forEach((d) => {
+      snapshotVal = d.val()
+    })
+    setState(snapshotVal)
+    setLoading(false)
   }
 
   useEffect(() => {
+    setLoading(true)
     nodeRef.on('value', firebaseCallback)
 
     return () => {
       nodeRef.off('value', firebaseCallback)
     }
-  }, [])
+  }, [node])
 
   let pm25 = []
   let pm10 = []
@@ -58,21 +52,7 @@ const IndexPage = () => {
   no2 = data.map((x) => [x.timestamp, x.no2 === 'No data' ? 0 : x.no2])
   so2 = data.map((x) => [x.timestamp, x.so2 === 'No data' ? 0 : x.so2])
 
-  // onclick nodes in google map
-  const onClickMapNode = (nodeId) => {
-    setSelectedNode(nodeId)
-  }
-
-  const scrollTo = () => {
-    const { top } = graphRef.current.getBoundingClientRect()
-    const currentY = window.scrollY
-    setTimeout(() => {
-      window.scrollTo({
-        top: top + currentY,
-        behavior: 'smooth',
-      })
-    }, 200)
-  }
+  const onClickMapNode = (nodeId) => updateNode(nodeId)
 
   return (
     <Layout>
@@ -81,50 +61,29 @@ const IndexPage = () => {
         <div className="container-fluid main-container">
           <div className="row">
             <div className="col-md-7 col-12">
-              <input className="form-control" id="nodeSearch" type="text" placeholder="Search..." />
+              <SearchBar />
             </div>
-            <div className="col-md-5 col-12 groupBtn">
-              <button
-                className="btn btn-dark"
-                style={{ width: '35%' }}
-                type="button"
-                onClick={() => scrollTo()}
-              >
-                <div className="optionsBtn">
-                  View Graph
-                </div>
-              </button>
-              <div className="divider" />
-              <Link className="btn btn-dark" style={{ width: '35%' }} to="/realtimedata">
-                <div className="optionsBtn">Realtime Data</div>
-              </Link>
-              <div className="divider" />
-              <Link className="btn btn-dark" style={{ width: '35%' }} to="/download">
-                <div className="optionsBtn">Download Data</div>
-              </Link>
+            <div className="col-md-5 col-12">
+              <SummaryBar node={node} state={state} loading={loading} />
             </div>
           </div>
           <div className="row">
             <div className="col-md-7 col-12 googleMap" style={{ minHeight: '500px' }}>
-              <MapWrapped
+              <GoogleMap
                 nodeSelectFunc={onClickMapNode}
                 googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${
                   API_MAP
                 }`}
-                loadingElement={<div style={{ height: '100%' }} />}
+                loadingElement={<Spinner />}
                 containerElement={<div style={{ height: '100%' }} />}
                 mapElement={<div style={{ height: '100%' }} />}
               />
             </div>
             <div className="col-md-5 col-12">
-              <AirQualitySummary
-                loading={loading}
-                nodeName={selectedNode}
-                data={state}
-              />
+              <AirQualitySummary node={node} state={state} loading={loading} />
             </div>
           </div>
-          <div id="first-graph" className="row graph" ref={graphRef}>
+          <div className="row graph">
             <div className="col col-12">
               <div className="borderbox">
                 <TimeSeriesGraph title="Data Measurement for PM2.5" unit="µg/m³" label="PM2.5" states={pm25} />
@@ -152,19 +111,6 @@ const IndexPage = () => {
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="col">
-              <div className="footer borderbox" style={{ color: 'white' }}>
-                ©
-                { new Date().getFullYear() }
-                , Built by
-                &nbsp;
-                <a href="#home">
-                  {author.site.siteMetadata.author}
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
       </Style>
     </Layout>
@@ -181,12 +127,9 @@ const Style = styled.div`
     }
   }
 
-  .footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: ${Color.thirdColor};
-    min-height: 91px;
+  .nodeSearchbar {
+    width: 100%;
+    color: ${Color.whiteColor};
   }
 
   .borderbox {
@@ -201,11 +144,7 @@ const Style = styled.div`
     width: 100%;
     margin-bottom: 15px;
   }
-  div.groupBtn {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-  }
+
   div.btmDiv {
     display: flex;
     width: 100%;
@@ -226,35 +165,15 @@ const Style = styled.div`
   }
 
   @media (max-width: 768px) {
-    .groupBtn a, .groupBtn button {
-      min-height: 62px !important;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  
   }
 
   @media (max-width: 1130px) {
-    .groupBtn a, .groupBtn button {
-      min-height: 69.5px 
-    }
+    
   }
 
   @media (min-width: 1130px) {
-    .optionsBtn {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-    .groupBtn a, .groupBtn button {
-      max-height: 62.5px
-    }
-  }
 
-  .divider {
-    border-left: 2px solid ${Color.fourthColor};
-    height: 25px;
-    margin: 0 7px;
   }
 `
 
