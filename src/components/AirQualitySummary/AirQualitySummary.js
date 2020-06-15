@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import {
   Carousel, OverlayTrigger,
 } from 'react-bootstrap'
 import styled from 'styled-components'
-import Firebase from '../Firebase/firebase'
-import { AppCtx } from '../../../provider'
 import WeatherSummary from '../WeatherSummary'
 import CautionaryStatements from '../CautionaryStatements'
 import Color from '../Theme/ColorPallete'
@@ -13,36 +12,7 @@ import popover from '../Utils/popover'
 import airClassification from '../Utils/airClassification'
 import makeBadge from '../Utils/makeBadge'
 
-const AQContent = () => {
-  const [state, setState] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  const store = useContext(AppCtx)
-  const { node } = store
-  console.log({ node })
-  console.log({ state })
-  const firebaseDB = Firebase.database()
-  const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`).orderByKey().limitToLast(1)
-
-  const firebaseCallback = (snapshot) => {
-    let snapshotVal
-    snapshot.forEach((d) => {
-      snapshotVal = d.val()
-    })
-    setState(snapshotVal)
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    setLoading(true)
-    nodeRef.on('value', firebaseCallback)
-
-    return () => {
-      nodeRef.off('value', firebaseCallback)
-    }
-  }, [node])
-
-  // init. parameters data from state (db)
+const AQContent = ({ node, state, loading }) => {
   const pm25 = state?.p2
   const pm10 = state?.p1
   const no2 = state?.n
@@ -109,21 +79,16 @@ const AQContent = () => {
       <div className="measurements-tab">
         <div className="weather-row">
           <WeatherSummary popover={popover} />
-          <div className="clock">
-            {/* <Clock
-              format="h:mm A"
-              ticking
-              timezone="Asia/Singapore"
-            /> */}
-          </div>
         </div>
         <div className="measurements-row">
           <div className="row measurements-title">
             <div className="col col-12">
               <span>Selected Node: </span>
             </div>
-            <div className="col col-12 selected-node-title">
-              {node}
+            <div className="col col-12 selected-node-title-wrapper">
+              <span className="selected-node-title">
+                {node}
+              </span>
             </div>
             <div className="col col-12">
               <span>Measurements:</span>
@@ -138,6 +103,7 @@ const AQContent = () => {
                     overlay={popover(param)}
                   >
                     <span className="param-label">
+                      {/* index < 4 -> excluding TEMP and HUMIDITY label from having <sub></sub> */}
                       {index < 4 ? param.slice(0, 2) : param}
                       <sub>
                         {index < 4 ? param.slice(2, 4) : ' '}
@@ -146,7 +112,9 @@ const AQContent = () => {
                       :
                     </span>
                   </OverlayTrigger>
-                  <span className="param-value">{data[param].value}</span>
+                  <span className={`param-value ${data[param].value === 'No data' ? 'warning' : ''}`}>
+                    {data[param].value}
+                  </span>
                   {data[param].badge}
                 </li>
               ))}
@@ -209,16 +177,6 @@ const Style = styled.div`
     padding: 0;
   }
 
-  .clock {
-    right: 0;
-    position: absolute;
-    height: 51px;
-    display: flex;
-    align-items: center;
-    background: ${Color.thirdColor};
-    padding-left: 10px;
-  }
-
   .measurements-row {
     width: 100%; 
     border-top: 1px solid ${Color.fourthColor + 33};
@@ -228,14 +186,21 @@ const Style = styled.div`
     width: 100%;
     margin: 0;
     padding-left: 15px;
+    padding-right: 15px;
   }
 
-  .selected-node-title {
+  .selected-node-title-wrapper {
     display: flex;
     align-items: center;
     max-height: 50px;
     font-size: -webkit-xxx-large;
     text-transform: uppercase;
+  }
+
+  .selected-node-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .measurements-data {
@@ -244,7 +209,6 @@ const Style = styled.div`
 
   .measurements-data ul {
     list-style: none;
-    font-weight: bold;
     color: white;
   }
 
@@ -253,8 +217,13 @@ const Style = styled.div`
   }
 
   .param-value {
+    color: ${Color.secondaryColor};
     margin: 0px 10px 0px 10px;
-    font-weight: normal;
+    font-weight: bold;
+  }
+
+  .warning {
+    color: yellow;
   }
 
   .cautionary-tab {
@@ -285,10 +254,33 @@ const Style = styled.div`
   .carousel-control-next {
     width: 45px;
   }
-  
-  .carousel-indicators {
-    bottom: -30px !important;
+
+  @media (min-width: 978px) {
+    .carousel-indicators {
+      bottom: -30px;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 977px) {
+    .carousel-indicators {
+      bottom: -10px;
+    }
+  }
+  @media (min-width: 354px) and (max-width: 767px) {
+    .carousel-indicators {
+      bottom: -30px;
+    }
   }
 `
+
+AQContent.propTypes = {
+  node: PropTypes.string.isRequired,
+  state: PropTypes.shape(),
+  loading: PropTypes.bool,
+}
+
+AQContent.defaultProps = {
+  state: {},
+  loading: false,
+}
 
 export default AQContent
