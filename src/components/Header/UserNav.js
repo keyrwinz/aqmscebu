@@ -14,8 +14,17 @@ const UserNav = () => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    Firebase.auth().onAuthStateChanged((userInfo) => {
-      store.updateUser(userInfo)
+    Firebase.auth().onAuthStateChanged(async (userInfo) => {
+      if (userInfo) {
+        try {
+          const token = await userInfo.getIdToken()
+          store.updateUser({ ...userInfo, token })
+        } catch (error) {
+          console.log(`On AuthStateChanged Error: ${error}`)
+        }
+      } else {
+        store.updateUser(null)
+      }
     })
   }, [])
 
@@ -23,7 +32,7 @@ const UserNav = () => {
     const name = store.user?.displayName
     const email = store.user?.email
     const uid = store.user?.uid
-    const photoUrl = store.user?.providerData[0]?.photoURL
+    const photoUrl = store.user?.photoURL
     setUser({
       name,
       email,
