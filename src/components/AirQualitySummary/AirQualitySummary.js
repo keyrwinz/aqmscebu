@@ -69,7 +69,7 @@ const AQContent = ({ node, state, loading }) => {
       data.TEMP.value = temp
     }
     if (humidity || humidity === 0) {
-      data.HUMIDITY.value = temp
+      data.HUMIDITY.value = humidity
     }
     paramKeys = Object.keys(paramClassifications)
   }

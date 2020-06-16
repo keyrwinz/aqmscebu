@@ -54,8 +54,8 @@ const SignInModal = ({ open, setOpen }) => {
       })
       .catch((error) => {
         setFeedback(false)
-        setAlert({ open: true, message: error, severity: 'error' })
-        console.log({ error })
+        setAlert({ open: true, message: 'Error signing in', severity: 'error' })
+        console.log(`Sign-in Error: ${error}`)
       })
   }
 
