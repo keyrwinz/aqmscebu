@@ -12,20 +12,24 @@ const { API_WEATHER } = process.env
 const WeatherSummary = ({ popover }) => {
   const store = useContext(AppCtx)
   const { node } = store
-  const [weatherIcon, setWeatherIcon] = useState(null)
-  const [weather, setWeather] = useState({ loading: true })
+  const [weather, setWeather] = useState({
+    loading: true, icon: null, data: null, error: false,
+  })
 
   const fetchWeather = async ({ lat, lng }) => {
-    setWeatherIcon(null)
-    setWeather({ loading: true })
+    setWeather({
+      loading: true, icon: null, data: null, error: false,
+    })
     try {
-      const response = await axios(`https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`)
+      const response = await axios(`http://airnuff.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`)
       const { data } = response
       const { icon } = data.currently
-      setWeatherIcon(<WeatherIcon icon={icon} />)
-      setWeather(data)
+      setWeather({
+        loading: false, icon: <WeatherIcon icon={icon} />, data, error: false,
+      })
     } catch (error) {
-      console.log({ error })
+      setWeather({ ...weather, loading: false, error: true })
+      console.log(`Weather fetch error: ${error}`)
     }
   }
 
@@ -34,18 +38,30 @@ const WeatherSummary = ({ popover }) => {
     fetchWeather(nodeObj)
   }, [node])
 
+  if (weather.loading) {
+    return <Spinner small style={{ marginLeft: '15px' }} />
+  }
+
+  if (weather.error) {
+    return (
+      <div style={{ marginLeft: '14px' }}>
+        Error fetching weather data
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="weather-icon">
         <OverlayTrigger
           placement="top"
-          overlay={popover('weather', weather.loading ? 'Loading...' : weather.currently.icon)}
+          overlay={popover('weather', weather.data?.currently.icon)}
         >
-          <span>{weatherIcon}</span>
+          <span>{weather.icon}</span>
         </OverlayTrigger>
       </div>
       <div className="weather-summary">
-        {weather.loading ? <Spinner small style={{ marginLeft: '15px' }} /> : weather.currently.summary }
+        {weather.data?.currently.summary }
       </div>
     </>
   )
