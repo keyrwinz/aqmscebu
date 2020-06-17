@@ -40,7 +40,8 @@ const CssTextField = withStyles({
 
 const SearchBar = () => {
   const store = useContext(AppCtx)
-  const { updateNode } = store
+  const { node, updateNode } = store
+  const selectedNode = AqmsNodes.nodesLoc.find((nodeObj) => nodeObj.id === node)
 
   const onChangeHandler = (_, value) => {
     if (value === null) return
@@ -50,6 +51,7 @@ const SearchBar = () => {
   return (
     <Autocomplete
       className="nodeSearchbar"
+      value={selectedNode}
       options={AqmsNodes.nodesLoc}
       getOptionLabel={(option) => option.text}
       onChange={onChangeHandler}
