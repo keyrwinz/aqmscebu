@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import styled from 'styled-components'
+import Color from '../Theme/ColorPallete'
 
 const RenderData = ({ data, pageSize, loading }) => {
   const [displayData, setDisplayData] = useState([])
@@ -47,7 +48,7 @@ const RenderData = ({ data, pageSize, loading }) => {
 
   return (
     <Style>
-      <table className="table table-dark table-striped">
+      <table className="table">
         <thead>
           <tr>
             <th scope="col">
@@ -93,10 +94,18 @@ RenderData.defaultProps = {
 const Style = styled.div`
   .table {
     margin-bottom: 0rem;
+    color: ${Color.whiteColor};
   }
   .table thead th {
     border: 0px;
   }
+  .table tbody tr:nth-of-type(odd) {
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .table tbody tr:nth-of-type(even) {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
   @keyframes pulse {
     50% {
       opacity: 0.2;
