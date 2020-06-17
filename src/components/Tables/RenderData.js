@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import styled from 'styled-components'
 
-const RenderData = ({ data, pageSize }) => {
+const RenderData = ({ data, pageSize, loading }) => {
   const [displayData, setDisplayData] = useState([])
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const RenderData = ({ data, pageSize }) => {
   }, [data])
 
   const tableRows = []
-  if (!data.length) {
+  if (loading) {
     let i = 0
     for (i; i < pageSize; i += 1) {
       tableRows.push(
@@ -81,32 +81,39 @@ const RenderData = ({ data, pageSize }) => {
 
 RenderData.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape()),
-  pageSize: PropTypes.number,
+  pageSize: PropTypes.number.isRequired,
+  loading: PropTypes.bool,
 }
 
 RenderData.defaultProps = {
   data: [],
-  pageSize: 10,
+  loading: true,
 }
 
 const Style = styled.div`
-@keyframes pulse {
-  50% {
-    opacity: 0.2;
+  .table {
+    margin-bottom: 0rem;
   }
-  100% {
-    opacity: 1;
+  .table thead th {
+    border: 0px;
   }
-}
-span {
-  display: block;
-  border-radius: 10px;
-  width: 50px;
-  height: 25px;
-  animation: pulse 2s ease-out;
-  animation-iteration-count: infinite;
-  background: rgba(95, 95, 95, 1);
-}
+  @keyframes pulse {
+    50% {
+      opacity: 0.2;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  span {
+    display: block;
+    border-radius: 10px;
+    width: 50px;
+    height: 25px;
+    animation: pulse 2s ease-out;
+    animation-iteration-count: infinite;
+    background: rgba(95, 95, 95, 1);
+  }
 `
 
 export default RenderData
