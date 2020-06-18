@@ -15,40 +15,45 @@ const WeatherSummary = ({ popover }) => {
   const [weather, setWeather] = useState({
     loading: true, icon: null, data: null, error: false,
   })
+  const { CancelToken } = axios
+  const source = CancelToken.source()
+  let unmounted = false
 
   const fetchWeather = async ({ lat, lng }) => {
     setWeather({
       loading: true, icon: null, data: null, error: false,
     })
     try {
-      const response = await axios(`http://airnuff.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`)
+      const response = await axios(
+        `http://airnuff.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`,
+        { cancelToken: source.token },
+      )
       const { data } = response
       const { icon } = data.currently
-      setWeather({
-        loading: false, icon: <WeatherIcon icon={icon} />, data, error: false,
-      })
+      if (!unmounted) {
+        setWeather({
+          loading: false, icon: <WeatherIcon icon={icon} />, data, error: false,
+        })
+      }
     } catch (error) {
-      setWeather({ ...weather, loading: false, error: true })
-      console.log(`Weather fetch error: ${error}`)
+      if (!unmounted) {
+        setWeather({ ...weather, loading: false, error: true })
+        console.log(`Weather fetch error: ${error}`)
+      }
     }
   }
 
   useEffect(() => {
     const nodeObj = AqmsNodes.nodesLoc.find((obj) => obj.id === node)
     fetchWeather(nodeObj)
+    return () => {
+      unmounted = true
+      source.cancel()
+    }
   }, [node])
 
-  if (weather.loading) {
-    return <Spinner small style={{ marginLeft: '15px' }} />
-  }
-
-  if (weather.error) {
-    return (
-      <div style={{ marginLeft: '14px' }}>
-        Error fetching weather data
-      </div>
-    )
-  }
+  if (weather.loading) return <Spinner small style={{ marginLeft: '15px' }} />
+  if (weather.error) return <div style={{ marginLeft: '14px' }}>Error fetching weather data</div>
 
   return (
     <>
