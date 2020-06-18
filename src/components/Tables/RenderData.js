@@ -28,8 +28,7 @@ const RenderData = ({
       </tr>,
     )
   } else if (loading) {
-    let i = 0
-    for (i; i < pageSize; i += 1) {
+    for (let i = 0; i < pageSize; i += 1) {
       tableRows.push(
         <tr id="loading-tr" key={i}>
           <td><span className="td-loading" /></td>
@@ -49,12 +48,12 @@ const RenderData = ({
       return (tableRows.push(
         // eslint-disable-next-line react/no-array-index-key
         <tr key={index}>
-          <td>{d.p2 ? d.p2 : 'No data'}</td>
-          <td>{d.p1 ? d.p1 : 'No data'}</td>
-          <td>{d.n ? d.n : 'No data'}</td>
-          <td>{d.s ? d.s : 'No data'}</td>
-          <td>{d.h ? d.h : 'No data'}</td>
-          <td>{d.te ? d.te : 'No data'}</td>
+          <td>{d.p2 || d.p2 === 0 ? d.p2 : 'No data'}</td>
+          <td>{d.p1 || d.p1 === 0 ? d.p1 : 'No data'}</td>
+          <td>{d.n || d.n === 0 ? d.n : 'No data'}</td>
+          <td>{d.s || d.s === 0 ? d.s : 'No data'}</td>
+          <td>{d.h || d.h === 0 ? d.h : 'No data'}</td>
+          <td>{d.te || d.te === 0 ? d.te : 'No data'}</td>
           <td>{d.ti ? timestamp : 'No data'}</td>
         </tr>,
       ))
