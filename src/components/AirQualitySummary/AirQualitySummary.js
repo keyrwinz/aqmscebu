@@ -25,8 +25,8 @@ const AQContent = ({ node, state, loading }) => {
     PM10: { value: 'No data', badge: '' },
     NO2: { value: 'No data', badge: '' },
     SO2: { value: 'No data', badge: '' },
-    TEMP: { value: 'No data', badge: '' },
-    HUMIDITY: { value: 'No data', badge: '' },
+    Temperature: { value: 'No data', badge: '' },
+    Humidity: { value: 'No data', badge: '' },
   }
 
   let paramKeys = []
@@ -42,8 +42,8 @@ const AQContent = ({ node, state, loading }) => {
     data.PM10.value = <Spinner small />
     data.NO2.value = <Spinner small />
     data.SO2.value = <Spinner small />
-    data.TEMP.value = <Spinner small />
-    data.HUMIDITY.value = <Spinner small />
+    data.Temperature.value = <Spinner small />
+    data.Humidity.value = <Spinner small />
   } else {
     if (pm25 || pm25 === 0) {
       data.PM25.value = pm25
@@ -66,10 +66,10 @@ const AQContent = ({ node, state, loading }) => {
       data.SO2.badge = makeBadge(paramClassifications.SO2)
     }
     if (temp || temp === 0) {
-      data.TEMP.value = temp
+      data.Temperature.value = temp
     }
     if (humidity || humidity === 0) {
-      data.HUMIDITY.value = humidity
+      data.Humidity.value = humidity
     }
     paramKeys = Object.keys(paramClassifications)
   }
