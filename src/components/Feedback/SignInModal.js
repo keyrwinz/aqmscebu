@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import {
-  Modal, Backdrop, Fade, Grid, Paper, Button,
+  Modal, Backdrop, Fade, Grid, Paper, Button, IconButton,
 } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
 import PropTypes from 'prop-types'
 import Firebase from '../Firebase/firebase'
 import Alert from '../Utils/alert'
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   paper: {
+    position: 'relative',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -27,12 +29,20 @@ const useStyles = makeStyles((theme) => ({
   },
   gridPaper: {
     padding: theme.spacing(1),
+    maxWidth: '230px',
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+  },
 }))
 
-const SignInModal = ({ open, setOpen }) => {
+const SignInModal = ({
+  open, setOpen, title, description,
+}) => {
   const classes = useStyles()
   const [feedback, setFeedback] = useState(false)
   const [alert, setAlert] = useState({
@@ -54,7 +64,7 @@ const SignInModal = ({ open, setOpen }) => {
       })
       .catch((error) => {
         setFeedback(false)
-        setAlert({ open: true, message: 'Error signing in', severity: 'error' })
+        setAlert({ open: true, message: error, severity: 'error' })
         console.log(`Sign-in Error: ${error}`)
       })
   }
@@ -81,9 +91,13 @@ const SignInModal = ({ open, setOpen }) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">Sign in</h2>
+            <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+            <h3 id="transition-modal-title" style={{ textAlign: 'center' }}>{title}</h3>
+            <p style={{ textAlign: 'center' }}>{description}</p>
             <hr style={{ margin: '20px 0' }} />
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.modal}>
               <Paper className={classes.gridPaper}>
                 <Button style={{ textTransform: 'none' }} onClick={signInHandler}>
                   <img
@@ -107,10 +121,14 @@ const SignInModal = ({ open, setOpen }) => {
 SignInModal.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func.isRequired,
+  title: PropTypes.string,
+  description: PropTypes.string,
 }
 
 SignInModal.defaultProps = {
   open: false,
+  title: 'Sign in',
+  description: '',
 }
 
 export default SignInModal
