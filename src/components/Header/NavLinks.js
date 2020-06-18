@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'gatsby'
-import Links from './Links'
+import { Routes } from '../../config'
 
 const NavLinks = () => (
   <>
     {
-      Links.map((link) => (
+      Routes.map((link) => (
         <Link key={link.route} className="nav-link" to={link.route} activeClassName="active">
           {link.text}
         </Link>

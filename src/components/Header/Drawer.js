@@ -7,9 +7,8 @@ import {
 import {
   Home, Assessment, Info, Menu, GitHub, Facebook, Twitter, Instagram,
 } from '@material-ui/icons'
-import { SocialMediaLinks } from '../../config'
+import { SocialMediaLinks, Routes } from '../../config'
 import Alert from '../Utils/alert'
-import Links from './Links'
 import Color from '../Theme/ColorPallete'
 
 const getIcon = (icon) => {
@@ -59,7 +58,7 @@ const Drawer = () => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      {Links.map((link) => (
+      {Routes.map((link) => (
         <ListItem button key={link.route} onClick={() => navigateLink(link.route)}>
           <ListItemIcon>{getIcon(link.text)}</ListItemIcon>
           <ListItemText primary={link.text} />

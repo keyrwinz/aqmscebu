@@ -1,4 +1,19 @@
 // eslint-disable-next-line import/prefer-default-export
+export const Routes = [
+  {
+    route: '/',
+    text: 'Home',
+  },
+  {
+    route: '/data',
+    text: 'Data',
+  },
+  {
+    route: '/about',
+    text: 'About',
+  },
+]
+
 export const SocialMediaLinks = [
   { text: 'Github', icon: 'Github', route: 'https://github.com/keyrwinz/aqmscebu' },
   { text: 'Facebook', icon: 'Facebook', route: 'Facebook' },
