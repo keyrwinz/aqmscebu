@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import styled from 'styled-components'
+import { Button } from '@material-ui/core/'
 import Color from '../Theme/ColorPallete'
 
-const RenderData = ({ data, pageSize, loading }) => {
+const RenderData = ({
+  data, pageSize, loading, notAuth, showModal,
+}) => {
   const [displayData, setDisplayData] = useState([])
 
   useEffect(() => {
@@ -12,24 +15,36 @@ const RenderData = ({ data, pageSize, loading }) => {
   }, [data])
 
   const tableRows = []
-  if (loading) {
+  if (notAuth) {
+    tableRows.push(
+      <tr key={1}>
+        <td className="td-noAuth" colSpan="7">
+          Looks like you are not logged-in,
+          <Button variant="outlined" onClick={() => showModal()}>
+            Sign in now
+          </Button>
+          to view data
+        </td>
+      </tr>,
+    )
+  } else if (loading) {
     let i = 0
     for (i; i < pageSize; i += 1) {
       tableRows.push(
         <tr id="loading-tr" key={i}>
-          <td><span /></td>
-          <td><span /></td>
-          <td><span /></td>
-          <td><span /></td>
-          <td><span /></td>
-          <td><span style={{ width: '80px' }} /></td>
-          <td><span style={{ width: '120px' }} /></td>
+          <td><span className="td-loading" /></td>
+          <td><span className="td-loading" /></td>
+          <td><span className="td-loading" /></td>
+          <td><span className="td-loading" /></td>
+          <td><span className="td-loading" /></td>
+          <td><span className="td-loading" style={{ width: '80px' }} /></td>
+          <td><span className="td-loading" style={{ width: '120px' }} /></td>
         </tr>,
       )
     }
   } else {
     displayData.map((d, index) => {
-      const time = d.ti ? d.ti : 0
+      const time = d.ti || 0
       const timestamp = moment.unix(time).format('llll')
       return (tableRows.push(
         // eslint-disable-next-line react/no-array-index-key
@@ -84,6 +99,8 @@ RenderData.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape()),
   pageSize: PropTypes.number.isRequired,
   loading: PropTypes.bool,
+  notAuth: PropTypes.bool.isRequired,
+  showModal: PropTypes.func.isRequired,
 }
 
 RenderData.defaultProps = {
@@ -106,6 +123,21 @@ const Style = styled.div`
     background: rgba(0, 0, 0, 0.5);
   }
 
+  .td-noAuth {
+    text-align: center;
+  }
+  .td-noAuth button {
+    margin: 0px 5px;
+    color: ${Color.whiteColor};
+  }
+  .td-noAuth button:hover {
+    color: ${Color.blackColor};
+    background: ${Color.secondaryColor};
+  }
+  .MuiButton-outlined {
+    border: 1px solid ${Color.secondaryColor};
+  }
+
   @keyframes pulse {
     50% {
       opacity: 0.2;
@@ -114,7 +146,7 @@ const Style = styled.div`
       opacity: 1;
     }
   }
-  span {
+  .td-loading {
     display: block;
     border-radius: 10px;
     width: 50px;

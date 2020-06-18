@@ -1,7 +1,6 @@
 import React, {
   useState, useRef, useEffect, useContext,
 } from 'react'
-import { Link } from 'gatsby'
 import {
   Button, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList, Avatar,
 } from '@material-ui/core'
@@ -55,15 +54,10 @@ const UserNav = () => {
       })
   }
 
-  const handleToggle = () => {
-    setOpenAvatarPopper((prevOpen) => !prevOpen)
-  }
+  const handleToggle = () => setOpenAvatarPopper((prevOpen) => !prevOpen)
 
   const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return
-    }
-
+    if (anchorRef.current && anchorRef.current.contains(event.target)) return
     setOpenAvatarPopper(false)
   }
 
@@ -118,11 +112,6 @@ const UserNav = () => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={openAvatarPopper} id="menu-list-grow">
-                  <MenuItem>
-                    <Link to="/about">
-                      About
-                    </Link>
-                  </MenuItem>
                   <MenuItem onClick={handleClose}>My account</MenuItem>
                   <MenuItem onClick={googleSignOut}>Logout</MenuItem>
                 </MenuList>
