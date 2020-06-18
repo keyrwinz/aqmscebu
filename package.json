@@ -14,7 +14,6 @@
     "babel-plugin-styled-components": "^1.10.7",
     "bootstrap": "^4.4.1",
     "firebase": "^7.8.1",
-    "firebase-paginator": "^1.1.2",
     "gatsby": "^2.19.7",
     "gatsby-cli": "^2.11.2",
     "gatsby-image": "^2.2.39",
@@ -36,8 +35,6 @@
     "react-google-maps": "^9.4.5",
     "react-helmet": "^5.2.1",
     "react-loadable": "^5.5.0",
-    "react-paginate": "^6.3.2",
-    "react-table": "^7.0.0-rc.15",
     "react-virtualized": "^9.21.2",
     "styled-components": "^5.0.1"
   },
