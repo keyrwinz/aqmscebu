@@ -31,13 +31,13 @@ const RenderData = ({
     for (let i = 0; i < pageSize; i += 1) {
       tableRows.push(
         <tr id="loading-tr" key={i}>
-          <td><span className="td-loading" /></td>
-          <td><span className="td-loading" /></td>
-          <td><span className="td-loading" /></td>
-          <td><span className="td-loading" /></td>
-          <td><span className="td-loading" /></td>
-          <td><span className="td-loading" style={{ width: '80px' }} /></td>
-          <td><span className="td-loading" style={{ width: '120px' }} /></td>
+          <td><span className="td-loading td1" /></td>
+          <td><span className="td-loading td2" /></td>
+          <td><span className="td-loading td3" /></td>
+          <td><span className="td-loading td4" /></td>
+          <td><span className="td-loading td5" /></td>
+          <td><span className="td-loading td6" style={{ width: '80px' }} /></td>
+          <td><span className="td-loading td7" style={{ width: '120px' }} /></td>
         </tr>,
       )
     }
@@ -142,7 +142,7 @@ const Style = styled.div`
       opacity: 0.2;
     }
     100% {
-      opacity: 1;
+      opacity: 0.9;
     }
   }
   .td-loading {
@@ -150,9 +150,29 @@ const Style = styled.div`
     border-radius: 10px;
     width: 50px;
     height: 25px;
-    animation: pulse 2s ease-out;
+    animation: pulse 3s ease-out;
     animation-iteration-count: infinite;
     background: rgba(95, 95, 95, 1);
+  }
+  .td1 {
+  }
+  .td2 {
+    animation-delay: 0.35s;
+  }
+  .td3 {
+    animation-delay: 0.7s;
+  }
+  .td4 {
+    animation-delay: 1.05s;
+  }
+  .td5 {
+    animation-delay: 1.4s;
+  }
+  .td6 {
+    animation-delay: 1.75s;
+  }
+  .td7 {
+    animation-delay: 2.1s;
   }
 `
 
