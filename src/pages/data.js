@@ -1,15 +1,17 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, {
   useState, useEffect, useRef, useContext,
 } from 'react'
 import styled from 'styled-components'
-import { TablePagination } from '@material-ui/core/'
+import { TablePagination, IconButton } from '@material-ui/core/'
+import ResetIcon from '@material-ui/icons/Autorenew'
 import FirebasePaginator from '../components/Firebase/firebase-paginator'
 import SEO from '../components/seo'
 import Layout from '../components/layout'
 import { AppCtx } from '../../provider'
 import Firebase from '../components/Firebase/firebase'
+import SignInModal from '../components/Feedback/SignInModal'
 import SearchBar from '../components/Others/SearchBar'
+import Switch from '../components/Switch'
 import RenderData from '../components/Tables/RenderData'
 import Color from '../components/Theme/ColorPallete'
 import Alert from '../components/Utils/alert'
@@ -17,6 +19,7 @@ import Alert from '../components/Utils/alert'
 const DownloadData = () => {
   const { user, node } = useContext(AppCtx)
   const [loading, setLoading] = useState(true)
+  const [reset, setReset] = useState(false)
   const [data, setData] = useState([])
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -24,21 +27,40 @@ const DownloadData = () => {
     open: false,
     message: '',
   })
+
+  // Refs
   const paginatorRef = useRef(null)
   const inputPageRef = useRef(null)
 
-  const options = {
-    pageSize: rowsPerPage,
-    finite: true,
-    retainLastPage: false,
-    auth: user?.token || null,
+  // Sign-in Modal
+  const [modalState, setModalState] = useState(false)
+  const setModalStateHandler = () => setModalState(true)
+
+  // Switch for realtime mode
+  const [realtimeMode, setRealtimeMode] = useState(false)
+  const setRealtimeModeHandler = (_, isRealtimeMode) => {
+    if (isRealtimeMode) {
+      console.log({ isRealtimeMode })
+    }
+    setRealtimeMode(isRealtimeMode)
+    setAlert({ open: true, message: 'Realtime mode is currently in development', severity: 'info' })
   }
 
   useEffect(() => {
+    if (user === null) setModalState(true)
+    else setModalState(false)
+
     setLoading(true)
     setPage(0)
+
     const firebaseDB = Firebase.database()
     const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`)
+    const options = {
+      pageSize: rowsPerPage,
+      finite: true,
+      retainLastPage: false,
+      auth: user?.token || null,
+    }
     const paginator = new FirebasePaginator(nodeRef, options)
     paginatorRef.current = paginator
 
@@ -53,16 +75,14 @@ const DownloadData = () => {
     }
 
     paginator.on('value', firebaseCallback)
-
-    // paginator.listen((eventName, eventPayload) => {
-    //   console.log(`Fired ${eventName} with the following payload: `, eventPayload)
-    // })
-
     return () => {
       paginator.off('value', firebaseCallback)
     }
-  }, [node, user, rowsPerPage])
+  }, [node, user, rowsPerPage, reset])
 
+  /**
+   * CHANGING ROW SIZE HANDLER
+   */
   const onChangeRowsPerPageHandler = ({ value }) => {
     if (loading) return
     if (value === rowsPerPage) return
@@ -70,8 +90,41 @@ const DownloadData = () => {
     setPage(0)
   }
 
+  /**
+   * GOTO PAGE HANDLER
+   */
+  const maxPageNum = paginatorRef.current?.pageCount || 0
+  const totalNumberOfData = paginatorRef.current?.totalKeys || 0
+  const goToPageHandler = () => {
+    if (inputPageRef.current && inputPageRef.current.value !== '') {
+      const { value } = inputPageRef.current
+      const currentPage = paginatorRef.current.page.pageNumber
+
+      // set page input validation
+      if (+value === currentPage || parseInt(value, 10) === currentPage) return
+      if ((+value > maxPageNum || parseInt(value, 10) > maxPageNum)
+          || (+value <= 0 || parseInt(value, 10) <= 0)) {
+        setAlert({ open: true, message: `Page must only be in 1 to ${maxPageNum} range.` })
+        return
+      }
+
+      setAlert({ ...alert, open: false })
+      setLoading(true)
+      setPage(value - 1)
+      paginatorRef.current.goToPage(value)
+    } else {
+      setAlert({ open: true, message: 'Invalid page number. Please try again.' })
+    }
+  }
+  // ON GOTO PAGE INPUT -> 'ENTER' EVENT
+  const handleKeyDown = ({ key }) => {
+    if (key === 'Enter') goToPageHandler()
+  }
+
+  /**
+   * NEXT & PREVIOUS PAGE HANDLER
+   */
   const onChangePageHandler = (_, newPage) => {
-    console.log(`New Page: ${newPage} === Current Page: ${page}`)
     if (newPage < page && paginatorRef.current) {
       setLoading(true)
       paginatorRef.current.next()
@@ -83,37 +136,34 @@ const DownloadData = () => {
     setPage(newPage)
   }
 
-  const goToPageHandler = () => {
-    if (inputPageRef.current && inputPageRef.current.value !== '') {
-      const { value } = inputPageRef.current
-      const currentPage = paginatorRef.current.page.pageNumber
-
-      if (+value === currentPage || parseInt(value, 10) === currentPage) return
-
-      console.log({ value })
-      setLoading(true)
-      setPage(value - 1)
-      paginatorRef.current.goToPage(value)
+  /**
+   * RESET HANDLER
+   */
+  const onResetHandler = () => {
+    if (paginatorRef.current && !realtimeMode) {
+      setReset(!reset)
     } else {
-      setAlert({ open: true, message: 'Invalid page number. Please try again.' })
+      console.log('Reset for realtime mode')
     }
   }
 
-  console.log({ paginatorRef })
-  // console.log({ inputPageRef })
-
-  const maxPageNum = paginatorRef.current?.pageCount || 0
-  const totalNumberOfData = paginatorRef.current?.totalKeys || 0
+  // console.log({ paginatorRef })
 
   if (paginatorRef.current && inputPageRef.current) {
     const { pageNumber } = paginatorRef.current
-    inputPageRef.current.value = pageNumber
+    inputPageRef.current.value = pageNumber || 0
   }
 
   return (
     <Layout>
       <SEO title="Data" />
-      <Alert open={alert.open} setOpen={setAlert} message={alert.message} />
+      <Alert open={alert.open} setOpen={setAlert} message={alert.message} severity={alert.severity || 'warning'} />
+      <SignInModal
+        open={modalState}
+        setOpen={setModalState}
+        title="You are not authenticated"
+        description="Sign in now to view data"
+      />
       <Style>
         <div className="container-sm">
           <div className="row">
@@ -144,6 +194,7 @@ const DownloadData = () => {
                     min="1"
                     max={maxPageNum}
                     disabled={!!loading}
+                    onKeyDown={handleKeyDown}
                   />
                   <div className="input-group-append">
                     <span className="input-group-text gotopage-maxcount">
@@ -165,11 +216,28 @@ const DownloadData = () => {
                   onChangeRowsPerPage={(e) => onChangeRowsPerPageHandler(e.target)}
                 />
               </div>
+              <div className="nav-item d-flex" style={{ flexGrow: 1, color: Color.whiteColor }}>
+                <IconButton aria-label="close" onClick={onResetHandler}>
+                  <ResetIcon color="secondary" />
+                </IconButton>
+                <Switch
+                  style={{ margin: '0px 0px 0px auto', paddingRight: '10px' }}
+                  label="Realtime Mode"
+                  state={realtimeMode}
+                  setState={setRealtimeModeHandler}
+                />
+              </div>
             </div>
           </div>
           <div className="row table-row">
             <div className="data-table" style={{ color: 'black', overflowX: 'auto' }}>
-              <RenderData data={data} pageSize={rowsPerPage} loading={loading} />
+              <RenderData
+                data={data}
+                pageSize={rowsPerPage}
+                loading={loading}
+                notAuth={user === null}
+                showModal={setModalStateHandler}
+              />
             </div>
           </div>
         </div>
