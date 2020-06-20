@@ -25,7 +25,7 @@ const WeatherSummary = ({ popover }) => {
     })
     try {
       const response = await axios(
-        `http://airnuff.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`,
+        `https://airnuff.herokuapp.com/https://api.darksky.net/forecast/${API_WEATHER}/${lat},${lng}`,
         { cancelToken: source.token },
       )
       const { data } = response
