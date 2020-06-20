@@ -41,7 +41,7 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-env-variables',
       options: {
-        whitelist: ['API_MAP', 'API_FIRESTORE', 'API_WEATHER'],
+        whitelist: ['API_MAP', 'API_FIREBASE', 'API_WEATHER'],
       },
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality
