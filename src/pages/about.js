@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Layout from '../components/layout'
 import SEO from '../components/seo'
+import Color from '../components/Theme/ColorPallete'
 
 const DownloadData = () => (
   <Layout>
@@ -21,6 +22,7 @@ const DownloadData = () => (
 const Style = styled.div`
   .about-section {
     min-height: 100vh;
+    color: ${Color.whiteColor};
   }
 `
 

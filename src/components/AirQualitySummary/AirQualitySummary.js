@@ -201,6 +201,7 @@ const Style = styled.div`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    color: ${Color.whiteColor};
   }
 
   .measurements-data {
