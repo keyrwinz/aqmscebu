@@ -52,7 +52,7 @@ const UserNav = () => {
       .then(() => {
         setOpenAvatarPopper(false)
       })
-      .catch((err) => {
+      .catch(() => {
         console.log('Error signing out')
       })
   }

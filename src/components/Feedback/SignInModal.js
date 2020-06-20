@@ -62,9 +62,9 @@ const SignInModal = ({
         setOpen(false)
         setAlert({ open: true, message: `Welcome, ${displayName || 'Buddy'}`, severity: 'success' })
       })
-      .catch((error) => {
+      .catch(() => {
         setFeedback(false)
-        setAlert({ open: true, message: error, severity: 'error' })
+        setAlert({ open: true, message: 'Error signing in', severity: 'error' })
         console.log('Error signing in')
       })
   }
