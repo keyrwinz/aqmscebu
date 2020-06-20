@@ -5,15 +5,17 @@ import {
   Button, ClickAwayListener, Grow, Paper, Popper, MenuItem, MenuList, Avatar,
 } from '@material-ui/core'
 import { AppCtx } from '../../../provider'
-import Firebase from '../Firebase/firebase'
+import getFirebase from '../Firebase/firebase'
 import SignInModal from '../Feedback/SignInModal'
 
 const UserNav = () => {
+  const firebase = getFirebase()
   const store = useContext(AppCtx)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    Firebase.auth().onAuthStateChanged(async (userInfo) => {
+    if (!firebase) return
+    firebase.auth().onAuthStateChanged(async (userInfo) => {
       if (userInfo) {
         try {
           const token = await userInfo.getIdToken()
@@ -25,7 +27,7 @@ const UserNav = () => {
         store.updateUser(null)
       }
     })
-  }, [])
+  }, [firebase])
 
   useEffect(() => {
     const name = store.user?.displayName
@@ -45,7 +47,8 @@ const UserNav = () => {
   const anchorRef = useRef(null)
 
   const googleSignOut = () => {
-    Firebase.auth().signOut()
+    if (!firebase) return
+    firebase.auth().signOut()
       .then(() => {
         setOpenAvatarPopper(false)
       })

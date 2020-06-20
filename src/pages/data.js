@@ -8,7 +8,7 @@ import FirebasePaginator from '../components/Firebase/firebase-paginator'
 import SEO from '../components/seo'
 import Layout from '../components/layout'
 import { AppCtx } from '../../provider'
-import Firebase from '../components/Firebase/firebase'
+import getFirebase from '../components/Firebase/firebase'
 import SignInModal from '../components/Feedback/SignInModal'
 import SearchBar from '../components/Others/SearchBar'
 import Switch from '../components/Switch'
@@ -17,6 +17,7 @@ import Color from '../components/Theme/ColorPallete'
 import Alert from '../components/Utils/alert'
 
 const DownloadData = () => {
+  const firebase = getFirebase()
   const { user, node } = useContext(AppCtx)
   const [loading, setLoading] = useState(true)
   const [reset, setReset] = useState(false)
@@ -40,10 +41,10 @@ const DownloadData = () => {
   const [realtimeMode, setRealtimeMode] = useState(false)
   const setRealtimeModeHandler = (_, isRealtimeMode) => {
     if (isRealtimeMode) {
-      console.log({ isRealtimeMode })
+      setAlert({ open: true, message: 'Realtime mode is currently in development', severity: 'info' })
     }
+    console.log({ isRealtimeMode })
     setRealtimeMode(isRealtimeMode)
-    setAlert({ open: true, message: 'Realtime mode is currently in development', severity: 'info' })
   }
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const DownloadData = () => {
     setLoading(true)
     setPage(0)
 
-    const firebaseDB = Firebase.database()
+    const firebaseDB = firebase.database()
     const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`)
     const options = {
       pageSize: rowsPerPage,
@@ -78,7 +79,7 @@ const DownloadData = () => {
     return () => {
       paginator.off('value', firebaseCallback)
     }
-  }, [node, user, rowsPerPage, reset])
+  }, [node, user, rowsPerPage, reset, firebase])
 
   /**
    * CHANGING ROW SIZE HANDLER
@@ -141,8 +142,9 @@ const DownloadData = () => {
    */
   const onResetHandler = () => {
     if (paginatorRef.current && !realtimeMode) {
-      setReset(!reset)
+      paginatorRef.current.goToPage(1)
     } else {
+      setAlert({ open: true, message: 'Reset for realtime mode is currently in development', severity: 'info' })
       console.log('Reset for realtime mode')
     }
   }

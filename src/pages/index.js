@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { AppCtx } from '../../provider'
 import Layout from '../components/layout'
 import SEO from '../components/seo'
-import Firebase from '../components/Firebase/firebase'
+import getFirebase from '../components/Firebase/firebase'
 import TimeSeriesGraph from '../components/Graphs/TimeSeriesGraph'
 import GoogleMap from '../components/GoogleMap/GoogleMap'
 import AirQualitySummary from '../components/AirQualitySummary'
@@ -15,14 +15,12 @@ import Color from '../components/Theme/ColorPallete'
 const { API_MAP } = process.env
 
 const IndexPage = () => {
+  const firebase = getFirebase()
   const [state, setState] = useState(null)
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState([])
   const store = useContext(AppCtx)
   const { node, updateNode } = store
-
-  const firebaseDB = Firebase.database()
-  const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`).orderByKey().limitToLast(1)
 
   const firebaseCallback = (snapshot) => {
     let snapshotVal
@@ -35,12 +33,14 @@ const IndexPage = () => {
 
   useEffect(() => {
     setLoading(true)
+    const firebaseDB = firebase.database()
+    const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`).orderByKey().limitToLast(1)
     nodeRef.on('value', firebaseCallback)
 
     return () => {
       nodeRef.off('value', firebaseCallback)
     }
-  }, [node])
+  }, [node, firebase])
 
   let pm25 = []
   let pm10 = []

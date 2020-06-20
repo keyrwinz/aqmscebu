@@ -5,14 +5,9 @@ import {
 } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import PropTypes from 'prop-types'
-import Firebase from '../Firebase/firebase'
+import getFirebase from '../Firebase/firebase'
 import Alert from '../Utils/alert'
 import BackdropFeedback from './BackDrop'
-
-
-const provider = new Firebase.auth.GoogleAuthProvider()
-provider.addScope('profile')
-provider.addScope('email')
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -43,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 const SignInModal = ({
   open, setOpen, title, description,
 }) => {
+  const firebase = getFirebase()
   const classes = useStyles()
   const [feedback, setFeedback] = useState(false)
   const [alert, setAlert] = useState({
@@ -54,8 +50,12 @@ const SignInModal = ({
   const handleClose = () => setOpen(false)
 
   const signInHandler = () => {
+    if (!firebase) return
     setFeedback(true) // display loading backdrop...
-    Firebase.auth().signInWithPopup(provider)
+    const provider = new firebase.auth.GoogleAuthProvider()
+    provider.addScope('profile')
+    provider.addScope('email')
+    firebase.auth().signInWithPopup(provider)
       .then((res) => {
         const { displayName } = res.user
         setFeedback(false)
