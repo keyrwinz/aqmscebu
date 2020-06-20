@@ -6,7 +6,7 @@ import Color from '../components/Theme/ColorPallete'
 
 const DownloadData = () => (
   <Layout>
-    <SEO title="Download Data" />
+    <SEO title="About" />
     <Style>
       <div className="container-sm">
         <div className="row about-section">

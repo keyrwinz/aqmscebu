@@ -10,7 +10,11 @@ const NotFoundPage = () => (
     >
       <SEO title="404: Not found" />
       <h1>PAGE NOT FOUND</h1>
-      <p>You just hit a route that doesn&#39;t exist... 😢</p>
+      <p>
+        You just hit a route that doesn&#39;t exist...
+        <span role="img" aria-label="Sad Face">😢</span>
+      </p>
+
     </div>
   </Layout>
 )

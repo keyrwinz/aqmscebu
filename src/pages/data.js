@@ -158,7 +158,7 @@ const DownloadData = () => {
 
   return (
     <Layout>
-      <SEO title="Data" />
+      <SEO title="View Data" />
       <Alert open={alert.open} setOpen={setAlert} message={alert.message} severity={alert.severity || 'warning'} />
       <SignInModal
         open={modalState}
