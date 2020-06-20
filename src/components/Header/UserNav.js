@@ -21,7 +21,7 @@ const UserNav = () => {
           const token = await userInfo.getIdToken()
           store.updateUser({ ...userInfo, token })
         } catch (error) {
-          console.log(`On AuthStateChanged Error: ${error}`)
+          console.log('On AuthStateChanged Error')
         }
       } else {
         store.updateUser(null)
@@ -53,7 +53,7 @@ const UserNav = () => {
         setOpenAvatarPopper(false)
       })
       .catch((err) => {
-        console.log({ err })
+        console.log('Error signing out')
       })
   }
 

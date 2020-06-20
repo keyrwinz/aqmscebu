@@ -283,8 +283,8 @@ function FirebasePaginator(ref, defaults) {
 
           return pages
         })
-        .catch(function (err) {
-          console.log('Error finite reset pagination: ', err.error)
+        .catch(function () {
+          console.log('Error finite reset pagination')
         })
     }
 

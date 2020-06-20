@@ -38,7 +38,7 @@ const WeatherSummary = ({ popover }) => {
     } catch (error) {
       if (!unmounted) {
         setWeather({ ...weather, loading: false, error: true })
-        console.log(`Weather fetch error: ${error}`)
+        console.log('Error fetching weather data')
       }
     }
   }
