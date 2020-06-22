@@ -31,7 +31,7 @@ const Spinner = ({ small, style }) => {
     Container = {
       ...Container,
       height: '100%',
-      minHeight: '100px',
+      minHeight: '125px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -54,6 +54,5 @@ Spinner.defaultProps = {
   small: false,
   style: {},
 }
-
 
 export default Spinner

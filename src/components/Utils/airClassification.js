@@ -6,7 +6,8 @@ const classification = (param, value) => {
       if (value >= 155 && value <= 254) return 'Unhealthy'
       if (value >= 255 && value <= 354) return 'Very Unhealthy'
       if (value >= 355 && value <= 424) return 'Acutely Unhealthy'
-      if (value >= 425 && value <= 504) return 'Emergency'
+      if (value >= 425) return 'Emergency'
+      // if (value >= 425 && value <= 504) return 'Emergency'
       return 'Invalid'
     case 'pm10':
       if (value >= 0 && value <= 54) return 'Good'
@@ -14,13 +15,15 @@ const classification = (param, value) => {
       if (value >= 155 && value <= 254) return 'Unhealthy'
       if (value >= 255 && value <= 354) return 'Very Unhealthy'
       if (value >= 355 && value <= 424) return 'Acutely Unhealthy'
-      if (value >= 425 && value <= 504) return 'Emergency'
+      if (value >= 425) return 'Emergency'
+      // if (value >= 425 && value <= 504) return 'Emergency'
       return 'Invalid'
     case 'no2':
       // no classification yet for range 0 to 0.64
       if (value >= 0 && value <= 0.64) return 'No classification'
       if (value >= 0.65 && value <= 1.24) return 'Acutely Unhealthy'
-      if (value >= 1.25 && value <= 1.64) return 'Emergency'
+      if (value >= 1.25) return 'Emergency'
+      // if (value >= 1.25 && value <= 1.64) return 'Emergency'
       return 'Invalid'
     case 'so2':
       if (value >= 0 && value <= 0.034) return 'Good'
@@ -28,7 +31,8 @@ const classification = (param, value) => {
       if (value >= 0.145 && value <= 0.224) return 'Unhealthy'
       if (value >= 0.225 && value <= 0.304) return 'Very Unhealthy'
       if (value >= 0.305 && value <= 0.604) return 'Acutely Unhealthy'
-      if (value >= 0.605 && value <= 0.804) return 'Emergency'
+      if (value >= 0.605) return 'Emergency'
+      // if (value >= 0.605 && value <= 0.804) return 'Emergency'
       return 'Invalid'
     default:
       break
