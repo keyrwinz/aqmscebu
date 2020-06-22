@@ -82,7 +82,6 @@ export const getPercent = (param, value) => {
 }
 
 export const getColor = (param, value, classification) => {
-  console.log(`${param}: ${classification}`)
   switch (classification) {
     case 'Good': return '#32CD32'
     case 'Fair': return '#FFFF00'

@@ -43,7 +43,6 @@ const DownloadData = () => {
     if (isRealtimeMode) {
       setAlert({ open: true, message: 'Realtime mode is currently in development', severity: 'info' })
     }
-    console.log({ isRealtimeMode })
     setRealtimeMode(isRealtimeMode)
   }
 
@@ -145,7 +144,6 @@ const DownloadData = () => {
       paginatorRef.current.goToPage(1)
     } else {
       setAlert({ open: true, message: 'Reset for realtime mode is currently in development', severity: 'info' })
-      console.log('Reset for realtime mode')
     }
   }
 
