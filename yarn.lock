@@ -2054,28 +2054,6 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.4.2.tgz#7c6dc4ecef16149fd7a736710baa1b811017fdca"
   integrity sha512-JlGTGRYHC2QK+DDbePyXdBdooxFq2+noLfWpRqJtkxcb/oYWzOF0kcbfvvbWrwevCC1l6hLUg1wHYT+ona5BWQ==
 
-"@progress/kendo-charts@^1.9.0":
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-charts/-/kendo-charts-1.14.0.tgz#65935221566420bc9ef9fa0f8f0523b4731aab9d"
-  integrity sha512-iWq1H/VEZJByWzRDvsODat2NrEPdC3bO6F+fZncBmYw9NEOQAPPqMm2hYd1o1IrdG3hmKFK01HUYJKgvyXmoaA==
-
-"@progress/kendo-react-common@3.14.0":
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-react-common/-/kendo-react-common-3.14.0.tgz#49db7ee959d787725f02f72986e103dc5fdbfd93"
-  integrity sha512-l3xjo8En6S4Q49QSpCESdMC8WDSzTAB/7x8oQAoW57otH7kdXpHaCxuAdK9iegHrMJsh3LAOL93EOhH1XavuVw==
-  dependencies:
-    "@telerik/kendo-draggable" "^2.1.0"
-    prop-types "^15.6.0"
-
-"@progress/kendo-react-gauges@^3.14.0":
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-react-gauges/-/kendo-react-gauges-3.14.0.tgz#6a62bb06dddc55e9c025ddccc407a95f5c822843"
-  integrity sha512-l2vCJowmpldBdn67XvLvBvkW9O+ULuxJQ5AHlhSSZjYM5nwq72XzRKr48LMggTaxvuI3z46ZqKtWkJLkARsAFw==
-  dependencies:
-    "@progress/kendo-charts" "^1.9.0"
-    "@progress/kendo-react-common" "3.14.0"
-    prop-types "^15.6.0"
-
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"
@@ -2168,11 +2146,6 @@
   integrity sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
   dependencies:
     defer-to-connect "^1.0.1"
-
-"@telerik/kendo-draggable@^2.1.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@telerik/kendo-draggable/-/kendo-draggable-2.2.0.tgz#651ee63e8978c3c9d8548a3ece37280ce5944863"
-  integrity sha512-78ofOzRpisqPjG51LfLQ4FEWoGJXs4PkzyJSdVklyFw6gtAnj/T6dp7mHIMj8BivVkN9FjNgf4Eo/mdYs9fusQ==
 
 "@types/color-name@^1.1.1":
   version "1.1.1"
