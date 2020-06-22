@@ -67,7 +67,7 @@ const IndexPage = () => {
               <SummaryBar node={node} state={state} loading={loading} />
             </div>
           </div>
-          <div className="row">
+          <div className="row main-section">
             <div className="col-md-7 col-12 googleMap" style={{ minHeight: '500px' }}>
               <GoogleMap
                 nodeSelectFunc={onClickMapNode}
@@ -125,6 +125,10 @@ const Style = styled.div`
       padding-left: 30px !important;
       padding-right: 30px !important;
     }
+  }
+
+  .main-section {
+    flex-wrap: wrap-reverse !important;
   }
 
   .nodeSearchbar {
