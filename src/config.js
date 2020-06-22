@@ -40,7 +40,7 @@ export const AirMonitoringNodes = {
       id: 'test-data', lat: 10.3167542, lng: 123.9078344, text: 'Dummy Data, Ayala Center Cebu', locality: 'Cebu City',
     },
     {
-      id: 'test-usc-mc-1', lat: 10.296557, lng: 123.898521, text: 'University of San Carlos, Main Campus', locality: 'Cebu City',
+      id: 'test-usc-mc-1', lat: 10.296557, lng: 123.898521, text: 'University of San Carlos, Main Campus - 1', locality: 'Cebu City',
     },
   ],
 }
