@@ -1,16 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  Carousel, OverlayTrigger,
-} from 'react-bootstrap'
+import { Carousel } from 'react-bootstrap'
 import styled from 'styled-components'
+import { AirMonitoringNodes as AqmsNodes } from '../../config'
 import WeatherSummary from '../WeatherSummary'
 import CautionaryStatements from '../CautionaryStatements'
+import GaugeComponent from '../Graphs/GaugeComponent'
 import Color from '../Theme/ColorPallete'
 import Spinner from '../Spinner'
 import popover from '../Utils/popover'
 import airClassification from '../Utils/airClassification'
-import makeBadge from '../Utils/makeBadge'
 
 const AQContent = ({ node, state, loading }) => {
   const pm25 = state?.p2
@@ -20,58 +19,43 @@ const AQContent = ({ node, state, loading }) => {
   const temp = state?.te
   const humidity = state?.h
 
+  const selectedNode = AqmsNodes.nodesLoc.find((nodeObj) => nodeObj.id === node)
+
   const data = {
-    PM25: { value: 'No data', badge: '' },
-    PM10: { value: 'No data', badge: '' },
-    NO2: { value: 'No data', badge: '' },
-    SO2: { value: 'No data', badge: '' },
-    Temperature: { value: 'No data', badge: '' },
-    Humidity: { value: 'No data', badge: '' },
+    PM25: { value: 'No data', classification: '' },
+    PM10: { value: 'No data', classification: '' },
+    NO2: { value: 'No data', classification: '' },
+    SO2: { value: 'No data', classification: '' },
   }
 
-  let paramKeys = []
-  const paramClassifications = {
-    PM25: null,
-    PM10: null,
-    NO2: null,
-    SO2: null,
+  const variables = {
+    Temperature: { value: 'No data' },
+    Humidity: { value: 'No data' },
   }
 
-  if (loading) {
-    data.PM25.value = <Spinner small />
-    data.PM10.value = <Spinner small />
-    data.NO2.value = <Spinner small />
-    data.SO2.value = <Spinner small />
-    data.Temperature.value = <Spinner small />
-    data.Humidity.value = <Spinner small />
-  } else {
+  if (!loading) {
     if (pm25 || pm25 === 0) {
       data.PM25.value = pm25
-      paramClassifications.PM25 = airClassification('pm25', pm25)
-      data.PM25.badge = makeBadge(paramClassifications.PM25)
+      data.PM25.classification = airClassification('pm25', pm25)
     }
     if (pm10 || pm10 === 0) {
       data.PM10.value = pm10
-      paramClassifications.PM10 = airClassification('pm10', pm10)
-      data.PM10.badge = makeBadge(paramClassifications.PM10)
+      data.PM10.classification = airClassification('pm10', pm10)
     }
     if (no2 || no2 === 0) {
       data.NO2.value = no2
-      paramClassifications.NO2 = airClassification('no2', no2)
-      data.NO2.badge = makeBadge(paramClassifications.NO2)
+      data.NO2.classification = airClassification('no2', no2)
     }
     if (so2 || so2 === 0) {
       data.SO2.value = so2
-      paramClassifications.SO2 = airClassification('so2', so2)
-      data.SO2.badge = makeBadge(paramClassifications.SO2)
+      data.SO2.classification = airClassification('so2', so2)
     }
     if (temp || temp === 0) {
-      data.Temperature.value = temp
+      variables.Temperature.value = temp
     }
     if (humidity || humidity === 0) {
-      data.Humidity.value = humidity
+      variables.Humidity.value = humidity
     }
-    paramKeys = Object.keys(paramClassifications)
   }
 
   return (
@@ -82,43 +66,43 @@ const AQContent = ({ node, state, loading }) => {
         </div>
         <div className="measurements-row">
           <div className="row measurements-title">
-            <div className="col col-12">
-              <span>Selected Node: </span>
-            </div>
             <div className="col col-12 selected-node-title-wrapper">
               <span className="selected-node-title">
-                {node}
+                <span className="uppercase">{`${selectedNode.id}, `}</span>
+                {selectedNode.text || 'No selected node'}
               </span>
-            </div>
-            <div className="col col-12">
-              <span>Measurements:</span>
             </div>
           </div>
           <div className="measurements-data">
-            <ul>
-              {Object.keys(data).map((param, index) => (
-                <li key={param}>
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={popover(param)}
-                  >
-                    <span className="param-label">
-                      {/* index < 4 -> excluding TEMP and HUMIDITY label from having <sub></sub> */}
-                      {index < 4 ? param.slice(0, 2) : param}
-                      <sub>
-                        {index < 4 ? param.slice(2, 4) : ' '}
-                        {' '}
-                      </sub>
-                      :
-                    </span>
-                  </OverlayTrigger>
-                  <span className={`param-value ${data[param].value === 'No data' ? 'warning' : ''}`}>
-                    {data[param].value}
-                  </span>
-                  {data[param].badge}
-                </li>
-              ))}
-            </ul>
+            <div className="measurements-pollutants">
+              <div className="pollutants-title">Pollutants</div>
+              <div className="pollutants-gauges">
+                { Object.keys(data).map((param) => (
+                  <div className="measurement-gauge" key={param}>
+                    <GaugeComponent
+                      loading={loading}
+                      param={param}
+                      value={data[param].value}
+                      classification={data[param].classification}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="measurements-environment">
+              <div className="variables-title">Variables</div>
+              <div className="variables-gauges">
+                { Object.keys(variables).map((param) => (
+                  <div className="measurement-gauge" key={param}>
+                    <GaugeComponent
+                      loading={loading}
+                      param={param}
+                      value={variables[param].value}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -132,11 +116,11 @@ const AQContent = ({ node, state, loading }) => {
           <div style={{ height: '320px' }}>
             {loading ? <Spinner /> : (
               <Carousel style={{ height: '100%' }} interval="10000">
-                {paramKeys.map((key) => (
-                  <Carousel.Item key={key}>
+                {Object.keys(data).map((param) => (
+                  <Carousel.Item key={param}>
                     <CautionaryStatements
-                      param={key}
-                      classification={paramClassifications[key]}
+                      param={param}
+                      classification={data[param].classification}
                     />
                   </Carousel.Item>
                 ))}
@@ -189,44 +173,60 @@ const Style = styled.div`
     padding-right: 15px;
   }
 
-  .selected-node-title-wrapper {
-    display: flex;
-    align-items: center;
-    max-height: 50px;
-    font-size: -webkit-xxx-large;
+  .uppercase {
     text-transform: uppercase;
   }
 
+  .selected-node-title-wrapper {
+    align-items: center;
+    text-align: center;
+  }
+
   .selected-node-title {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     color: ${Color.whiteColor};
   }
 
+  // <-- POLLUTANTS AND VARIABLES -->
   .measurements-data {
-    margin-left: 45px;
+    display: flex;
+    padding: 0px 15px;
   }
-
-  .measurements-data ul {
-    list-style: none;
-    color: white;
+  @media (min-width: 902px) {
+    .measurements-data {
+      min-height: 337px;
+      max-height: 337px;
+    }
   }
-
-  .param-label:hover {
-    cursor: help;
+  .measurements-pollutants {
+    flex: 1;
+    flex-flow: column;
+    display: flex;
+    flex-wrap: wrap;
   }
-
-  .param-value {
-    color: ${Color.secondaryColor};
-    margin: 0px 10px 0px 10px;
-    font-weight: bold;
+  .pollutants-title {
+    padding-left: 15px;
+    margin-bottom: 15px;
   }
-
-  .warning {
-    color: yellow;
+  .pollutants-gauges {
+    display: flex;
+    flex-wrap: wrap;
   }
-
+  .variables-title {
+    text-align: center;
+    padding-left: 20px;
+    margin-bottom: 15px;
+  }
+  .variables-gauges {
+    padding-left: 20px;
+    border-left: 1px solid ${Color.primaryColor};
+  }
+  .measurement-gauge {
+    min-height: 125px;
+    flex: 1 0 35%;
+    margin-bottom: 10px;
+  }
+  
+  // <-- CAUTIONARY STATEMENTS TAB -->
   .cautionary-tab {
     display: flex;
     flex-flow: column;
