@@ -6,6 +6,7 @@ require('dotenv').config({
 module.exports = {
   siteMetadata: {
     title: 'Air Quality Monitoring',
+    siteUrl: 'https://www.airnuff.com',
     description: 'Air Quality Monitoring Application in Cebu City, Philippines',
     author: '@AirNuff',
   },
