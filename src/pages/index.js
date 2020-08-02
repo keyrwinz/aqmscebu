@@ -18,10 +18,9 @@ import Spinner from '../components/Spinner'
 import Color from '../components/Theme/ColorPallete'
 
 const { API_MAP } = process.env
-const firebase = getFirebase()
-const firebaseDB = firebase.database()
 
 const IndexPage = () => {
+  const firebase = getFirebase()
   const store = useContext(AppCtx)
   const { node, updateNode, user } = store
   const [loading, setLoading] = useState(true)
@@ -52,6 +51,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     setLoading(true)
+    const firebaseDB = firebase.database()
     const nodeRef = firebaseDB.ref(`aqmnodes/${node}/states`).orderByKey().limitToLast(1)
     nodeRef.on('value', firebaseCallback)
     return () => {
@@ -70,6 +70,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     setLoading(true)
+    const firebaseDB = firebase.database()
     const nodeForGraphRef = firebaseDB.ref(`aqmnodes/${node}/${graphInterval}`).orderByChild('ti').startAt(selectedStartDate).endAt(selectedEndDate)
     nodeForGraphRef.on('value', firebaseForGraphCb)
     return () => {
@@ -102,6 +103,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     setLoading(true)
+    const firebaseDB = firebase.database()
     const nodeForMinDate = firebaseDB.ref(`aqmnodes/${node}/${graphInterval}`).orderByKey().limitToFirst(1)
     const nodeForMaxDate = firebaseDB.ref(`aqmnodes/${node}/${graphInterval}`).orderByKey().limitToLast(1)
     nodeForMinDate.on('value', minDateCb)
