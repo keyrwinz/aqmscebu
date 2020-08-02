@@ -2,5 +2,6 @@
   "prettier.jsxSingleQuote": true,
   "prettier.singleQuote": true,
   "prettier.useTabs": true,
-  "prettier.arrowParens": "always"
+  "prettier.arrowParens": "always",
+  "eslint.enable": true
 }
