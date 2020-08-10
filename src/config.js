@@ -48,5 +48,11 @@ export const AirMonitoringNodes = {
     {
       id: 'test-usc-mc-3', lat: 10.328711, lng: 123.898829, text: 'University of San Carlos, Main Campus - Test3', locality: 'Cebu City',
     },
+    {
+      id: 'test-usc-mc-4', lat: 10.348711, lng: 123.888829, text: 'University of San Carlos, Main Campus - Test4', locality: 'Cebu City',
+    },
+    {
+      id: 'test-usc-sc-1', lat: 10.368711, lng: 123.878829, text: 'University of San Carlos, South Campus - Test1', locality: 'Cebu City',
+    },
   ],
 }
