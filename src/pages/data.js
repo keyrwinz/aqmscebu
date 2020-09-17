@@ -142,6 +142,7 @@ const DownloadData = () => {
   const onResetHandler = () => {
     if (paginatorRef.current && !realtimeMode) {
       paginatorRef.current.goToPage(1)
+      setPage(0)
     } else {
       setAlert({ open: true, message: 'Reset for realtime mode is currently in development', severity: 'info' })
     }

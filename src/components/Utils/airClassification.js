@@ -20,11 +20,19 @@ const classification = (param, value) => {
       return 'Invalid'
     case 'no2':
       // no classification yet for range 0 to 0.64
-      if (value >= 0 && value <= 0.64) return 'No classification'
-      if (value >= 0.65 && value <= 1.24) return 'Acutely Unhealthy'
-      if (value >= 1.25) return 'Emergency'
+      // if (value >= 0 && value <= 0.64) return 'No classification'
+      // if (value >= 0.65 && value <= 1.24) return 'Acutely Unhealthy'
+      // if (value >= 1.25) return 'Emergency'
       // if (value >= 1.25 && value <= 1.64) return 'Emergency'
-      return 'Invalid'
+      if (value >= 0 && value <= 0.053) return 'Good'
+      if (value >= 0.054 && value <= 0.1) return 'Fair'
+      if (value >= 0.101 && value <= 0.15) return 'Unhealthy'
+      if (value >= 0.151 && value <= 0.2) return 'Unhealthy'
+      if (value >= 0.201 && value <= 0.3) return 'Very Unhealthy'
+      if (value >= 0.301 && value <= 0.4) return 'Acutely Unhealthy'
+      if (value >= 0.401 && value <= 0.5) return 'Acutely Unhealthy'
+      if (value > 0.5) return 'Emergency'
+      return 'No classification'
     case 'so2':
       if (value >= 0 && value <= 0.034) return 'Good'
       if (value >= 0.035 && value <= 0.144) return 'Fair'
