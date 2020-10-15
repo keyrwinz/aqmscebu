@@ -29,13 +29,17 @@ export const AirMonitoringNodes = {
      * @param { string } id -> Used to display selected node in UI
      * @param { string } text -> Used to display as suggested text in search bar
      * @param { number } lat_and_lng -> Latitude and Longitude
+     *
+     *
+      {
+        id: 'usc-mc-bak', lat: 10.299974,
+        lng: 123.898434, text: 'University of San Carlos, Main Campus', locality: 'Cebu City',
+      },
+      {
+        id: 'usc-sc-bak', lat: 10.300467,
+        lng: 123.887958, text: 'University of San Carlos, South Campus', locality: 'Cebu City',
+      },
      */
-    {
-      id: 'usc-mc-bak', lat: 10.299974, lng: 123.898434, text: 'University of San Carlos, Main Campus', locality: 'Cebu City',
-    },
-    {
-      id: 'usc-sc-bak', lat: 10.300467, lng: 123.887958, text: 'University of San Carlos, South Campus', locality: 'Cebu City',
-    },
     {
       id: 'test-data', lat: 10.3167542, lng: 123.9078344, text: 'Dummy Data, Ayala Center Cebu', locality: 'Cebu City',
     },
@@ -49,10 +53,10 @@ export const AirMonitoringNodes = {
       id: 'test-usc-mc-3', lat: 10.328711, lng: 123.898829, text: 'University of San Carlos, Main Campus - Test3', locality: 'Cebu City',
     },
     {
-      id: 'usc-mc', lat: 10.297713, lng: 123.985059, text: 'University of San Carlos, Main Campus', locality: 'Cebu City',
+      id: 'test-usc-mc-4', lat: 10.297713, lng: 123.985059, text: 'University of San Carlos, Main Campus', locality: 'Cebu City',
     },
     {
-      id: 'usc-sc', lat: 10.297713, lng: 123.985059, text: 'University of San Carlos, South Campus', locality: 'Cebu City',
+      id: 'test-usc-sc-1', lat: 10.297713, lng: 123.985059, text: 'University of San Carlos, South Campus', locality: 'Cebu City',
     },
   ],
 }

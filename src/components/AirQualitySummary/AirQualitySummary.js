@@ -68,7 +68,7 @@ const AQContent = ({ node, state, loading }) => {
           <div className="row measurements-title">
             <div className="col col-12 selected-node-title-wrapper">
               <span className="selected-node-title">
-                <span className="uppercase">{`${selectedNode.id}, `}</span>
+                {/* <span className="uppercase">{`${selectedNode.id}, `}</span> */}
                 {selectedNode.text || 'No selected node'}
               </span>
             </div>

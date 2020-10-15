@@ -5,7 +5,7 @@ export const AppCtx = React.createContext()
 // eslint-disable-next-line react/prop-types
 const Provider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [node, setNode] = useState('usc-mc')
+  const [node, setNode] = useState('test-usc-mc-4')
 
   return (
     <AppCtx.Provider value={{

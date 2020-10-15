@@ -18,12 +18,22 @@ const SummaryBar = ({ node, state, loading }) => {
     isOnline = true
   }
 
+  // temporary ===================
+  let nodeName = ''
+  if (node === 'test-usc-mc-4') {
+    nodeName = 'USC-MC'
+  }
+  if (node === 'test-usc-sc-1') {
+    nodeName = 'USC-SC'
+  }
+  // ==============================
+
   return (
     <Style>
       <span className="label">
         Node:
         <span className="value node">
-          {` ${node}`}
+          {` ${nodeName}`}
         </span>
       </span>
       <span className="label status">
